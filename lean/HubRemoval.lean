@@ -5,3 +5,4 @@ import HubRemoval.Doubling
 import HubRemoval.SubSum
 import HubRemoval.Monotone
 import HubRemoval.Robust
+import HubRemoval.Sigma
