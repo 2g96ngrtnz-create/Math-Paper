@@ -105,8 +105,8 @@ between vertices of `(K, N]` is exactly reachability in `G_{N,K}`.
 outside `(K, N]` are isolated. -/
 def divGraph (N K : ℕ) : SimpleGraph ℕ where
   Adj a b := a ≠ b ∧ K < a ∧ a ≤ N ∧ K < b ∧ b ≤ N ∧ (a ∣ b ∨ b ∣ a)
-  symm := fun _ _ ⟨h, ha, ha', hb, hb', hd⟩ => ⟨h.symm, hb, hb', ha, ha', hd.symm⟩
-  loopless := fun _ h => h.1 rfl
+  symm := ⟨fun _ _ ⟨h, ha, ha', hb, hb', hd⟩ => ⟨h.symm, hb, hb', ha, ha', hd.symm⟩⟩
+  loopless := ⟨fun _ h => h.1 rfl⟩
 
 /-- Adjacent vertices of `G_{N,K}` have the same `B`-rough part, `B = ⌊N/(K+1)⌋`. -/
 theorem roughPart_eq_of_adj {N K a b : ℕ} (h : (divGraph N K).Adj a b) :

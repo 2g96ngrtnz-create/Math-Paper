@@ -30,4 +30,17 @@ example : roughPart (100 / (10 + 1)) 11 = roughPart (100 / (10 + 1)) 99 :=
 -- The cofactor hypothesis matters: 2 ∣ 22 with B = 9 has cofactor 11 > 9, and the rough
 -- parts differ (R_9(2) = 1, R_9(22) = 11). In the paper this pair is never an edge,
 -- since vertices are > K = 10.
-example : roughPart 9 2 ≠ roughPart 9 22 := by decide
+-- (A test assertion, evaluated like `#eval`; the kernel cannot reduce `Nat.factorization`.)
+#guard roughPart 9 2 ≠ roughPart 9 22
+
+/-! ### Lemma 3.1(b) -/
+
+#print axioms roughPart_eq_of_reachable
+
+-- A walk 22 — 11 — 99 in G_{100,10} (both are edges: 11 ∣ 22 and 11 ∣ 99), so R_9(22) = R_9(99).
+example : roughPart (100 / (10 + 1)) 22 = roughPart (100 / (10 + 1)) 99 := by
+  have h1 : (divGraph 100 10).Adj 22 11 := ⟨by decide, by decide, by decide, by decide,
+    by decide, Or.inr ⟨2, rfl⟩⟩
+  have h2 : (divGraph 100 10).Adj 11 99 := ⟨by decide, by decide, by decide, by decide,
+    by decide, Or.inl ⟨9, rfl⟩⟩
+  exact roughPart_eq_of_reachable (h1.reachable.trans h2.reachable)
