@@ -29,3 +29,4 @@ import HubRemoval.Buchstab
 import HubRemoval.PrimeSum
 import HubRemoval.DickmanThm
 import HubRemoval.PsiLimit
+import HubRemoval.Profile
