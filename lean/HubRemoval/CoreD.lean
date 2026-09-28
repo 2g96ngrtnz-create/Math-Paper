@@ -32,10 +32,8 @@ theorem coreY_pos (N K : ℕ) (δ : ℝ) (hN : (0 : ℝ) < N) : 0 < coreY N K δ
   unfold coreY
   positivity
 
-/-- `log Y ≥ ½ η log N`, because `Y ≥ N^{η/2}`. -/
-theorem CoreHyp.log_Y_ge (h : CoreHyp N K s₀ η δ) :
-    η / 2 * Real.log N ≤ Real.log (coreY N K δ) := by
-  have hY : (N : ℝ) ^ (η / 2) ≤ coreY N K δ := by
+/-- `Y ≥ N^{η/2}`. -/
+theorem CoreHyp.rpow_le_Y (h : CoreHyp N K s₀ η δ) : (N : ℝ) ^ (η / 2) ≤ coreY N K δ := by
     unfold coreY
     rw [le_div_iff₀ (by positivity)]
     have h1 : 2 * ((K : ℝ) + 1) ≤ 4 * (N : ℝ) ^ (1 - η) := by linarith [h.K1_le]
@@ -50,8 +48,12 @@ theorem CoreHyp.log_Y_ge (h : CoreHyp N K s₀ η δ) :
     calc (N : ℝ) ^ (η / 2) * (2 * ((K : ℝ) + 1))
         ≤ (N : ℝ) ^ (η / 2) * (4 * (N : ℝ) ^ (1 - η)) := mul_le_mul_of_nonneg_left h1 h3
       _ ≤ (N : ℝ) ^ (1 - 2 * δ) := by rw [hs]; nlinarith
+
+/-- `log Y ≥ ½ η log N`, because `Y ≥ N^{η/2}`. -/
+theorem CoreHyp.log_Y_ge (h : CoreHyp N K s₀ η δ) :
+    η / 2 * Real.log N ≤ Real.log (coreY N K δ) :=
   calc η / 2 * Real.log N = Real.log ((N : ℝ) ^ (η / 2)) := by rw [Real.log_rpow h.N_pos]
-    _ ≤ Real.log (coreY N K δ) := Real.log_le_log (Real.rpow_pos_of_pos h.N_pos _) hY
+    _ ≤ Real.log (coreY N K δ) := Real.log_le_log (Real.rpow_pos_of_pos h.N_pos _) h.rpow_le_Y
 
 /-- `log B − log Y ≤ 2δ log N + log 2`, because `B/Y ≤ 2N^{2δ}`. -/
 theorem CoreHyp.log_B_sub_log_Y (h : CoreHyp N K s₀ η δ) (hB : 0 < N / (K + 1)) :
