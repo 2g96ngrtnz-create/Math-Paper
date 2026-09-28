@@ -27,6 +27,7 @@ lake env lean Checks/TuranCheck.lean
 lake env lean Checks/CoreCheck.lean
 lake env lean Checks/CoreParamsCheck.lean
 lake env lean Checks/DivisorCheck.lean
+lake env lean Checks/SandwichCheck.lean
 ```
 
 ## Status
@@ -49,6 +50,7 @@ lake env lean Checks/DivisorCheck.lean
 | Lemma 4.5(c), counting argument: if P⁺(m) ≤ Y and ω_z(m) ≥ s₀, then s(m) ≥ s₀ + 1, given the inequalities between M, z, E₀, E₁ that the proof uses | `core_divisors`, `exists_dvd_mem_Ico` | `HubRemoval/Core.lean` | **Proved.** Standard axioms. M, z, E₀, E₁ are abstract reals, and the inequalities between them are hypotheses; the next row discharges them. Checks in `Checks/CoreCheck.lean` |
 | Lemma 4.5(a)–(c) with the paper's parameters: from (H1) K ≤ N^{1−η}, (H2) N^{η/4} ≥ 4, (H3) N^{δ/s₀} ≥ 2 and 0 < δ ≤ η/8: (a) M ≥ 4(K+1); (b) 𝒰 ⊆ F_1 and m > M on 𝒰; (c) s(m) ≥ s₀ + 1 on 𝒰 | `core_a`, `core_b`, `core_c` | `HubRemoval/CoreParams.lean` | **Proved.** Standard axioms. Part (d) needs Mertens' theorem and is **not** formalised. Checks in `Checks/CoreParamsCheck.lean` (N = 2¹⁶, η = 1/2, δ = 1/16, K = 10) |
 | Lemma 6.1: if U ⊆ V(D), the largest SCC of D[U] is at most the largest SCC of D; so Φ_{K'} ≤ Φ_K for K ≤ K' and a fixed orientation | `maxSCC_mono`, `maxSCC_Ioc_antitone` | `HubRemoval/Monotone.lean` | **Proved.** Standard axioms. `maxSCC` is the largest strongly connected set, which equals the largest SCC. Checks in `Checks/MonotoneCheck.lean` |
+| Lemma 6.2: if 0 < ε ≤ 1/2, 1 ≤ K < N and (N/K)(ε/2) ≥ τ̂ + 5, where τ̂ bounds τ(n) for n ≤ N, then a static or adaptive top-K set T satisfies {v ≥ 1 : v ≤ (1−ε)K} ⊆ T ⊆ {t : t ≤ (1+ε)K} | `sandwich_static`, `sandwich_adaptive` | `HubRemoval/Sandwich.lean` | **Proved.** Standard axioms. Degrees are cardinalities of explicit neighbour sets in G_N − T. Checks in `Checks/SandwichCheck.lean`, including the paper's degree formula for all m ≤ 100 |
 | Lemma A.1: if x₁, …, xₙ sum to 1, 0 < θ ≤ 1/3 and every xᵢ < 1 − θ, some sub-sum lies in [θ, 1/2]; the bound 1/3 is sharp | `subsum`, `subsum_of_mem_Icc`, `subsum_sharp` | `HubRemoval/SubSum.lean` | **Proved.** Standard axioms. Only finite sequences are covered; the paper also allows infinite ones. Neither monotonicity nor xᵢ ≥ 0 is needed. Checks in `Checks/SubSumCheck.lean` |
 
 All other lemmas of the paper are not yet formalised.
