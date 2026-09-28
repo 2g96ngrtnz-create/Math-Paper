@@ -30,3 +30,5 @@ import HubRemoval.PrimeSum
 import HubRemoval.DickmanThm
 import HubRemoval.PsiLimit
 import HubRemoval.Profile
+import HubRemoval.Giant
+import HubRemoval.Attack

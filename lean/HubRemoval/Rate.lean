@@ -41,10 +41,36 @@ theorem expect_PhiK_nonneg {ρ : ℝ} (hρ0 : 0 ≤ ρ) (hρ1 : ρ ≤ 1) (N K :
 theorem gap_nonneg {ρ : ℝ} (hρ0 : 0 ≤ ρ) (hρ1 : ρ ≤ 1) (N K : ℕ) : 0 ≤ gap ρ N K :=
   sub_nonneg.mpr (expect_PhiK_le_psi hρ0 hρ1)
 
-/-- **The core of Theorem 1.2.** Under (R1)–(R6) at `t = log N`, every `K < N` has
-`gap ≤ 30N/log log N`. -/
-theorem gap_le_of_good {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (hK : K < N)
-    (hG : GoodT ρ (Real.log N)) : gap ρ N K ≤ 30 * N / Real.log (Real.log N) := by
+/-- `ℓ = log log N`. -/
+noncomputable def ellN (N : ℕ) : ℝ := Real.log (Real.log N)
+
+/-- The paper's parameters in the proof of Theorem 1.2: `η = 1/ℓ`, `δ = 1/(8ℓ²)`,
+`s₀ = max(1, ⌈log ℓ/log(1/λ)⌉)`. -/
+noncomputable def etaN (N : ℕ) : ℝ := 1 / ellN N
+noncomputable def deltaN (N : ℕ) : ℝ := 1 / (8 * ellN N ^ 2)
+noncomputable def s0N (ρ : ℝ) (N : ℕ) : ℕ := s0f ρ (ellN N)
+
+/-- `Err` of Proposition 4.6, with `C₁ = 18`. -/
+noncomputable def errT (ρ : ℝ) (N s₀ : ℕ) (η δ : ℝ) : ℝ :=
+  (N : ℝ) ^ (1 - δ) + N * (4 * δ / η + 2 * (1 + 18) / (η * Real.log N)) +
+    ((Ioc 0 N).filter (fun m => omegaZ ⌊(N : ℝ) ^ (δ / s₀)⌋₊ m < s₀)).card +
+    2 * (max ρ (1 - ρ)) ^ (s₀ + 1) * N
+
+/-- **The two cases of the proof of Theorem 1.2.** Under (R1)–(R6) at `t = log N`, and for
+`K < N`: `N/ℓ ≥ 1`, and
+* if `K ≤ N^{1−η}`, the hypotheses of Lemma 4.5 hold, `K ≤ N/ℓ`, `Err ≤ 28N/ℓ` and
+  `N³ exp(−q(N^{2δ} − 2)) ≤ 1`;
+* if `K > N^{1−η}`, then `Ψ(N, B) ≤ 3N/ℓ`. -/
+theorem rate_cases {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (hK : K < N)
+    (hG : GoodT ρ (Real.log N)) :
+    1 ≤ (N : ℝ) / ellN N ∧
+    ((K : ℝ) ≤ (N : ℝ) ^ (1 - etaN N) →
+      CoreHyp N K (s0N ρ N) (etaN N) (deltaN N) ∧ (K : ℝ) ≤ N / ellN N ∧
+      errT ρ N (s0N ρ N) (etaN N) (deltaN N) ≤ 28 * N / ellN N ∧
+      (N : ℝ) ^ 3 * Real.exp (-(ρ * (1 - ρ)) * ((N : ℝ) ^ (2 * deltaN N) - 2)) ≤ 1) ∧
+    (¬ (K : ℝ) ≤ (N : ℝ) ^ (1 - etaN N) →
+      (psi N (N / (K + 1)) : ℝ) ≤ 3 * (N / ellN N)) := by
+  unfold etaN deltaN s0N ellN
   set t := Real.log (N : ℝ) with htdef
   set ℓ := Real.log t with hℓdef
   have hℓ1 : 1 < ℓ := hG.p0
@@ -93,7 +119,7 @@ theorem gap_le_of_good {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (h
   -- `N^{1−a} = N / N^a`.
   have hsub : ∀ a : ℝ, (N : ℝ) ^ (1 - a) = N / (N : ℝ) ^ a := fun a => by
     rw [Real.rpow_sub hNpos, Real.rpow_one]
-  by_cases hKs : (K : ℝ) ≤ (N : ℝ) ^ (1 - η)
+  refine ⟨hNℓ, fun hKs => ?_, fun hKs => ?_⟩
   · ---------------- Case `K ≤ N^{1−η}`: Proposition 4.6.
     have hH2 : 4 ≤ (N : ℝ) ^ (η / 4) := hle_rpow 4 (η / 4) (by norm_num) (by
       rw [hη, show t * (1 / ℓ / 4) = t / (4 * ℓ) by ring, le_div_iff₀ (by positivity)]
@@ -113,7 +139,6 @@ theorem gap_le_of_good {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (h
         H1 := hKs
         H2 := hH2
         H3 := hH3 }
-    obtain ⟨hlow, -⟩ := fixedN_sandwich' h hρ0.le hρ1.le
     -- `K ≤ N/ℓ`.
     have e1 : (K : ℝ) ≤ N / ℓ := by
       refine hKs.trans ?_
@@ -192,17 +217,9 @@ theorem gap_le_of_good {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (h
       have := hG.p7
       rw [← hℓdef] at this
       linarith
-    have key : gap ρ N K ≤ (K : ℝ) + ((N : ℝ) ^ (1 - δ) +
-        N * (4 * δ / η + 2 * (1 + 18) / (η * Real.log N)) +
-        ((Ioc 0 N).filter (fun m => omegaZ ⌊(N : ℝ) ^ (δ / s₀)⌋₊ m < s₀)).card +
-        2 * (max ρ (1 - ρ)) ^ (s₀ + 1) * N) +
-        (N : ℝ) ^ 3 * Real.exp (-(ρ * (1 - ρ)) * ((N : ℝ) ^ (2 * δ) - 2)) := by
-      unfold gap
-      linarith
-    have e30 : (N : ℝ) / ℓ + (N / ℓ + N / ℓ + 24 * N / ℓ + 2 * N / ℓ) + 1 ≤ 30 * N / ℓ := by
-      have : (N : ℝ) / ℓ + (N / ℓ + N / ℓ + 24 * N / ℓ + 2 * N / ℓ) = 29 * (N / ℓ) := by ring
-      rw [this, show 30 * (N : ℝ) / ℓ = 30 * (N / ℓ) by ring]
-      linarith
+    refine ⟨h, e1, ?_, e6⟩
+    have e28 : (N : ℝ) / ℓ + N / ℓ + 24 * N / ℓ + 2 * N / ℓ = 28 * N / ℓ := by ring
+    unfold errT
     linarith
   · ---------------- Case `K > N^{1−η}`: Lemma 2.3.
     push Not at hKs
@@ -259,13 +276,27 @@ theorem gap_le_of_good {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (h
           2 * N * Real.log ((N / (K + 1) : ℕ) : ℝ) / t + 2 * N * (Real.log 4 + 2) / t := by
         ring
       linarith
-    have hEnn := expect_PhiK_nonneg hρ0.le hρ1.le N K
     have hid : (N : ℝ) / (2 * ℓ) + (2 * N / ℓ + N / (2 * ℓ)) = 3 * (N / ℓ) := by
       field_simp; ring
-    have hΨ : (psi N (N / (K + 1)) : ℝ) ≤ 3 * (N / ℓ) := by linarith
-    have hNℓ0 : 0 ≤ (N : ℝ) / ℓ := by positivity
+    linarith
+
+/-- **The core of Theorem 1.2.** Under (R1)–(R6) at `t = log N`, every `K < N` has
+`gap ≤ 30N/log log N`. -/
+theorem gap_le_of_good {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (hK : K < N)
+    (hG : GoodT ρ (Real.log N)) : gap ρ N K ≤ 30 * N / Real.log (Real.log N) := by
+  obtain ⟨hNℓ, hsmall, hlarge⟩ := rate_cases hρ0 hρ1 hK hG
+  have e30 : 30 * (N : ℝ) / ellN N = 30 * (N / ellN N) := by ring
+  change gap ρ N K ≤ 30 * N / ellN N
+  by_cases hKs : (K : ℝ) ≤ (N : ℝ) ^ (1 - etaN N)
+  · obtain ⟨h, e1, e28, e6⟩ := hsmall hKs
+    obtain ⟨hlow, -⟩ := fixedN_sandwich' h hρ0.le hρ1.le
+    have e28' : 28 * (N : ℝ) / ellN N = 28 * (N / ellN N) := by ring
+    unfold errT at e28
     unfold gap
-    rw [show 30 * (N : ℝ) / ℓ = 30 * (N / ℓ) by ring]
+    linarith
+  · have hΨ := hlarge hKs
+    have hEnn := expect_PhiK_nonneg hρ0.le hρ1.le N K
+    unfold gap
     linarith
 
 /-- **Theorem 1.2 (Rate).** For every `ρ ∈ (0,1)` there is `N₀` such that for all `N ≥ N₀` and all
