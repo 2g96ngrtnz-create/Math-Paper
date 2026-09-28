@@ -26,6 +26,7 @@ lake env lean Checks/AttachCheck.lean
 lake env lean Checks/TuranCheck.lean
 lake env lean Checks/CoreCheck.lean
 lake env lean Checks/CoreParamsCheck.lean
+lake env lean Checks/DivisorCheck.lean
 ```
 
 ## Status
@@ -35,6 +36,7 @@ lake env lean Checks/CoreParamsCheck.lean
 | Paper result | Lean name | File | Status |
 |---|---|---|---|
 | Lemma 2.4: for z ≤ N, ∑_{m≤N} (ω_z(m) − L)² ≤ 3NL; for 2 ≤ z ≤ N and s ≤ L/2, #{m ≤ N : ω_z(m) < s} ≤ 12N/L | `turan_variance`, `turan_count` | `HubRemoval/Turan.lean` | **Proved.** Standard axioms. z is a natural number, which loses nothing because the primes ≤ z are the primes ≤ ⌊z⌋. The hypothesis 0 ≤ s is not needed. Checks in `Checks/TuranCheck.lean`, including an exact evaluation over ℚ for N = 100, z = 7 |
+| Lemma 2.5: for every ε > 0 there is C_ε > 0 with τ(n) ≤ C_ε n^ε for all n ≥ 1 | `divisor_bound` | `HubRemoval/Divisor.lean` | **Proved.** Standard axioms. Explicit constant C_ε = max(1, 1/(ε log 2))^{⌈2^{1/ε}⌉}. Checks in `Checks/DivisorCheck.lean` |
 | Lemma 3.1(a), part 1: if d ∣ m, K < d and m ≤ N, then m/d ≤ ⌊N/(K+1)⌋ | `cofactor_le_B` | `HubRemoval/Fibre.lean` | **Proved.** Axioms: `propext`, `Quot.sound`. |
 | Lemma 3.1(a), part 2: along an edge (d ∣ m, K < d < m ≤ N), R_B(d) = R_B(m) | `roughPart_eq_of_edge` | `HubRemoval/Fibre.lean` | **Proved.** Standard axioms. |
 | Lemma 3.1(b): R_B is constant on connected components of G_{N,K} | `roughPart_eq_of_reachable` | `HubRemoval/Fibre.lean` | **Proved.** Standard axioms. |
