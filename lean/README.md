@@ -16,6 +16,7 @@ lake env lean InstallCheck.lean         # install sanity checks (must succeed)
 lake env lean Checks/NegativeCheck.lean # a false statement (must FAIL)
 lake env lean Checks/FibreCheck.lean    # axioms and concrete instances
 lake env lean Checks/FibreCountCheck.lean
+lake env lean Checks/UpperBoundCheck.lean
 ```
 
 ## Status
@@ -28,7 +29,7 @@ lake env lean Checks/FibreCountCheck.lean
 | Lemma 3.1(a), part 2: along an edge (d ∣ m, K < d < m ≤ N), R_B(d) = R_B(m) | `roughPart_eq_of_edge` | `HubRemoval/Fibre.lean` | **Proved.** Standard axioms. |
 | Lemma 3.1(b): R_B is constant on connected components of G_{N,K} | `roughPart_eq_of_reachable` | `HubRemoval/Fibre.lean` | **Proved.** Standard axioms. |
 | Lemma 3.1(c): \|V_n\| ≤ Ψ(N/n,B) ≤ Ψ(N,B); V_1 = F_1; \|F_1\| = Ψ(N,B) − Ψ(K,B); \|V_n\| ≤ K for n > 1 | `card_fibre_le`, `card_fibre_le_psi`, `fibre_one`, `card_smoothFibre`, `card_fibre_le_K` | `HubRemoval/FibreCount.lean` | **Proved.** Standard axioms. Checks in `Checks/FibreCountCheck.lean` |
-| Proposition 3.2: upper bound for any orientation | | `HubRemoval/UpperBound.lean` | Draft, not yet compiled |
+| Proposition 3.2: for any orientation of G_{N,K}, a strongly connected set lies in one fibre and has ≤ Ψ(N,B) and ≤ max(\|F_1\|, K) elements | `stronglyConnected_subset_fibre`, `stronglyConnected_card_le_psi`, `stronglyConnected_card_le_max` | `HubRemoval/UpperBound.lean` | **Proved.** Standard axioms. The orientation is modelled as any relation whose arcs are edges, which is slightly more general. Checks in `Checks/UpperBoundCheck.lean` |
 | Lemma 4.2: doubling connectivity | | `HubRemoval/Doubling.lean` | Draft, not yet compiled |
 | Lemma A.1: sub-sum lemma, and its sharpness at 1/3 | | `HubRemoval/SubSum.lean` | Draft, not yet compiled |
 
