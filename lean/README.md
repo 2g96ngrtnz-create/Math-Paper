@@ -30,6 +30,7 @@ lake env lean Checks/DivisorCheck.lean
 lake env lean Checks/SandwichCheck.lean
 lake env lean Checks/PsiUpperCheck.lean
 lake env lean Checks/CoreDCheck.lean
+lake env lean Checks/FiniteProbCheck.lean
 ```
 
 ## Status
@@ -56,5 +57,6 @@ lake env lean Checks/CoreDCheck.lean
 | Lemma 6.1: if U ⊆ V(D), the largest SCC of D[U] is at most the largest SCC of D; so Φ_{K'} ≤ Φ_K for K ≤ K' and a fixed orientation | `maxSCC_mono`, `maxSCC_Ioc_antitone` | `HubRemoval/Monotone.lean` | **Proved.** Standard axioms. `maxSCC` is the largest strongly connected set, which equals the largest SCC. Checks in `Checks/MonotoneCheck.lean` |
 | Lemma 6.2: if 0 < ε ≤ 1/2, 1 ≤ K < N and (N/K)(ε/2) ≥ τ̂ + 5, where τ̂ bounds τ(n) for n ≤ N, then a static or adaptive top-K set T satisfies {v ≥ 1 : v ≤ (1−ε)K} ⊆ T ⊆ {t : t ≤ (1+ε)K} | `sandwich_static`, `sandwich_adaptive` | `HubRemoval/Sandwich.lean` | **Proved.** Standard axioms. Degrees are cardinalities of explicit neighbour sets in G_N − T. Checks in `Checks/SandwichCheck.lean`, including the paper's degree formula for all m ≤ 100 |
 | Lemma A.1: if x₁, …, xₙ sum to 1, 0 < θ ≤ 1/3 and every xᵢ < 1 − θ, some sub-sum lies in [θ, 1/2]; the bound 1/3 is sharp | `subsum`, `subsum_of_mem_Icc`, `subsum_sharp` | `HubRemoval/SubSum.lean` | **Proved.** Standard axioms. Only finite sequences are covered; the paper also allows infinite ones. Neither monotonicity nor xᵢ ≥ 0 is needed. Checks in `Checks/SubSumCheck.lean` |
+| Infrastructure: finite product probability (the model of a random orientation) | `sum_wt`, `prob_cylinder`, `expectP_mul_of_disjoint`, `expectP_prod_of_pairwiseDisjoint`, `prob_exists_le`, `prob_and_ge` | `HubRemoval/FiniteProb.lean` | **Proved.** Standard axioms. Outcomes are ω : ι → Bool with independent Bernoulli(ρ) coordinates, and expectations are finite sums. Includes cylinder probabilities, independence for functions of disjoint coordinate blocks, and the union bound. Checks in `Checks/FiniteProbCheck.lean`, including a case showing disjointness is needed |
 
 All other lemmas of the paper are not yet formalised.
