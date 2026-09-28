@@ -31,6 +31,7 @@ lake env lean Checks/SandwichCheck.lean
 lake env lean Checks/PsiUpperCheck.lean
 lake env lean Checks/CoreDCheck.lean
 lake env lean Checks/FiniteProbCheck.lean
+lake env lean Checks/OrientationCheck.lean
 ```
 
 ## Status
@@ -58,5 +59,6 @@ lake env lean Checks/FiniteProbCheck.lean
 | Lemma 6.2: if 0 < ε ≤ 1/2, 1 ≤ K < N and (N/K)(ε/2) ≥ τ̂ + 5, where τ̂ bounds τ(n) for n ≤ N, then a static or adaptive top-K set T satisfies {v ≥ 1 : v ≤ (1−ε)K} ⊆ T ⊆ {t : t ≤ (1+ε)K} | `sandwich_static`, `sandwich_adaptive` | `HubRemoval/Sandwich.lean` | **Proved.** Standard axioms. Degrees are cardinalities of explicit neighbour sets in G_N − T. Checks in `Checks/SandwichCheck.lean`, including the paper's degree formula for all m ≤ 100 |
 | Lemma A.1: if x₁, …, xₙ sum to 1, 0 < θ ≤ 1/3 and every xᵢ < 1 − θ, some sub-sum lies in [θ, 1/2]; the bound 1/3 is sharp | `subsum`, `subsum_of_mem_Icc`, `subsum_sharp` | `HubRemoval/SubSum.lean` | **Proved.** Standard axioms. Only finite sequences are covered; the paper also allows infinite ones. Neither monotonicity nor xᵢ ≥ 0 is needed. Checks in `Checks/SubSumCheck.lean` |
 | Infrastructure: finite product probability (the model of a random orientation) | `sum_wt`, `prob_cylinder`, `expectP_mul_of_disjoint`, `expectP_prod_of_pairwiseDisjoint`, `prob_exists_le`, `prob_and_ge` | `HubRemoval/FiniteProb.lean` | **Proved.** Standard axioms. Outcomes are ω : ι → Bool with independent Bernoulli(ρ) coordinates, and expectations are finite sums. Includes cylinder probabilities, independence for functions of disjoint coordinate blocks, and the union bound. Checks in `Checks/FiniteProbCheck.lean`, including a case showing disjointness is needed |
+| Infrastructure: the random orientation 𝒟_ρ(N,K), and Proposition 3.2 in it: Φ_K(ω) ≤ Ψ(N,B) and Φ_K(ω) ≤ max(\|F_1\|, K) for every outcome ω | `edges`, `arc`, `PhiK`, `PhiK_le_psi`, `PhiK_le_max`, `card_le_PhiK` | `HubRemoval/Orientation.lean` | **Proved.** Standard axioms. An outcome is ω : Edge N K → Bool, where true means reversed. Checks in `Checks/OrientationCheck.lean` (a directed 3-cycle in G_{4,0}) |
 
 All other lemmas of the paper are not yet formalised.
