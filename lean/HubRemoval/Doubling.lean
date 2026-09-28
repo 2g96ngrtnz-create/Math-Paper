@@ -87,7 +87,7 @@ theorem doubling {M : ℝ} {K : ℕ} (hM : 4 * ((K : ℝ) + 1) ≤ M) (x : ℕ) 
       · have hpow : 2 ^ y.factorization 2 ≤ L := by rw [← hy2]; exact hyL
         exact Nat.le_log_of_pow_le (by norm_num) hpow
       · by_contra hlt
-        push_neg at hlt
+        push Not at hlt
         have h5 : 2 ^ (y.factorization 2 + 1) ≤ 2 ^ Nat.log 2 L :=
           Nat.pow_le_pow_right (by norm_num) hlt
         have h6 : 2 ^ Nat.log 2 L ≤ L := Nat.pow_log_le_self 2 (by omega)

@@ -25,7 +25,7 @@ theorem subsum_of_mem_Icc {n : ℕ} (x : Fin n → ℝ) (hsum : ∑ i, x i = 1) 
   rw [hsum] at hc
   by_cases h : ∑ i ∈ I, x i ≤ 1 / 2
   · exact ⟨I, h1, h⟩
-  · push_neg at h
+  · push Not at h
     exact ⟨Iᶜ, by linarith, by linarith⟩
 
 /-- **Lemma A.1 (finite form).** -/
@@ -36,7 +36,7 @@ theorem subsum {n : ℕ} (x : Fin n → ℝ) (hx0 : ∀ i, 0 ≤ x i) (hsum : �
   by_cases hbig : ∃ i, θ ≤ x i
   · obtain ⟨i, hi⟩ := hbig
     exact subsum_of_mem_Icc x hsum {i} (by simpa using hi) (by simpa using (hmax i).le)
-  push_neg at hbig
+  push Not at hbig
   -- Partial sums `f k = x₀ + ⋯ + x_{k-1}`.
   let f : ℕ → ℝ := fun k => ∑ i ∈ univ.filter (fun i : Fin n => i.val < k), x i
   have hf_all : ∀ k, n ≤ k → f k = 1 := by
@@ -49,7 +49,7 @@ theorem subsum {n : ℕ} (x : Fin n → ℝ) (hx0 : ∀ i, 0 ≤ x i) (hsum : �
   obtain ⟨k, hk, hmin⟩ : ∃ k, θ ≤ f k ∧ ∀ m < k, f m < θ :=
     ⟨Nat.find hex, Nat.find_spec hex, fun m hm => by
       have := Nat.find_min hex hm
-      push_neg at this
+      push Not at this
       exact this⟩
   have hk0 : k ≠ 0 := by
     rintro rfl
@@ -59,7 +59,7 @@ theorem subsum {n : ℕ} (x : Fin n → ℝ) (hx0 : ∀ i, 0 ≤ x i) (hsum : �
   have hprev : f j < θ := hmin j (Nat.lt_succ_self j)
   have hjn : j < n := by
     by_contra hjn
-    push_neg at hjn
+    push Not at hjn
     have := hf_all j hjn
     linarith
   have hstep : f (j + 1) = f j + x ⟨j, hjn⟩ := by
