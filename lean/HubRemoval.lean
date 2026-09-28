@@ -6,3 +6,4 @@ import HubRemoval.SubSum
 import HubRemoval.Monotone
 import HubRemoval.Robust
 import HubRemoval.Sigma
+import HubRemoval.Attach

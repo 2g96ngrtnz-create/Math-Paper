@@ -22,6 +22,7 @@ lake env lean Checks/SubSumCheck.lean
 lake env lean Checks/MonotoneCheck.lean
 lake env lean Checks/RobustCheck.lean
 lake env lean Checks/SigmaCheck.lean
+lake env lean Checks/AttachCheck.lean
 ```
 
 ## Status
@@ -38,6 +39,7 @@ lake env lean Checks/SigmaCheck.lean
 | Lemma 4.1, deterministic part: on the event 𝓡, both ends of each edge of G_{M,K} lie in one SCC, so each component of G_{M,K} lies in one SCC; and \|𝒴\| = ⌊N/x'⌋ − 1 ≥ N/M − 2 | `robust_adj`, `robust_reachable`, `card_multiples_Ioc`, `card_multiples_Ioc_ge` | `HubRemoval/Robust.lean` | **Proved.** Standard axioms. The probability bound P(𝓡ᶜ) ≤ M²(1 − q)^{N^{2δ} − 2} is **not** formalised; it needs a model of the random orientation. Checks in `Checks/RobustCheck.lean` |
 | Lemma 4.2: for real M ≥ 4(K+1), all x ∈ (K, M] with P⁺(x) ≤ M/(2(K+1)) lie in one component of G_{M,K} | `doubling`, `doubling_connected` | `HubRemoval/Doubling.lean` | **Proved.** Standard axioms. Checks in `Checks/DoublingCheck.lean` |
 | Corollary 4.3: if M ≥ 4(K+1), then on 𝓡 all of S_M lies in one SCC Σ; if also M ≤ N, then Σ ⊆ F_1 | `sigma_mutual`, `goodSet_mem_smoothFibre`, `sigma_subset_smoothFibre` | `HubRemoval/Sigma.lean` | **Proved.** Standard axioms. Checks in `Checks/SigmaCheck.lean` |
+| Lemma 4.4: on A_m ∩ 𝓡, m ∈ Σ; and P(A_m) = 1 − ρ^s − (1 − ρ)^s ≥ 1 − 2λ^s for s ≥ 1 | `attach_mutual`, `sum_weight`, `prob_attach`, `prob_attach_ge` | `HubRemoval/Attach.lean` | **Proved.** Standard axioms. The probability is proved in the finite product model on the s edges {d, m}. The product measure on all orientations of G_{N,K}, and the marginalisation to these s edges, are **not** formalised. Checks in `Checks/AttachCheck.lean`, including a brute-force evaluation over ℚ |
 | Lemma 6.1: if U ⊆ V(D), the largest SCC of D[U] is at most the largest SCC of D; so Φ_{K'} ≤ Φ_K for K ≤ K' and a fixed orientation | `maxSCC_mono`, `maxSCC_Ioc_antitone` | `HubRemoval/Monotone.lean` | **Proved.** Standard axioms. `maxSCC` is the largest strongly connected set, which equals the largest SCC. Checks in `Checks/MonotoneCheck.lean` |
 | Lemma A.1: if x₁, …, xₙ sum to 1, 0 < θ ≤ 1/3 and every xᵢ < 1 − θ, some sub-sum lies in [θ, 1/2]; the bound 1/3 is sharp | `subsum`, `subsum_of_mem_Icc`, `subsum_sharp` | `HubRemoval/SubSum.lean` | **Proved.** Standard axioms. Only finite sequences are covered; the paper also allows infinite ones. Neither monotonicity nor xᵢ ≥ 0 is needed. Checks in `Checks/SubSumCheck.lean` |
 
