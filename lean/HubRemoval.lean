@@ -22,3 +22,5 @@ import HubRemoval.LowerBound
 import HubRemoval.Mertens
 import HubRemoval.Mertens2
 import HubRemoval.Unconditional
+import HubRemoval.Asymptotics
+import HubRemoval.Rate

@@ -38,6 +38,7 @@ lake env lean Checks/LowerBoundCheck.lean
 lake env lean Checks/MertensCheck.lean
 lake env lean Checks/Mertens2Check.lean
 lake env lean Checks/UnconditionalCheck.lean
+lake env lean Checks/RateCheck.lean
 ```
 
 ## Status
@@ -46,6 +47,9 @@ lake env lean Checks/UnconditionalCheck.lean
 
 | Paper result | Lean name | File | Status |
 |---|---|---|---|
+| **Theorem 1.2 (Rate):** for every ρ ∈ (0,1) there is N₀ such that for all N ≥ N₀ and all K < N, 0 ≤ Ψ(N, N/(K+1)) − E[Φ_K] ≤ 30N/log log N | `thm_rate`, `gap_le_of_good` | `HubRemoval/Rate.lean` | **Proved.** Standard axioms. It uses the paper's parameters ℓ = log log N, η = 1/ℓ, δ = 1/(8ℓ²), s₀ = max(1, ⌈log ℓ/log(1/λ)⌉), z = N^{δ/s₀}. If K ≤ N^{1−η}, the gap is at most 29N/ℓ + 1 by `fixedN_sandwich'`; if K > N^{1−η}, Lemma 2.3 gives Ψ ≤ 3N/ℓ. Checks in `Checks/RateCheck.lean` |
+| Growth conditions (R1)–(R6) in the proof of Theorem 1.2: they hold for all large N | `eventually_goodN`, `eventually_goodT`, `eventually_mul_log_pow_le` | `HubRemoval/Asymptotics.lean` | **Proved.** Standard axioms. All follow from A(log t)^k ≤ t eventually (Mathlib's `Real.isLittleO_pow_log_id_atTop`). The numerics in `Checks/RateCheck.lean` show that for ρ = 1/2, (R2) first holds at log log N = 80, so N₀ is astronomically large, as the paper notes |
+| **Theorem 1.1 (Main theorem):** Φ_K ≤ Ψ(N, N/(K+1)) for every orientation, and max_{0≤K<N} (Ψ(N, N/(K+1)) − E[Φ_K])/N → 0 | `thm_main` | `HubRemoval/Rate.lean` | **Proved.** Standard axioms. The limit follows from Theorem 1.2 by squeezing between 0 and 30/log log N. Checks in `Checks/RateCheck.lean`, including the uniform ε-form |
 | Lemma 2.1(a), Mertens-type: ∑_{p≤n} log p/(p−1) ≤ log n + c₀ for n ≥ 1, with c₀ = log 4 + 2 | `mertens_a`, `sum_log_div_le`, `theta_le` | `HubRemoval/Mertens.lean` | **Proved from scratch.** Standard axioms. The paper cites Mertens. Here: θ(n) ≤ n log 4 (primorial ≤ 4ⁿ, from Mathlib); Legendre plus n! ≤ nⁿ gives ∑ log p/p ≤ log n + log 4; and a telescoping bound gives ∑ log p/(p(p−1)) ≤ 2. Parts (b)–(d) are in the next row. Checks in `Checks/MertensCheck.lean` |
 | Lemma 2.1(b)–(d), and the full Lemma 2.1: for real 2 ≤ y ≤ w, \|∑_{y<p≤w} 1/p − log(log w/log y)\| ≤ C₁/log y; ∑_{p≤z} 1/p ≥ log log z − C₁ for z ≥ 2; π(x) ≤ C₁x/log x for x ≥ 2; with c₀ = log 4 + 2 and C₁ = 18 | `lemma_2_1`, `mertens_b`, `mertens_b_nat`, `mertens_c`, `mertens_d`, `abs_Smert_sub_log_le` | `HubRemoval/Mertens2.lean` | **Proved from scratch.** Standard axioms. Mertens' first theorem \|∑_{p≤n} log p/p − log n\| ≤ 3 comes from Legendre and nⁿ/eⁿ ≤ n! ≤ nⁿ. (b) follows by Abel summation: 8/log y for integers, 18/log y for reals. (c) has constant 13 and (d) has constant 5. Checks in `Checks/Mertens2Check.lean`, including a floating-point sanity check of the constants |
 | Lemma 2.3: for x ≥ 2, Ψ(x,y) ≤ √x + 2x(log y + c₀)/log x | `psi_upper`, `psi_upper'`, `sum_log_smooth_le` | `HubRemoval/PsiUpper.lean` | **Proved.** Standard axioms. `psi_upper` takes Mertens' estimate as a hypothesis. `psi_upper'` is unconditional, with c₀ = log 4 + 2 from the proof of Lemma 2.1(a) in the next row. Legendre's theorem comes from Mathlib. The consequence ρ(u) ≤ 2/u needs Dickman's theorem and is **not** formalised. Checks in `Checks/PsiUpperCheck.lean` |
@@ -72,4 +76,6 @@ lake env lean Checks/UnconditionalCheck.lean
 | Infrastructure: finite product probability (the model of a random orientation) | `sum_wt`, `prob_cylinder`, `expectP_mul_of_disjoint`, `expectP_prod_of_pairwiseDisjoint`, `prob_exists_le`, `prob_and_ge` | `HubRemoval/FiniteProb.lean` | **Proved.** Standard axioms. Outcomes are ω : ι → Bool with independent Bernoulli(ρ) coordinates, and expectations are finite sums. Includes cylinder probabilities, independence for functions of disjoint coordinate blocks, and the union bound. Checks in `Checks/FiniteProbCheck.lean`, including a case showing disjointness is needed |
 | Infrastructure: the random orientation 𝒟_ρ(N,K), and Proposition 3.2 in it: Φ_K(ω) ≤ Ψ(N,B) and Φ_K(ω) ≤ max(\|F_1\|, K) for every outcome ω | `edges`, `arc`, `PhiK`, `PhiK_le_psi`, `PhiK_le_max`, `card_le_PhiK` | `HubRemoval/Orientation.lean` | **Proved.** Standard axioms. An outcome is ω : Edge N K → Bool, where true means reversed. Checks in `Checks/OrientationCheck.lean` (a directed 3-cycle in G_{4,0}) |
 
-All other lemmas of the paper are not yet formalised.
+**How the model matches the paper.** `expectP ρ (fun ω : Edge N K → Bool => PhiK N K ω)` is E[Φ_K] for independent reversals of the edges of G_{N,K}. The paper's 𝒟_ρ(N,K) = 𝒟_ρ(N)[V_{N,K}] has the same law, because the edges of G_N outside G_{N,K} do not affect Φ_K. Also Ψ(N, N/(K+1)) = Ψ(N, ⌊N/(K+1)⌋), and `psi N (N / (K + 1))` counts the latter.
+
+**Not yet formalised:** Lemma 2.2 (Dickman's function) and Lemma 2.7, and hence Corollaries 1.3 and 1.5, which rest on them; eq. (4.2) and Corollary 1.4; and the remarks.
