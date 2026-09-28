@@ -7,7 +7,9 @@ import Mathlib
 every `xᵢ < 1 − θ`. Then some sub-sum lies in `[θ, 1/2]`.
 
 The paper states this for a non-increasing sequence with `x₁ < 1 − θ`, which says exactly that
-every term is `< 1 − θ`. Monotonicity is not needed here.
+every term is `< 1 − θ`. Monotonicity is not needed here, and neither is `xᵢ ≥ 0`: if every term
+is `< θ`, the first partial sum that reaches `θ` is `< 2θ ≤ 1 − θ`, whatever the signs. The
+theorem below is therefore stated without the nonnegativity hypothesis, which makes it stronger.
 
 The bound `1/3` is sharp. For `1/3 < θ`, the parts `(1/3, 1/3, 1/3)` have no sub-sum in
 `[θ, 1/2]`.
@@ -28,8 +30,8 @@ theorem subsum_of_mem_Icc {n : ℕ} (x : Fin n → ℝ) (hsum : ∑ i, x i = 1) 
   · push Not at h
     exact ⟨Iᶜ, by linarith, by linarith⟩
 
-/-- **Lemma A.1 (finite form).** -/
-theorem subsum {n : ℕ} (x : Fin n → ℝ) (hx0 : ∀ i, 0 ≤ x i) (hsum : ∑ i, x i = 1)
+/-- **Lemma A.1 (finite form).** No nonnegativity hypothesis is needed. -/
+theorem subsum {n : ℕ} (x : Fin n → ℝ) (hsum : ∑ i, x i = 1)
     {θ : ℝ} (hθ0 : 0 < θ) (hθ : θ ≤ 1 / 3) (hmax : ∀ i, x i < 1 - θ) :
     ∃ I : Finset (Fin n), θ ≤ ∑ i ∈ I, x i ∧ ∑ i ∈ I, x i ≤ 1 / 2 := by
   classical
