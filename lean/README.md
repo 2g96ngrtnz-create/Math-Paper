@@ -35,6 +35,7 @@ lake env lean Checks/OrientationCheck.lean
 lake env lean Checks/RobustProbCheck.lean
 lake env lean Checks/AttachProbCheck.lean
 lake env lean Checks/LowerBoundCheck.lean
+lake env lean Checks/MertensCheck.lean
 ```
 
 ## Status
@@ -43,7 +44,8 @@ lake env lean Checks/LowerBoundCheck.lean
 
 | Paper result | Lean name | File | Status |
 |---|---|---|---|
-| Lemma 2.3: for x ≥ 2, Ψ(x,y) ≤ √x + 2x(log y + c₀)/log x | `psi_upper`, `sum_log_smooth_le` | `HubRemoval/PsiUpper.lean` | **Proved, conditional on Mertens.** Standard axioms. Mertens' estimate ∑_{p≤y} log p/(p−1) ≤ log y + c₀ (Lemma 2.1(a)) is not in Mathlib and is an explicit hypothesis. Legendre's theorem comes from Mathlib. The consequence ρ(u) ≤ 2/u needs Dickman's theorem and is **not** formalised. Checks in `Checks/PsiUpperCheck.lean` |
+| Lemma 2.1(a), Mertens-type: ∑_{p≤n} log p/(p−1) ≤ log n + c₀ for n ≥ 1, with c₀ = log 4 + 2 | `mertens_a`, `sum_log_div_le`, `theta_le` | `HubRemoval/Mertens.lean` | **Proved from scratch.** Standard axioms. The paper cites Mertens. Here: θ(n) ≤ n log 4 (primorial ≤ 4ⁿ, from Mathlib); Legendre plus n! ≤ nⁿ gives ∑ log p/p ≤ log n + log 4; and a telescoping bound gives ∑ log p/(p(p−1)) ≤ 2. Parts (b), (c), (d) of Lemma 2.1 are **not** formalised. Checks in `Checks/MertensCheck.lean` |
+| Lemma 2.3: for x ≥ 2, Ψ(x,y) ≤ √x + 2x(log y + c₀)/log x | `psi_upper`, `psi_upper'`, `sum_log_smooth_le` | `HubRemoval/PsiUpper.lean` | **Proved.** Standard axioms. `psi_upper` takes Mertens' estimate as a hypothesis. `psi_upper'` is unconditional, with c₀ = log 4 + 2 from the proof of Lemma 2.1(a) in the next row. Legendre's theorem comes from Mathlib. The consequence ρ(u) ≤ 2/u needs Dickman's theorem and is **not** formalised. Checks in `Checks/PsiUpperCheck.lean` |
 | Lemma 2.4: for z ≤ N, ∑_{m≤N} (ω_z(m) − L)² ≤ 3NL; for 2 ≤ z ≤ N and s ≤ L/2, #{m ≤ N : ω_z(m) < s} ≤ 12N/L | `turan_variance`, `turan_count` | `HubRemoval/Turan.lean` | **Proved.** Standard axioms. z is a natural number, which loses nothing because the primes ≤ z are the primes ≤ ⌊z⌋. The hypothesis 0 ≤ s is not needed. Checks in `Checks/TuranCheck.lean`, including an exact evaluation over ℚ for N = 100, z = 7 |
 | Lemma 2.5: for every ε > 0 there is C_ε > 0 with τ(n) ≤ C_ε n^ε for all n ≥ 1 | `divisor_bound` | `HubRemoval/Divisor.lean` | **Proved.** Standard axioms. Explicit constant C_ε = max(1, 1/(ε log 2))^{⌈2^{1/ε}⌉}. Checks in `Checks/DivisorCheck.lean` |
 | Lemma 3.1(a), part 1: if d ∣ m, K < d and m ≤ N, then m/d ≤ ⌊N/(K+1)⌋ | `cofactor_le_B` | `HubRemoval/Fibre.lean` | **Proved.** Axioms: `propext`, `Quot.sound`. |
