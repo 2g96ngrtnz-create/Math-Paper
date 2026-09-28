@@ -9,3 +9,4 @@ import HubRemoval.Sigma
 import HubRemoval.Attach
 import HubRemoval.Turan
 import HubRemoval.Core
+import HubRemoval.CoreParams
