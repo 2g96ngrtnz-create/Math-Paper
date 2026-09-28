@@ -60,7 +60,7 @@ theorem smoothPart_mem_smoothNumbers (B n : ℕ) :
   rw [Nat.mem_smoothNumbers']
   intro q hq hqd
   unfold smoothPart at hqd
-  obtain ⟨p, hp, hqp⟩ := (Prime.dvd_finset_prod_iff hq.prime _).mp hqd
+  obtain ⟨p, hp, hqp⟩ := (Prime.dvd_finsetProd_iff hq.prime _).mp hqd
   have hp' := Finset.mem_filter.mp hp
   have hpp := Nat.prime_of_mem_primeFactors hp'.1
   have hqp' : q = p := (Nat.prime_dvd_prime_iff_eq hq hpp).mp (hq.dvd_of_dvd_pow hqp)
@@ -70,7 +70,7 @@ theorem smoothPart_mem_smoothNumbers (B n : ℕ) :
 /-- If `R_B(n) ≠ 1` (with `n ≠ 0`), then `R_B(n) > B`. -/
 theorem lt_roughPart_of_ne_one {B n : ℕ} (hn : n ≠ 0) (h1 : roughPart B n ≠ 1) :
     B < roughPart B n := by
-  unfold roughPart at h1 ⊢
+  unfold roughPart at h1
   obtain ⟨p, hp⟩ : (n.primeFactors.filter (B < ·)).Nonempty := by
     by_contra hne
     rw [Finset.not_nonempty_iff_eq_empty] at hne
@@ -78,7 +78,7 @@ theorem lt_roughPart_of_ne_one {B n : ℕ} (hn : n ≠ 0) (h1 : roughPart B n �
   have hp' := Finset.mem_filter.mp hp
   have hpp := Nat.prime_of_mem_primeFactors hp'.1
   have hpos : 0 < n.factorization p := hpp.factorization_pos_of_dvd hn (Nat.dvd_of_mem_primeFactors hp'.1)
-  have hdvd : p ∣ ∏ q ∈ n.primeFactors.filter (B < ·), q ^ n.factorization q :=
+  have hdvd : p ∣ roughPart B n :=
     (dvd_pow_self p (Nat.pos_iff_ne_zero.mp hpos)).trans (Finset.dvd_prod_of_mem _ hp)
   have hle := Nat.le_of_dvd (roughPart_pos B n) hdvd
   have := hp'.2
@@ -132,8 +132,11 @@ theorem card_fibre_le (N K n : ℕ) : (fibre N K n).card ≤ psi (N / n) (N / (K
     rw [hv'.2] at hmul
     have hn : 0 < n := hv'.2 ▸ roughPart_pos _ v
     have hdiv : v / n = smoothPart (N / (K + 1)) v := by
-      rw [← hmul, Nat.mul_div_cancel_left _ hn]
-    rw [Finset.mem_coe, Nat.mem_smoothNumbersUpTo, hdiv]
+      conv_lhs => rw [← hmul]
+      exact Nat.mul_div_cancel_left _ hn
+    rw [Finset.mem_coe, Nat.mem_smoothNumbersUpTo]
+    dsimp only
+    rw [hdiv]
     refine ⟨?_, smoothPart_mem_smoothNumbers _ _⟩
     rw [← hdiv]
     exact Nat.div_le_div_right hvI.2
@@ -193,7 +196,7 @@ theorem card_fibre_le_K {N K n : ℕ} (hn : 1 < n) : (fibre N K n).card ≤ K :=
         have hlt : N < (K + 1) * (N / (K + 1) + 1) := Nat.lt_mul_div_succ N (Nat.succ_pos K)
         have hle : N / n ≤ N / (N / (K + 1) + 1) := Nat.div_le_div_left hBn (Nat.succ_pos _)
         have : N / (N / (K + 1) + 1) < K + 1 :=
-          (Nat.div_lt_iff_lt_mul (Nat.succ_pos _)).mpr (by rw [Nat.mul_comm]; exact hlt)
+          (Nat.div_lt_iff_lt_mul (Nat.succ_pos _)).mpr hlt
         omega
 
 end HubRemoval

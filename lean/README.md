@@ -15,6 +15,7 @@ lake build HubRemoval                   # the formalised lemmas
 lake env lean InstallCheck.lean         # install sanity checks (must succeed)
 lake env lean Checks/NegativeCheck.lean # a false statement (must FAIL)
 lake env lean Checks/FibreCheck.lean    # axioms and concrete instances
+lake env lean Checks/FibreCountCheck.lean
 ```
 
 ## Status
@@ -26,7 +27,7 @@ lake env lean Checks/FibreCheck.lean    # axioms and concrete instances
 | Lemma 3.1(a), part 1: if d ∣ m, K < d and m ≤ N, then m/d ≤ ⌊N/(K+1)⌋ | `cofactor_le_B` | `HubRemoval/Fibre.lean` | **Proved.** Axioms: `propext`, `Quot.sound`. |
 | Lemma 3.1(a), part 2: along an edge (d ∣ m, K < d < m ≤ N), R_B(d) = R_B(m) | `roughPart_eq_of_edge` | `HubRemoval/Fibre.lean` | **Proved.** Standard axioms. |
 | Lemma 3.1(b): R_B is constant on connected components of G_{N,K} | `roughPart_eq_of_reachable` | `HubRemoval/Fibre.lean` | **Proved.** Standard axioms. |
-| Lemma 3.1(c): fibre sizes | | `HubRemoval/FibreCount.lean` | Draft, not yet compiled |
+| Lemma 3.1(c): \|V_n\| ≤ Ψ(N/n,B) ≤ Ψ(N,B); V_1 = F_1; \|F_1\| = Ψ(N,B) − Ψ(K,B); \|V_n\| ≤ K for n > 1 | `card_fibre_le`, `card_fibre_le_psi`, `fibre_one`, `card_smoothFibre`, `card_fibre_le_K` | `HubRemoval/FibreCount.lean` | **Proved.** Standard axioms. Checks in `Checks/FibreCountCheck.lean` |
 | Proposition 3.2: upper bound for any orientation | | `HubRemoval/UpperBound.lean` | Draft, not yet compiled |
 | Lemma 4.2: doubling connectivity | | `HubRemoval/Doubling.lean` | Draft, not yet compiled |
 | Lemma A.1: sub-sum lemma, and its sharpness at 1/3 | | `HubRemoval/SubSum.lean` | Draft, not yet compiled |
