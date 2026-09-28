@@ -20,6 +20,7 @@ lake env lean Checks/UpperBoundCheck.lean
 lake env lean Checks/DoublingCheck.lean
 lake env lean Checks/SubSumCheck.lean
 lake env lean Checks/MonotoneCheck.lean
+lake env lean Checks/RobustCheck.lean
 ```
 
 ## Status
@@ -33,6 +34,7 @@ lake env lean Checks/MonotoneCheck.lean
 | Lemma 3.1(b): R_B is constant on connected components of G_{N,K} | `roughPart_eq_of_reachable` | `HubRemoval/Fibre.lean` | **Proved.** Standard axioms. |
 | Lemma 3.1(c): \|V_n\| ≤ Ψ(N/n,B) ≤ Ψ(N,B); V_1 = F_1; \|F_1\| = Ψ(N,B) − Ψ(K,B); \|V_n\| ≤ K for n > 1 | `card_fibre_le`, `card_fibre_le_psi`, `fibre_one`, `card_smoothFibre`, `card_fibre_le_K` | `HubRemoval/FibreCount.lean` | **Proved.** Standard axioms. Checks in `Checks/FibreCountCheck.lean` |
 | Proposition 3.2: for any orientation of G_{N,K}, a strongly connected set lies in one fibre and has ≤ Ψ(N,B) and ≤ max(\|F_1\|, K) elements | `stronglyConnected_subset_fibre`, `stronglyConnected_card_le_psi`, `stronglyConnected_card_le_max` | `HubRemoval/UpperBound.lean` | **Proved.** Standard axioms. The orientation is modelled as any relation whose arcs are edges, which is slightly more general. Checks in `Checks/UpperBoundCheck.lean` |
+| Lemma 4.1, deterministic part: on the event 𝓡, both ends of each edge of G_{M,K} lie in one SCC, so each component of G_{M,K} lies in one SCC; and \|𝒴\| = ⌊N/x'⌋ − 1 ≥ N/M − 2 | `robust_adj`, `robust_reachable`, `card_multiples_Ioc`, `card_multiples_Ioc_ge` | `HubRemoval/Robust.lean` | **Proved.** Standard axioms. The probability bound P(𝓡ᶜ) ≤ M²(1 − q)^{N^{2δ} − 2} is **not** formalised; it needs a model of the random orientation. Checks in `Checks/RobustCheck.lean` |
 | Lemma 4.2: for real M ≥ 4(K+1), all x ∈ (K, M] with P⁺(x) ≤ M/(2(K+1)) lie in one component of G_{M,K} | `doubling`, `doubling_connected` | `HubRemoval/Doubling.lean` | **Proved.** Standard axioms. Checks in `Checks/DoublingCheck.lean` |
 | Lemma 6.1: if U ⊆ V(D), the largest SCC of D[U] is at most the largest SCC of D; so Φ_{K'} ≤ Φ_K for K ≤ K' and a fixed orientation | `maxSCC_mono`, `maxSCC_Ioc_antitone` | `HubRemoval/Monotone.lean` | **Proved.** Standard axioms. `maxSCC` is the largest strongly connected set, which equals the largest SCC. Checks in `Checks/MonotoneCheck.lean` |
 | Lemma A.1: if x₁, …, xₙ sum to 1, 0 < θ ≤ 1/3 and every xᵢ < 1 − θ, some sub-sum lies in [θ, 1/2]; the bound 1/3 is sharp | `subsum`, `subsum_of_mem_Icc`, `subsum_sharp` | `HubRemoval/SubSum.lean` | **Proved.** Standard axioms. Only finite sequences are covered; the paper also allows infinite ones. Neither monotonicity nor xᵢ ≥ 0 is needed. Checks in `Checks/SubSumCheck.lean` |
