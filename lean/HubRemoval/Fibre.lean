@@ -91,4 +91,39 @@ theorem roughPart_eq_of_edge {N K d m : ℕ} (hdm : d ∣ m) (hKd : K < d) (hdlt
     (hmN : m ≤ N) : roughPart (N / (K + 1)) d = roughPart (N / (K + 1)) m :=
   roughPart_eq_of_cofactor_le hdm (by omega) (cofactor_le_B hdm hKd hmN)
 
+/-!
+## Lemma 3.1(b)
+
+`R_B` is constant on every connected component of `G_{N,K}`.
+
+We model `G_{N,K}` as a simple graph on `ℕ`. Two distinct numbers are adjacent when both lie in
+`(K, N]` and one divides the other. Numbers outside `(K, N]` are isolated. So reachability
+between vertices of `(K, N]` is exactly reachability in `G_{N,K}`.
+-/
+
+/-- The divisor graph `G_{N,K}` on `{K+1, …, N}`, as a simple graph on `ℕ` in which vertices
+outside `(K, N]` are isolated. -/
+def divGraph (N K : ℕ) : SimpleGraph ℕ where
+  Adj a b := a ≠ b ∧ K < a ∧ a ≤ N ∧ K < b ∧ b ≤ N ∧ (a ∣ b ∨ b ∣ a)
+  symm := fun _ _ ⟨h, ha, ha', hb, hb', hd⟩ => ⟨h.symm, hb, hb', ha, ha', hd.symm⟩
+  loopless := fun _ h => h.1 rfl
+
+/-- Adjacent vertices of `G_{N,K}` have the same `B`-rough part, `B = ⌊N/(K+1)⌋`. -/
+theorem roughPart_eq_of_adj {N K a b : ℕ} (h : (divGraph N K).Adj a b) :
+    roughPart (N / (K + 1)) a = roughPart (N / (K + 1)) b := by
+  obtain ⟨hne, hKa, haN, hKb, hbN, hd | hd⟩ := h
+  · have hlt : a < b := lt_of_le_of_ne (Nat.le_of_dvd (by omega) hd) hne
+    exact roughPart_eq_of_edge hd hKa hlt hbN
+  · have hlt : b < a := lt_of_le_of_ne (Nat.le_of_dvd (by omega) hd) (Ne.symm hne)
+    exact (roughPart_eq_of_edge hd hKb hlt haN).symm
+
+/-- **Lemma 3.1(b).** The `B`-rough part is constant on connected components of `G_{N,K}`:
+reachable vertices have the same `B`-rough part, `B = ⌊N/(K+1)⌋`. -/
+theorem roughPart_eq_of_reachable {N K a b : ℕ} (h : (divGraph N K).Reachable a b) :
+    roughPart (N / (K + 1)) a = roughPart (N / (K + 1)) b := by
+  obtain ⟨w⟩ := h
+  induction w with
+  | nil => rfl
+  | cons hadj _ ih => exact (roughPart_eq_of_adj hadj).trans ih
+
 end HubRemoval
