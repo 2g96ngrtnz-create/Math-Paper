@@ -17,3 +17,4 @@ import HubRemoval.CoreD
 import HubRemoval.FiniteProb
 import HubRemoval.Orientation
 import HubRemoval.RobustProb
+import HubRemoval.AttachProb
