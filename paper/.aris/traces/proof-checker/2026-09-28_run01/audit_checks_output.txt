@@ -1,0 +1,7 @@
+Lemma 3.1 / Prop 3.2 checks done, failures so far: 0
+Lemma 4.2 checked on 1643 cases; failures so far: 0
+Lemma 4.5 (c) checked on 67921 integers m in U; failures so far: 0
+Lemma 2.4 checked; failures so far: 0
+Remark 5.1 identity checked; failures so far: 0
+Lemma A.1 random tests done; failures so far: 0
+TOTAL FAILURES: 0

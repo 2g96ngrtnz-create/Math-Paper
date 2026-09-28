@@ -18,10 +18,12 @@ Fix a flip probability ρ ∈ (0,1). Let Φ_K be the size of the largest SCC of 
 
    So **the conjecture of the brief holds for every θ ∈ [0,1)**, not only θ ≤ 1/3.
 4. **Structure (Cor. 1.5).** W.h.p. the giant SCC equals the smooth fibre F₁ up to o(N) + O(K) vertices, and E[second-largest SCC] ≤ K + o(N).
-5. **Degree attacks (Cor. 1.6).** The same limit holds for static and adaptive highest-degree attacks.
+5. **Degree attacks (Cor. 1.6).** For θ < 1, the same limit holds for static and adaptive highest-degree attacks.
 6. **Explicit loss (Remark 5.1).** For K ≤ √N − 1,
 
    1 − E[Φ_K]/N = log(log N / log B) + O(1/log log N).
+
+   This is an additive approximation. The main term dominates the error only when log K ≫ log N / log log N, so for bounded K the loss is not determined to within a factor 1 + o(1).
 
 ### The key new idea (Lemmas 4.1 and 4.2)
 
@@ -50,6 +52,7 @@ The argument needs no hub clique and no Poisson–Dirichlet input.
 | Lemma 2.3 (Ψ(x,y) ≤ √x + 2x(log y + c₀)/log x; ρ_Dick(u) ≤ 2/u) | PROVEN | standard |
 | Lemma 2.4 (variance of ω_z) | PROVEN | special case of Turán–Kubilius |
 | Lemma 2.6 (τ(n) ≪_ε n^ε) | PROVEN | standard |
+| Lemma 2.7 (limit of Ψ(N, N/(K+1))/N) | PROVEN | standard; added by the proof-checker audit (F6) |
 | Lemma 3.1 (fibres of the B-rough part) | PROVEN | essentially known (cf. McNew 2021) |
 | Prop. 3.2 (Φ_K ≤ Ψ(N,B); Φ_K ≤ max(\|F₁\|, K)) | PROVEN | deterministic |
 | Cor. 3.3 (limsup bound) | PROVEN | |
@@ -66,7 +69,7 @@ The argument needs no hub clique and no Poisson–Dirichlet input.
 | Cor. 1.4 (profile ρ_Dick(1/(1−θ)), θ ∈ [0,1]) | PROVEN | new; all θ, including θ ≥ 1/2 |
 | Cor. 1.5 (giant ≈ F₁; second SCC ≤ K + o(N)) | PROVEN | new |
 | Remark 5.2 (term K is necessary) | PROVEN | uses KP Cor. 2 and Bertrand |
-| Remark 5.3 (uniform in ρ ∈ [ρ₀, 1−ρ₀]; ρ_N ≫ 1/log log N) | PROVEN | |
+| Remark 5.3 (uniform in ρ ∈ [ρ₀, 1−ρ₀]; ρ_N ≫ 1/log log N) | PROVEN | s₀ chosen from λ₀ = 1 − ρ₀ (audit fix F4) |
 | Lemma 6.1, Lemma 6.2 (monotonicity, sandwich) | PROVEN | |
 | Cor. 1.6 (static/adaptive degree attacks) | PROVEN | degrees taken in the undirected G_N |
 | Remark 7.1 (edge share θ) | PROVEN | |
@@ -80,3 +83,22 @@ The argument needs no hub clique and no Poisson–Dirichlet input.
 - **No limit interchanges.** Prop. 4.6 is non-asymptotic, and all parameters depend only on N. So the bounds are uniform in K by construction.
 - **Citation hygiene.** Theorem numbers are given only for Hardy–Wright (Thm. 7, Chebyshev; Thm. 315, divisor bound). They should be checked against the edition used. The other classical inputs are cited by author and work, without theorem numbers.
 - **Sanity check (not a result).** At N = 10⁵, one random sample was run for each of K ∈ {1, 10, 46, 316, 1000, 2154}. In every sample the set S_M from Lemma 4.2 was connected in G_{M,K} and lay inside the giant SCC, and the observed Φ/N matched the background table of the brief.
+
+## Proof-checker audit (2026-09-28, run 01)
+
+The `proof-checker` workflow was run on the paper. Outputs are in `paper/`:
+- `PROOF_SKELETON.md`: obligation ledger, dependency DAG, symbol table, micro-claims;
+- `PROOF_AUDIT.md`: round log;
+- `PROOF_AUDIT.json`, `PROOF_CHECK_STATE.json`: machine-readable verdict and state;
+- `proof_audit_report.pdf`: before/after report;
+- `.aris/traces/proof-checker/2026-09-28_run01/`: scripts and outputs.
+
+- **Verdict: ERROR (`reviewer_error`).** The skill's cross-model reviewer (Codex MCP) was not available in this session, so both review rounds were self-reviews.
+- **Self-review result.** 0 FATAL, 0 CRITICAL, 4 MAJOR and 10 MINOR issues, all fixed. The self-review acceptance gate passes.
+- **The four MAJOR issues** were all overstatements or missing citations in prose and remarks:
+  - a ratio asymptotic stated where only an additive bound is proved;
+  - the abstract's degree-attack claim at θ = 1;
+  - the prime number theorem was uncited;
+  - uniformity in ρ was not derived.
+- **No proof of a theorem or corollary changed.** No counterexample was found. Two bounds (Lemma 3.1(c), Lemma 4.5(c)) were shown numerically to be attained.
+- Re-run the skill with a Codex reviewer connected to obtain a cross-model verdict.

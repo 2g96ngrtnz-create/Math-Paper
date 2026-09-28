@@ -1,0 +1,221 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,longtable,array}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+
+\newtcolorbox{before}{colback=red!6,colframe=red!60!black,title=BEFORE,fonttitle=\bfseries\small,left=4pt,right=4pt,top=2pt,bottom=2pt}
+\newtcolorbox{after}{colback=green!6,colframe=green!45!black,title=AFTER,fonttitle=\bfseries\small,left=4pt,right=4pt,top=2pt,bottom=2pt}
+\newtcolorbox{whywrong}{colback=orange!8,colframe=orange!80!black,title=WHY WRONG,fonttitle=\bfseries\small,left=4pt,right=4pt,top=2pt,bottom=2pt}
+\newtcolorbox{insight}{colback=blue!5,colframe=blue!60!black,title=KEY INSIGHT,fonttitle=\bfseries\small,left=4pt,right=4pt,top=2pt,bottom=2pt}
+\newtcolorbox{warn}{colback=yellow!12,colframe=yellow!50!black,title=WARNING,fonttitle=\bfseries\small,left=4pt,right=4pt,top=2pt,bottom=2pt}
+\newcommand{\dick}{\rho_{\mathrm{Dick}}}
+\newcommand{\E}{\mathbb{E}}
+
+\title{Proof audit report: \texttt{hub\_\allowbreak{}removal.tex}\\\large proof-checker run 01, 2026-09-28}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{warn}
+\textbf{Reviewer backend unavailable.} The skill requires an adversarial review by an external model through the Codex MCP server. That server is not connected in this session. Review rounds 1 and 2 were therefore self-reviews by the executing agent, using the mandatory checklist A--H and the two-axis severity system.
+\begin{itemize}\itemsep0pt
+\item Following the skill's verdict table, the machine-readable verdict is \textbf{ERROR} (\texttt{reviewer\_\allowbreak{}error}).
+\item The self-review acceptance gate is \textbf{PASS}.
+\item A cross-model verdict requires re-running the skill with a Codex reviewer connected.
+\end{itemize}
+\end{warn}
+
+\noindent\textbf{Input.} Commit \texttt{055505f}, sha256 \texttt{4d562ccc\ldots0090}.\\
+\textbf{Output.} The fixed file has sha256 \texttt{bc8fd63c\ldots62df}; it has 17 pages and compiles cleanly.\\
+\textbf{Companion files.} \texttt{PROOF\_\allowbreak{}SKELETON.md} (ledger), \texttt{PROOF\_\allowbreak{}AUDIT.md} (round log), \texttt{PROOF\_\allowbreak{}AUDIT.json}, and \url{.aris/traces/proof-checker/2026-09-28_run01/} (scripts and outputs).
+
+\section*{1. Overview}
+{\footnotesize
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\textwidth}>{\raggedright\arraybackslash}p{0.09\textwidth}>{\raggedright\arraybackslash}p{0.2\textwidth}>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}p{0.17\textwidth}>{\raggedright\arraybackslash}p{0.12\textwidth}@{}}
+\toprule
+ID & Severity & Status / Impact & Category & Fix strategy & Result\\
+\midrule
+\endhead
+R1-01 & MAJOR & UNJUSTIFIED / LOCAL & SCOPE\_\allowbreak{}OVERCLAIM & WEAKEN\_\allowbreak{}CLAIM & fixed (F1)\\
+R1-02 & MAJOR & UNJUSTIFIED / LOCAL & SCOPE\_\allowbreak{}OVERCLAIM & WEAKEN\_\allowbreak{}CLAIM & fixed (F2)\\
+R1-03 & MAJOR & UNJUSTIFIED / LOCAL & REFERENCE\_\allowbreak{}MISMATCH & ADD\_\allowbreak{}REFERENCE & fixed (F3)\\
+R1-04 & MAJOR & UNJUSTIFIED / LOCAL & QUANTIFIER\_\allowbreak{}ERROR & ADD\_\allowbreak{}DERIVATION & fixed (F4)\\
+R1-05 & MINOR & UNCLEAR / COSMETIC & CASE\_\allowbreak{}INCOMPLETE & ADD\_\allowbreak{}DERIVATION & fixed (F5)\\
+R1-06 & MINOR & UNCLEAR / COSMETIC & forward reference (acyclic) & ADD\_\allowbreak{}DERIVATION & fixed (F6)\\
+R1-07 & MINOR & UNCLEAR / COSMETIC & symbol reuse & notation & fixed (F7)\\
+R1-08 & MINOR & OVERSTATED / COSMETIC & SCOPE\_\allowbreak{}OVERCLAIM & WEAKEN\_\allowbreak{}CLAIM & fixed (F8)\\
+R1-09 & MINOR & UNCLEAR / COSMETIC & CONSTANT\_\allowbreak{}DEPENDENCE\_\allowbreak{}HIDDEN & notation & fixed (F9)\\
+R1-10 & MINOR & UNCLEAR / COSMETIC & UNJUSTIFIED\_\allowbreak{}ASSERTION (in a sketch) & WEAKEN\_\allowbreak{}CLAIM & fixed (F10)\\
+R1-11 & MINOR & UNCLEAR / COSMETIC & NORMALIZATION\_\allowbreak{}MISMATCH & notation & fixed (F11)\\
+R1-12 & MINOR & UNCLEAR / COSMETIC & STOCHASTIC\_\allowbreak{}MODE\_\allowbreak{}CONFUSION & notation & fixed (F12)\\
+R1-13 & MINOR & UNCLEAR / COSMETIC & CONSTANT\_\allowbreak{}DEPENDENCE\_\allowbreak{}HIDDEN & notation & fixed (F13)\\
+R2-01 & MINOR & UNCLEAR / COSMETIC & CASE\_\allowbreak{}INCOMPLETE (in F10's wording) & WEAKEN\_\allowbreak{}CLAIM & fixed in round 2\\
+\bottomrule
+\end{longtable}
+
+}
+\noindent Totals: 0 FATAL, 0 CRITICAL, 4 MAJOR, 10 MINOR; all 14 were fixed and none remains open. No issue affects the proof of Theorem~1.2, Theorem~1.3, or Corollaries~1.4--1.6.
+
+\section*{2. Logic chain of the main result}
+
+\begin{insight}
+The main dependency chain is unchanged by the audit.
+\begin{itemize}\itemsep0pt
+\item \emph{Upper bound:} Lemma~3.1 (fibres) $\Rightarrow$ Proposition~3.2, which gives $\Phi_K\le\Psi(N,B)$.
+\item \emph{Lower bound, first half:} Lemma~4.1 (robust edges) together with Lemma~4.2 (doubling) gives Corollary~4.3, the SCC $\Sigma\supset S_M$.
+\item \emph{Lower bound, second half:} Lemma~4.4 (attachment) together with Lemma~4.5 (arithmetic core) gives Proposition~4.6, whose error is non-asymptotic.
+\item \emph{Assembly:} these give Theorem~1.3, hence Theorem~1.2; then Corollary~1.4 follows via Lemma~2.7, which is the only new node.
+\end{itemize}
+Every edge of this chain was re-derived. Every application discharges its hypotheses (ledger, \texttt{PROOF\_\allowbreak{}SKELETON.md} \S2). The dependency graph is acyclic.
+\end{insight}
+
+\section*{3. The fixes}
+
+\subsection*{F1 (R1-01): the explicit form for $K\le\sqrt N-1$}
+\begin{before}
+``So the expected fraction of vertices lost \ldots\ is asymptotically $\log\frac{\log N}{\log(N/K)}$, which is about $\frac{\log K}{\log N}$ when $K=N^{o(1)}$.''
+\end{before}
+\begin{whywrong}
+Remark~5.1 proves only $\bigl|1-\E\Phi_K/N-\log\frac{\log N}{\log B}\bigr|\le 31/\log\log N$. The main term is of order $\log K/\log N$. So a ratio asymptotic follows only when $\log K\gg\log N/\log\log N$, and not for bounded $K$.
+
+\emph{Candidate test at $K=1$:} the main term is $\approx0.693/\log N$ and the proven lower bound on the loss is $\approx0.667/\log N$. Neither confirms nor refutes the ratio claim.
+\end{whywrong}
+\begin{after}
+``Up to an additive error $O_\rho(1/\log\log N)$ that is uniform in $0\le K\le\sqrt N-1$, the fraction lost equals $\log\frac{\log N}{\log B}$. This main term dominates the error only when $\log K\gg\log N/\log\log N$; for bounded $K$ we do not determine the loss to within a factor $1+o(1)$.''
+\end{after}
+
+\subsection*{F2 (R1-02): degree attacks at $\theta=1$}
+\begin{before}
+The abstract states the profile for $0\le\theta\le1$, then: ``The same limit holds if the $K$ vertices of largest degree are deleted instead.''
+\end{before}
+\begin{whywrong}
+Corollary~1.6 assumes $\theta<1$. Its sandwich lemma needs $N/K\gg\tau_N$, which fails for $K=N^{1-o(1)}$. The claim at $\theta=1$ is unproven, though plausible for static attacks.
+\end{whywrong}
+\begin{after}
+``For $0\le\theta<1$ the same limit holds if the $K$ vertices of largest degree are deleted instead.''
+\end{after}
+
+\subsection*{F3 (R1-03): prime-counting asymptotics}
+\begin{before}
+$\pi(N/2)-\pi(N/3)\sim N/(6\log N)$ and $\pi(N)-\pi(N/2)\sim N/(2\log N)$, with only Chebyshev's upper bound cited.
+\end{before}
+\begin{after}
+Both asymptotics are attributed to the prime number theorem (Hadamard 1896; de la Vall\'ee Poussin 1896), and both works are added to the bibliography. The accompanying inequalities $\ge\pi(N/2)-\pi(N/3)$ and $\ge\pi(N)-\pi(N/2)$ are exact and unchanged.
+\end{after}
+
+\subsection*{F4 (R1-04): uniformity in $\rho\in[\rho_0,1-\rho_0]$}
+\begin{before}
+``The proof depends on $\rho$ only through $q$ and $\lambda$. So Theorems~1.2 and~1.3 hold uniformly for $\rho\in[\rho_0,1-\rho_0]$, with $N_0=N_0(\rho_0)$.''
+\end{before}
+\begin{whywrong}
+In the proof of Theorem~1.3, $s_0$ is defined from $\lambda(\rho)$. The text never explains why a single $N_0$ works for the whole interval.
+\end{whywrong}
+\begin{after}
+Put $\lambda_0:=1-\rho_0\ge\lambda$ and $q_0:=\rho_0(1-\rho_0)\le q$, and define $s_0$ from $\lambda_0$.
+\begin{itemize}\itemsep0pt
+\item Then $\lambda^{s_0}\le\lambda_0^{s_0}\le1/\ell$.
+\item Conditions (R1)--(R4) and (R6) depend only on $N$ and $s_0(\lambda_0)$.
+\item The left side of (R5) is decreasing in $q$ once $N^{2\delta}\ge2$, so (R5) for $q_0$ implies it for every $q\ge q_0$.
+\end{itemize}
+Hence one $N_0(\rho_0)$ works for the whole interval.
+\end{after}
+
+\subsection*{F5 (R1-05): the case $t<0$ in Lemma~4.1}
+\begin{before}
+``The second inequality uses $M\le N$ and $1-q\le e^{-q}$.''
+\end{before}
+\begin{whywrong}
+The inequality $(1-q)^t\le e^{-qt}$ requires $t\ge0$, and it reverses for $t<0$, that is, when $N^{2\delta}<2$. The \emph{stated} bound still holds in that case, because its right-hand side exceeds~$1$.
+\end{whywrong}
+\begin{after}
+``\ldots\ and $(1-q)^t\le e^{-qt}$ for $t=N^{2\delta}-2\ge0$. If $N^{2\delta}<2$, the right-hand side exceeds $1$ and there is nothing to prove.''
+\end{after}
+
+\subsection*{F6 (R1-06): forward reference replaced by Lemma~2.7}
+\begin{before}
+Corollary~3.3 cited ``the computation of $\lim\Psi(N,B)/N$ in the proof of Corollary~1.4''. That proof opens by invoking Theorem~1.2.
+\end{before}
+\begin{after}
+\textbf{Lemma~2.7 (new).} If $\log(K+1)/\log N\to\theta\in[0,1]$, then $\Psi(N,N/(K+1))/N\to\dick(1/(1-\theta))$.
+
+The proof is the former computation, with one added clause: for $\theta<1$ we have $y>1$ for large $N$, so $u_N$ is defined. The lemma uses only Lemmas~2.2 and~2.3. Corollary~3.3 now follows from Proposition~3.2 and Lemma~2.7, and Corollary~1.4 from Theorem~1.2 and Lemma~2.7.
+\end{after}
+
+\subsection*{F7--F13 and R2-01: exposition}
+\begin{after}
+\begin{itemize}\itemsep1pt
+\item \textbf{F7:} $\epsilon\to\kappa\in(0,\frac12)$ in Corollary~1.6, with $1\le K$ made explicit and the note $N/(K(K+1))\ge\frac12N^{2\kappa}$ added.
+\item \textbf{F8:} ``far more damaging'' is restricted to moderate $\theta$, with the example $\theta=\frac12$: half the edges go, but only 30.7\% of the vertices remain in the giant.
+\item \textbf{F9:} Remark~5.2 is restated as $\liminf\E\Phi^{(2)}_K/K\ge\frac12$, with the dependence of its $o(1)$ terms declared. Theorem~1.2 with $K=0$ is noted as an internal replacement for [KP, Cor.~2].
+\item \textbf{F10 and R2-01:} the sketch in Remark~7.2 now says ``if the $p_i$ are distinct, $s(m)\ge3$''.
+\item \textbf{F11:} ``$K=N^{\theta+o(1)}$'' is glossed as $\log(K+1)/\log N\to\theta$ in the abstract and in the caption of Table~1.
+\item \textbf{F12:} ``w.h.p.\ up to $o(N)$'' is quantified: for every fixed $\varepsilon>0$, with probability $1-o(1)$, by Markov's inequality.
+\item \textbf{F13:} Theorem~1.3 is non-trivial only when $\log\log N>30$; this is now stated.
+\end{itemize}
+\end{after}
+
+\section*{4. Proof-obligation diff}
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.33\textwidth}>{\raggedright\arraybackslash}p{0.3\textwidth}>{\raggedright\arraybackslash}p{0.3\textwidth}@{}}
+\toprule
+Obligation & Before & After\\
+\midrule
+\endhead
+Uniform $N_0$ for $\rho\in[\rho_0,1-\rho_0]$ & asserted & derived (F4)\\
+PNT-based asymptotics in \S1.4 and (O1) & uncited & cited (F3)\\
+Ratio asymptotic for the fraction lost & claimed & withdrawn; the additive form is proved (F1)\\
+Degree attacks at $\theta=1$ & claimed in the abstract & withdrawn; now open (F2)\\
+$\lim\Psi(N,N/(K+1))/N$ & inside a later proof (forward reference) & standalone Lemma~2.7 (F6)\\
+Lemma~4.1 for $N^{2\delta}<2$ & implicit & explicit (F5)\\
+Every other ledger entry & discharged & discharged (unchanged)\\
+\bottomrule
+\end{longtable}
+
+\section*{5. Counterexample red team}
+No counterexample was found. The suite, whose scripts are in the trace directory, was run before the fixes and again after them, with identical results.
+\begin{itemize}\itemsep1pt
+\item \textbf{Exhaustive checks:}
+  \begin{itemize}\itemsep0pt
+  \item Lemma~3.1 and Proposition~3.2 for $N\le3000$ and the edge values of $K$;
+  \item Lemma~4.2 on 1,643 cases, plus 20 exact boundary cases with $M=4(K+1)$;
+  \item Lemma~4.5(c) on 67,921 integers, including the extremes $K=\lfloor N^{1-\eta}\rfloor$ and $\delta=\eta/8$;
+  \item the identity in Remark~5.1;
+  \item Lemma~A.1: 20,000 random cases and all 280 grid partitions at $\theta=\frac13$, in exact rational arithmetic.
+  \end{itemize}
+\item \textbf{Sharpness:}
+  \begin{itemize}\itemsep0pt
+  \item the bound $|V_n|\le K$ in Lemma~3.1(c) is attained;
+  \item $\min s(m)=s_0+1$ in Lemma~4.5(c) is attained;
+  \item beyond its hypothesis, the static sandwich of Lemma~6.2 first fails at $K=833$ ($N=10^5$), well past the $K\le187$ that the hypothesis allows.
+  \end{itemize}
+\item \textbf{Extreme parameters:} Lemma~2.4 holds at $z=2$ and at $z=N$.
+\item \textbf{Constants:} the grid requires $c_0\ge-0.71$, while the Mertens constant is at least $0.144$.
+\item \textbf{Regression trend for Lemma~2.7:} $\Psi(N,N^{1/u})/N-\dick(u)$ decreases steadily for $N=10^4,\dots,10^7$ at $u\in\{1.5,2,3\}$.
+\item \textbf{Not falsifiable numerically:} Theorem~1.3 is vacuous below $N\approx10^{4.6\cdot10^{12}}$ (recorded as R1-13).
+\end{itemize}
+
+\section*{6. Summary}
+\begin{itemize}\itemsep1pt
+\item \textbf{Now proven (unchanged by the audit):}
+  \begin{itemize}\itemsep0pt
+  \item Theorem~1.2 and Theorem~1.3, uniform in $K$;
+  \item Corollary~1.4, the profile $\dick(1/(1-\theta))$ for $\theta\in[0,1]$;
+  \item Corollary~1.5, the structure of the giant;
+  \item Corollary~1.6, degree attacks for $\theta<1$;
+  \item Remarks~5.1--5.3;
+  \item Lemma~2.7, newly isolated.
+  \end{itemize}
+\item \textbf{Assumed (cited):} Mertens' theorems, Chebyshev's bound, Dickman's asymptotic with Hildebrand's uniformity, the prime number theorem, Bertrand's postulate, and [KP, Cor.~2]. The last is replaceable by Theorem~1.2 with $K=0$.
+\item \textbf{Still a sketch:} Remark~7.2 (hub cliques lose for $\theta>\frac13$); it is not used anywhere.
+\item \textbf{Open:}
+  \begin{itemize}\itemsep0pt
+  \item (O1)--(O5);
+  \item degree attacks at $\theta=1$;
+  \item the ratio asymptotic for the fraction lost when $K$ is bounded.
+  \end{itemize}
+\end{itemize}
+
+\end{document}

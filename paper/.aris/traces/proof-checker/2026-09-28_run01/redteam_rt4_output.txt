@@ -1,0 +1,21 @@
+  N=  5000 K=   148 M=   596 delta=0.1249 Y=2.0 |S_M|=  2 S_M=[256, 512]... one component with 2^b=512: True
+  N=  5000 K=   149 M=   600 delta=0.1245 Y=2.0 |S_M|=  2 S_M=[256, 512]... one component with 2^b=512: True
+  N=  5000 K=   155 M=   624 delta=0.1222 Y=2.0 |S_M|=  2 S_M=[256, 512]... one component with 2^b=512: True
+  N=  5000 K=   296 M=  1188 delta=0.0844 Y=2.0 |S_M|=  2 S_M=[512, 1024]... one component with 2^b=1024: True
+  N=  5000 K=   312 M=  1252 delta=0.0813 Y=2.0 |S_M|=  2 S_M=[512, 1024]... one component with 2^b=1024: True
+  N=  5000 K=   624 M=  2500 delta=0.0407 Y=2.0 |S_M|=  2 S_M=[1024, 2048]... one component with 2^b=2048: True
+  N= 20000 K=   420 M=  1684 delta=0.1249 Y=2.0 |S_M|=  2 S_M=[512, 1024]... one component with 2^b=1024: True
+  N= 20000 K=   421 M=  1688 delta=0.1248 Y=2.0 |S_M|=  2 S_M=[512, 1024]... one component with 2^b=1024: True
+  N= 20000 K=   427 M=  1712 delta=0.1241 Y=2.0 |S_M|=  2 S_M=[512, 1024]... one component with 2^b=1024: True
+  N= 20000 K=   500 M=  2004 delta=0.1162 Y=2.0 |S_M|=  2 S_M=[512, 1024]... one component with 2^b=1024: True
+  N= 20000 K=   840 M=  3364 delta=0.0900 Y=2.0 |S_M|=  2 S_M=[1024, 2048]... one component with 2^b=2048: True
+  N= 20000 K=  1250 M=  5004 delta=0.0699 Y=2.0 |S_M|=  2 S_M=[2048, 4096]... one component with 2^b=4096: True
+  N= 20000 K=  2499 M= 10000 delta=0.0350 Y=2.0 |S_M|=  2 S_M=[4096, 8192]... one component with 2^b=8192: True
+  N=200000 K=  2364 M=  9460 delta=0.1250 Y=2.0 |S_M|=  2 S_M=[4096, 8192]... one component with 2^b=8192: True
+  N=200000 K=  2365 M=  9464 delta=0.1250 Y=2.0 |S_M|=  2 S_M=[4096, 8192]... one component with 2^b=8192: True
+  N=200000 K=  2371 M=  9488 delta=0.1249 Y=2.0 |S_M|=  2 S_M=[4096, 8192]... one component with 2^b=8192: True
+  N=200000 K=  4728 M= 18916 delta=0.0966 Y=2.0 |S_M|=  2 S_M=[8192, 16384]... one component with 2^b=16384: True
+  N=200000 K=  5000 M= 20004 delta=0.0943 Y=2.0 |S_M|=  2 S_M=[8192, 16384]... one component with 2^b=16384: True
+  N=200000 K= 12500 M= 50004 delta=0.0568 Y=2.0 |S_M|=  2 S_M=[16384, 32768]... one component with 2^b=32768: True
+  N=200000 K= 24999 M=100000 delta=0.0284 Y=2.0 |S_M|=  2 S_M=[32768, 65536]... one component with 2^b=65536: True
+RT-4: tested 20 boundary cases, failures 0

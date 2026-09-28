@@ -1,0 +1,33 @@
+== RT-1  Lemma 2.3: smallest c0 making Psi(x,y) <= sqrt x + 2x(log y + c0)/log x (x<=2e5) ==
+  max required c0 over grid = -0.7062;  max of sum_(p<=y) log p/(p-1) - log y = 0.1438  (Lemma 2.1(a) c0 must exceed this)
+  -> no counterexample: required c0 is below the Mertens constant bound
+== RT-2  Lemma 2.4 at extreme z (z=2, z=N) ==
+  N=   100 z=     2: sum (w-L)^2 =       25.0  <=  3NL =      150.0  OK
+  N=   100 z=   100: sum (w-L)^2 =       39.5  <=  3NL =      540.8  OK
+  N=  1000 z=     2: sum (w-L)^2 =      250.0  <=  3NL =     1500.0  OK
+  N=  1000 z=  1000: sum (w-L)^2 =      553.3  <=  3NL =     6594.2  OK
+  N= 20000 z=     2: sum (w-L)^2 =     5000.0  <=  3NL =    30000.0  OK
+  N= 20000 z= 20000: sum (w-L)^2 =    14944.5  <=  3NL =   153296.1  OK
+== RT-3  Lemma 3.1(c) tightness: max |V_n| over n>1 vs K ==
+  N=1000 K=3: max_(n>1)|V_n| = 3  (bound K=3)  OK
+  N=1000 K=10: max_(n>1)|V_n| = 10  (bound K=10)  OK
+  N=1000 K=31: max_(n>1)|V_n| = 27  (bound K=31)  OK
+  N=1000 K=100: max_(n>1)|V_n| = 34  (bound K=100)  OK
+  N=1000 K=316: max_(n>1)|V_n| = 9  (bound K=316)  OK
+  N=10000 K=3: max_(n>1)|V_n| = 3  (bound K=3)  OK
+  N=10000 K=10: max_(n>1)|V_n| = 10  (bound K=10)  OK
+  N=10000 K=31: max_(n>1)|V_n| = 31  (bound K=31)  OK
+  N=10000 K=100: max_(n>1)|V_n| = 99  (bound K=100)  OK
+  N=10000 K=316: max_(n>1)|V_n| = 165  (bound K=316)  OK
+== RT-4  Lemma 4.2 at the boundary M = 4(K+1) exactly ==
+  (delta<=1/8 forces M>=N^(3/4); for small K this boundary is only reachable when N is small)
+== RT-5  Lemma 4.5(c) tightness: minimum s(m) over U, K = floor(N^(1-eta)) extreme ==
+  N=20000 K=2 s0=1: checked 4813 m in U; min s(m) = 2 at m=6962 (lemma needs >= 2)  OK
+  N=200000 K=11 s0=1: checked 5385 m in U; min s(m) = 2 at m=59858 (lemma needs >= 2)  OK
+  N=200000 eta=0.8 delta=0.05 s0=2: hypotheses fail, skipped
+== RT-6  Lemma 6.2 beyond its hypothesis (informative, not a counterexample) ==
+  eps=1/2: hypothesis allows K<=187; static upper inclusion first fails at K = 833
+== RT-7  Lemma A.1 adversarial at theta = 1/3 (exact rational arithmetic) ==
+  tested 280 partitions of 1 into <=5 parts from the grid 1/24,...,23/24: 0 counterexamples
+== RT-8  Theorem 1.3 vacuity threshold ==
+  30/log log N < 1 requires log log N > 30, i.e. N > exp(exp(30)) ~ 10^(4.641e+12)

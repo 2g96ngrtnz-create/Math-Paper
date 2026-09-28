@@ -1,0 +1,138 @@
+{
+  "audit_skill": "proof-checker",
+  "verdict": "ERROR",
+  "reason_code": "reviewer_error",
+  "summary": "Cross-model reviewer (Codex MCP) unavailable in this session, so the skill's independent-review invariant was not met. Self-review with checklist A-H: 0 FATAL, 0 CRITICAL, 4 MAJOR and 10 MINOR issues, all fixed; none affects Theorems 1.2-1.3 or Corollaries 1.4-1.6. Self-review acceptance gate PASS.",
+  "audited_input_hashes": {
+    "hub_removal.tex": "sha256:bc8fd63c329299c9a284c98328dba31278f0e8eb4c851822a22286f6ebb762df"
+  },
+  "trace_path": ".aris/traces/proof-checker/2026-09-28_run01/",
+  "thread_id": null,
+  "reviewer_model": null,
+  "reviewer_reasoning": null,
+  "generated_at": "2026-09-28T04:11:12Z",
+  "details": {
+    "theorems_audited": 23,
+    "remarks_with_claims_audited": 6,
+    "reviewer_backend": "unavailable",
+    "self_review_verdict": "PASS",
+    "self_review_reason_code": "all_proofs_complete",
+    "input_commit": "055505f",
+    "input_hash_before_fixes": "sha256:4d562ccc4cb4f3c3ec830aecaae155ca88f1cbce73577c0b8702e1a930ae0090",
+    "counterexamples_found": 0,
+    "issues": [
+      {
+        "id": "R1-01",
+        "severity": "MAJOR",
+        "category": "SCOPE_OVERCLAIM",
+        "location": "hub_removal.tex:L106 (v055505f)",
+        "note": "Ratio asymptotic for the fraction lost claimed; only additive O(1/loglogN) proved (Remark 5.1). Fixed by WEAKEN_CLAIM (F1).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-02",
+        "severity": "MAJOR",
+        "category": "SCOPE_OVERCLAIM",
+        "location": "hub_removal.tex:L40 (v055505f), abstract",
+        "note": "Degree-attack limit claimed for theta=1; Cor 1.6 needs theta<1. Fixed by WEAKEN_CLAIM (F2).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-03",
+        "severity": "MAJOR",
+        "category": "REFERENCE_MISMATCH",
+        "location": "hub_removal.tex:L156, L636 (v055505f)",
+        "note": "Asymptotics pi(N/2)-pi(N/3) ~ N/(6 log N) etc. need the prime number theorem; only Chebyshev was cited. Fixed by ADD_REFERENCE (F3).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-04",
+        "severity": "MAJOR",
+        "category": "QUANTIFIER_ERROR",
+        "location": "hub_removal.tex:L556 (v055505f), Remark 5.3",
+        "note": "Uniform N_0 for rho in [rho_0,1-rho_0] asserted without choosing s_0 uniformly. Fixed by ADD_DERIVATION (F4).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-05",
+        "severity": "MINOR",
+        "category": "CASE_INCOMPLETE",
+        "location": "hub_removal.tex:L332 (v055505f), Lemma 4.1",
+        "note": "(1-q)^t <= e^{-qt} used without t>=0; stated bound trivially true otherwise. Fixed (F5).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-06",
+        "severity": "MINOR",
+        "category": "CIRCULAR_DEPENDENCY",
+        "location": "hub_removal.tex:L297 (v055505f), Cor 3.3",
+        "note": "Forward reference into proof of Cor 1.4 (verified acyclic). Extracted Lemma 2.7 lem:psi-limit (F6).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-07",
+        "severity": "MINOR",
+        "category": "NORMALIZATION_MISMATCH",
+        "location": "hub_removal.tex:L133, L612 (v055505f)",
+        "note": "Symbol epsilon reused (Cor 1.6 vs Lemma 6.2). Renamed kappa (F7).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-08",
+        "severity": "MINOR",
+        "category": "SCOPE_OVERCLAIM",
+        "location": "hub_removal.tex:L156 (v055505f)",
+        "note": "'Far more damaging than edge loss' false for small theta. Qualified (F8).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-09",
+        "severity": "MINOR",
+        "category": "CONSTANT_DEPENDENCE_HIDDEN",
+        "location": "hub_removal.tex:L541 (v055505f), Remark 5.2",
+        "note": "o(1) dependence undeclared. Restated as liminf with declared dependence (F9).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-10",
+        "severity": "MINOR",
+        "category": "UNJUSTIFIED_ASSERTION",
+        "location": "hub_removal.tex:L627 (v055505f), Remark 7.2 (SKETCH)",
+        "note": "Attachment via a single divisor. Reworded (F10).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-11",
+        "severity": "MINOR",
+        "category": "NORMALIZATION_MISMATCH",
+        "location": "hub_removal.tex:L40, L151 (v055505f)",
+        "note": "'K = N^{theta+o(1)}' undefined for K=0; glossed as log(K+1)/log N -> theta (F11).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-12",
+        "severity": "MINOR",
+        "category": "STOCHASTIC_MODE_CONFUSION",
+        "location": "hub_removal.tex:L125 (v055505f)",
+        "note": "'w.h.p. up to o(N)' unquantified. Quantified via Markov (F12).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R1-13",
+        "severity": "MINOR",
+        "category": "CONSTANT_DEPENDENCE_HIDDEN",
+        "location": "hub_removal.tex:L95-100 (v055505f), Theorem 1.3",
+        "note": "Bound non-trivial only for loglogN>30; now stated (F13).",
+        "resolution": "fixed"
+      },
+      {
+        "id": "R2-01",
+        "severity": "MINOR",
+        "category": "CASE_INCOMPLETE",
+        "location": "hub_removal.tex, Remark 7.2 (after F10)",
+        "note": "Degenerate case p_i=p_j in F10 wording; fixed in round 2.",
+        "resolution": "fixed"
+      }
+    ]
+  }
+}
