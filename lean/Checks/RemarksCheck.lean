@@ -5,6 +5,9 @@ import HubRemoval.RemarkRho
 import HubRemoval.RemarkSecond
 import HubRemoval.RemarkClique
 import HubRemoval.TuranKubilius
+import HubRemoval.RemarkHub
+import HubRemoval.RemarkSmallTheta
+import HubRemoval.SubSum
 open HubRemoval Finset Filter Topology
 
 /-! ### Remark 2.5: axioms -/
@@ -111,6 +114,17 @@ open HubRemoval Finset Filter Topology
 #print axioms slice_sum_ge
 #print axioms card_obst_ge
 #print axioms remark_7_2
+#print axioms card_common_multiples_ge
+#print axioms hub_mutual
+#print axioms prob_not_hub
+#print axioms tendsto_mul_exp_neg
+#print axioms remark_7_2_hubs
+#print axioms exists_divisor_of_subsum
+#print axioms remark_7_2_small
+
+/-! ### Lemma A.1, infinite form: axioms -/
+
+#print axioms subsum_infinite
 
 /-! ### Remark 7.1 on concrete instances -/
 
@@ -362,3 +376,27 @@ example {x : ℝ} (hx : 2 ≤ x) :
         tkA (fun n => ((n.primeFactors.card : ℕ) : ℂ)) ⌊x⌋₊‖ ^ 2 ≤
       130 * x * tkB2 (fun n => ((n.primeFactors.card : ℕ) : ℂ)) ⌊x⌋₊ :=
   turan_kubilius isAdditive_omega hx
+
+/-! ### Remark 7.2, the two asides -/
+
+/-- The hubs `(0, N^{1/4}]` of `𝒟_{1/2}(N)` are pairwise mutually reachable w.h.p. -/
+example : Tendsto (fun N : ℕ => prob (1 / 2) (fun ω : Edge N 0 → Bool =>
+    ∀ a ∈ Ioc 0 ⌊(N : ℝ) ^ (1 / 2 - 1 / 4 : ℝ)⌋₊, ∀ b ∈ Ioc 0 ⌊(N : ℝ) ^ (1 / 2 - 1 / 4 : ℝ)⌋₊,
+      MutuallyReachable (arc ω) a b)) atTop (𝓝 1) :=
+  remark_7_2_hubs (by norm_num) (by norm_num) (by norm_num) (fun _ => 0)
+
+/-- With `K = ⌊N^{1/4}⌋` (`θ = 1/4 < 1/3`), almost all of `F₁` has a divisor in `(K, √N]`. -/
+example : Tendsto (fun N : ℕ => (((smoothFibre N ⌊(N : ℝ) ^ (1 / 4 : ℝ)⌋₊).filter
+    fun m => ∀ d ∈ m.divisors, ¬ (⌊(N : ℝ) ^ (1 / 4 : ℝ)⌋₊ < d ∧ d * d ≤ N)).card : ℝ) / N)
+    atTop (𝓝 0) :=
+  remark_7_2_small (K := fun N => ⌊(N : ℝ) ^ (1 / 4 : ℝ)⌋₊) (by norm_num)
+    (tendsto_log_floor_rpow (by norm_num))
+
+/-! ### Lemma A.1, infinite form, on `x_n = 2^{−(n+1)}` with `θ = 1/3` -/
+
+example : ∃ S : Set ℕ, 1 / 3 ≤ ∑' i, S.indicator (fun n : ℕ => (1 : ℝ) / 2 / 2 ^ n) i ∧
+    ∑' i, S.indicator (fun n : ℕ => (1 : ℝ) / 2 / 2 ^ n) i ≤ 1 / 2 := by
+  refine subsum_infinite (hasSum_geometric_two' 1) (by norm_num) (by norm_num) fun n => ?_
+  have : (1 : ℝ) ≤ 2 ^ n := one_le_pow₀ (by norm_num)
+  rw [div_div, div_lt_iff₀ (by positivity)]
+  nlinarith

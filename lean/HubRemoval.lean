@@ -39,3 +39,5 @@ import HubRemoval.RemarkRho
 import HubRemoval.RemarkSecond
 import HubRemoval.RemarkClique
 import HubRemoval.TuranKubilius
+import HubRemoval.RemarkHub
+import HubRemoval.RemarkSmallTheta

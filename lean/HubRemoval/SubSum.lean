@@ -13,6 +13,12 @@ theorem below is therefore stated without the nonnegativity hypothesis, which ma
 
 The bound `1/3` is sharp. For `1/3 < θ`, the parts `(1/3, 1/3, 1/3)` have no sub-sum in
 `[θ, 1/2]`.
+
+**Lemma A.1 (infinite form).** Let `x₀, x₁, …` be real with `∑ xᵢ = 1` absolutely convergent, let
+`0 < θ ≤ 1/3`, and suppose every `xᵢ < 1 − θ`. Then `∑_{i ∈ S} xᵢ ∈ [θ, 1/2]` for some `S ⊆ ℕ` (`subsum_infinite`).
+Choose `n` with `x₀ + ⋯ + x_{n−1} > θ`; then the tail `r = ∑_{i ≥ n} xᵢ` is `< 1 − θ`. The finite
+form applied to `(x₀, …, x_{n−1}, r)` gives a set `I`, and `S` is `I` with `r` replaced by all
+indices `≥ n`.
 -/
 
 namespace HubRemoval
@@ -86,5 +92,91 @@ theorem subsum_sharp {θ : ℝ} (hθ : 1 / 3 < θ) (I : Finset (Fin 3)) :
   have hc : I.card ≤ 3 := by simpa using Finset.card_le_univ I
   rintro ⟨h1, h2⟩
   interval_cases hI : I.card <;> norm_num at h1 h2 <;> linarith
+
+/-- **Lemma A.1 (infinite form).** For real `xᵢ` with `∑ xᵢ = 1` (unconditionally, which for real
+series means absolutely), `0 < θ ≤ 1/3` and every `xᵢ < 1 − θ`, some sub-sum `∑_{i ∈ S} xᵢ`
+(`S ⊆ ℕ`, possibly infinite) lies in `[θ, 1/2]`. No sign condition is needed. -/
+theorem subsum_infinite {x : ℕ → ℝ} (hsum : HasSum x 1) {θ : ℝ}
+    (hθ0 : 0 < θ) (hθ : θ ≤ 1 / 3) (hmax : ∀ i, x i < 1 - θ) :
+    ∃ S : Set ℕ, θ ≤ ∑' i, S.indicator x i ∧ ∑' i, S.indicator x i ≤ 1 / 2 := by
+  classical
+  have hs := hsum.summable
+  -- A prefix with sum `> θ`.
+  obtain ⟨n, hn⟩ : ∃ n, θ < ∑ i ∈ range n, x i :=
+    ((hsum.tendsto_sum_nat).eventually (lt_mem_nhds (show θ < 1 by linarith))).exists
+  set r := ∑' i, x (i + n) with hr
+  have hsplit : ∑ i ∈ range n, x i + r = 1 := by
+    rw [hr, hs.sum_add_tsum_nat_add n, hsum.tsum_eq]
+  -- The finite family `(x₀, …, x_{n−1}, r)`.
+  set y : ℕ → ℝ := fun i => if i < n then x i else r with hy
+  have hyx : ∀ i, i < n → y i = x i := fun i hi => by simp only [hy, hi, ↓reduceIte]
+  have hyr : y n = r := by simp only [hy, lt_irrefl, ↓reduceIte]
+  have hysum : ∑ i : Fin (n + 1), y i = 1 := by
+    rw [Fin.sum_univ_castSucc, Fin.val_last, hyr]
+    have h1 : ∑ i : Fin n, y (Fin.castSucc i : Fin (n + 1)) = ∑ i ∈ range n, x i := by
+      rw [← Fin.sum_univ_eq_sum_range]
+      exact sum_congr rfl fun i _ => by rw [Fin.val_castSucc, hyx i i.2]
+    rw [h1, hsplit]
+  have hymax : ∀ i : Fin (n + 1), y i < 1 - θ := fun i => by
+    by_cases hi : (i : ℕ) < n
+    · rw [hyx i hi]; exact hmax i
+    · simp only [hy, hi, ↓reduceIte]; linarith
+  obtain ⟨I, h1, h2⟩ := subsum (fun i : Fin (n + 1) => y i) hysum hθ0 hθ hymax
+  -- Transport `I` to `ℕ`.
+  set J : Finset ℕ := I.image (fun i : Fin (n + 1) => (i : ℕ)) with hJ
+  have hJsum : ∑ i ∈ I, y i = ∑ j ∈ J, y j :=
+    (sum_image fun a _ b _ h => Fin.ext h).symm
+  have hJsub : ∀ j ∈ J, j ≤ n := fun j hj => by
+    obtain ⟨i, -, rfl⟩ := mem_image.mp hj
+    exact Nat.lt_succ_iff.mp i.2
+  have hJfilt : J.filter (fun j => ¬ j < n) = if n ∈ J then {n} else ∅ := by
+    ext j
+    simp only [mem_filter]
+    split_ifs with h
+    · simp only [mem_singleton]
+      constructor
+      · rintro ⟨hj, hjn⟩; have := hJsub j hj; omega
+      · intro hj; rw [hj]; exact ⟨h, lt_irrefl n⟩
+    · simp only [notMem_empty, iff_false, not_and, not_not]
+      intro hj
+      by_contra hjn
+      have := hJsub j hj
+      exact h (by rwa [show j = n by omega] at hj)
+  have hJy : ∑ j ∈ J, y j = ∑ j ∈ J.filter (· < n), x j + (if n ∈ J then r else 0) := by
+    rw [← sum_filter_add_sum_filter_not J (· < n), hJfilt]
+    congr 1
+    · exact sum_congr rfl fun j hj => hyx j (mem_filter.mp hj).2
+    · split_ifs <;> simp [hyr]
+  -- The set `S`.
+  set S : Set ℕ := {i | i < n ∧ i ∈ J} ∪ {i | n ≤ i ∧ n ∈ J} with hS
+  have hSx : ∑' i, S.indicator x i = ∑ j ∈ J.filter (· < n), x j + (if n ∈ J then r else 0) := by
+    rw [← (hs.indicator S).sum_add_tsum_nat_add n]
+    congr 1
+    · rw [← sum_filter_add_sum_filter_not (range n) (· ∈ J)]
+      have e1 : ∑ i ∈ (range n).filter (· ∈ J), S.indicator x i =
+          ∑ j ∈ J.filter (· < n), x j := by
+        have hset : (range n).filter (· ∈ J) = J.filter (· < n) := by
+          ext i; simp only [mem_filter, mem_range]; tauto
+        rw [hset]
+        refine sum_congr rfl fun i hi => ?_
+        obtain ⟨hiJ, hin⟩ := mem_filter.mp hi
+        exact Set.indicator_of_mem (show i ∈ S from Or.inl ⟨hin, hiJ⟩) x
+      have e2 : ∑ i ∈ (range n).filter (· ∉ J), S.indicator x i = 0 := by
+        refine sum_eq_zero fun i hi => ?_
+        obtain ⟨hin, hiJ⟩ := mem_filter.mp hi
+        refine Set.indicator_of_notMem ?_ x
+        rintro (⟨-, h⟩ | ⟨h, -⟩)
+        · exact hiJ h
+        · have := mem_range.mp hin; omega
+      rw [e1, e2, add_zero]
+    · split_ifs with h
+      · exact tsum_congr fun i => Set.indicator_of_mem (show i + n ∈ S from Or.inr ⟨by omega, h⟩) x
+      · refine (tsum_congr fun i => Set.indicator_of_notMem ?_ x).trans tsum_zero
+        rintro (⟨hi, -⟩ | ⟨-, hn⟩)
+        · omega
+        · exact h hn
+  refine ⟨S, ?_, ?_⟩
+  · rw [hSx, ← hJy, ← hJsum]; exact h1
+  · rw [hSx, ← hJy, ← hJsum]; exact h2
 
 end HubRemoval
