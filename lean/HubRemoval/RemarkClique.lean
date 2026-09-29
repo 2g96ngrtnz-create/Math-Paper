@@ -655,4 +655,174 @@ theorem remark_7_2 {θ : ℝ} (hθ1 : 1 / 3 < θ) (hθ2 : θ < 1 / 2) {K : ℕ �
     exact mem_filter.mpr ⟨h1, h2⟩
   exact hcN.trans (by exact_mod_cast card_le_card hsub)
 
+/-! ### The pointwise claims for any distinct primes in `(N^{1/4}, N^{1/3}]` -/
+
+/-- `(N^{1/4})⁴ = N`. -/
+theorem rpow_quarter_pow_four (N : ℕ) : ((N : ℝ) ^ (1 / 4 : ℝ)) ^ 4 = N := by
+  rw [← Real.rpow_natCast, ← Real.rpow_mul (Nat.cast_nonneg N)]
+  norm_num
+
+/-- A prime factor of `p₁p₂p₃s` is one of the `p_i` or divides `s`. -/
+theorem prime_dvd_four {p₁ p₂ p₃ s q : ℕ} (hq : q.Prime) (hp₁ : p₁.Prime) (hp₂ : p₂.Prime)
+    (hp₃ : p₃.Prime) (h : q ∣ p₁ * p₂ * p₃ * s) : q = p₁ ∨ q = p₂ ∨ q = p₃ ∨ q ∣ s := by
+  rcases (Nat.Prime.dvd_mul hq).mp h with h | h
+  · rcases (Nat.Prime.dvd_mul hq).mp h with h' | h'
+    · rcases (Nat.Prime.dvd_mul hq).mp h' with h'' | h''
+      · exact Or.inl ((Nat.prime_dvd_prime_iff_eq hq hp₁).mp h'')
+      · exact Or.inr (Or.inl ((Nat.prime_dvd_prime_iff_eq hq hp₂).mp h''))
+    · exact Or.inr (Or.inr (Or.inl ((Nat.prime_dvd_prime_iff_eq hq hp₃).mp h')))
+  · exact Or.inr (Or.inr (Or.inr h))
+
+/-- **Remark 7.2, the pointwise claims.** Let `p₁, p₂, p₃` be distinct primes in
+`(N^{1/4}, N^{1/3}]`, let `1 ≤ s ≤ N^γ` with `γ ≤ 1/3`, and let `m = p₁p₂p₃s ≤ N`. If
+`N^{1/3+γ} ≤ K < N^{3/4}` and `N^{1/3} ≤ B`, then `m ∈ F₁`, and `m` has no divisor in `(K, √N]`. -/
+theorem three_primes_mem {N K p₁ p₂ p₃ s : ℕ} {γ : ℝ} (hN : 1 ≤ N) (hγ : γ ≤ 1 / 3)
+    (hp₁ : p₁.Prime) (hp₂ : p₂.Prime) (hp₃ : p₃.Prime) (h12 : p₁ ≠ p₂)
+    (h13 : p₁ ≠ p₃) (h23 : p₂ ≠ p₃) (l1 : (N : ℝ) ^ (1 / 4 : ℝ) < p₁)
+    (l2 : (N : ℝ) ^ (1 / 4 : ℝ) < p₂) (l3 : (N : ℝ) ^ (1 / 4 : ℝ) < p₃)
+    (u1 : (p₁ : ℝ) ≤ (N : ℝ) ^ (1 / 3 : ℝ)) (u2 : (p₂ : ℝ) ≤ (N : ℝ) ^ (1 / 3 : ℝ))
+    (u3 : (p₃ : ℝ) ≤ (N : ℝ) ^ (1 / 3 : ℝ)) (hs1 : 1 ≤ s) (hsγ : (s : ℝ) ≤ (N : ℝ) ^ γ)
+    (hle : p₁ * p₂ * p₃ * s ≤ N) (hK1 : (N : ℝ) ^ (1 / 3 + γ) ≤ K)
+    (hK2 : (K : ℝ) < (N : ℝ) ^ (3 / 4 : ℝ))
+    (hB : (N : ℝ) ^ (1 / 3 : ℝ) ≤ ((N / (K + 1) : ℕ) : ℝ)) :
+    p₁ * p₂ * p₃ * s ∈ smoothFibre N K ∧
+      ∀ d ∈ (p₁ * p₂ * p₃ * s).divisors, ¬ (K < d ∧ d * d ≤ N) := by
+  have hN0 : (0 : ℝ) < N := by exact_mod_cast hN
+  have hX0 : 0 < (N : ℝ) ^ (1 / 4 : ℝ) := by positivity
+  have hs0 : (1 : ℝ) ≤ s := by exact_mod_cast hs1
+  have hγT : (N : ℝ) ^ γ ≤ (N : ℝ) ^ (1 / 3 : ℝ) := rpow_mono_N hN hγ
+  have hX3 : (N : ℝ) ^ (3 / 4 : ℝ) = (N : ℝ) ^ (1 / 4 : ℝ) * (N : ℝ) ^ (1 / 4 : ℝ) *
+      (N : ℝ) ^ (1 / 4 : ℝ) := by
+    rw [← Real.rpow_add hN0, ← Real.rpow_add hN0]; norm_num
+  have hP : (N : ℝ) ^ (3 / 4 : ℝ) < (p₁ : ℝ) * p₂ * p₃ := by
+    rw [hX3]
+    exact mul_lt_mul'' (mul_lt_mul'' l1 l2 hX0.le hX0.le) l3 (by positivity) hX0.le
+  refine ⟨?_, ?_⟩
+  · refine mem_filter.mpr ⟨mem_Ioc.mpr ⟨?_, hle⟩, ?_⟩
+    · have : (K : ℝ) < ((p₁ * p₂ * p₃ * s : ℕ) : ℝ) := by
+        push_cast
+        nlinarith
+      exact_mod_cast this
+    · refine Nat.mem_smoothNumbers'.mpr fun q hq hqm => ?_
+      have hqB : (q : ℝ) ≤ ((N / (K + 1) : ℕ) : ℝ) := by
+        rcases prime_dvd_four hq hp₁ hp₂ hp₃ hqm with h | h | h | h
+        · rw [h]; linarith
+        · rw [h]; linarith
+        · rw [h]; linarith
+        · have : (q : ℝ) ≤ s := by exact_mod_cast Nat.le_of_dvd (by omega) h
+          linarith
+      have : q ≤ N / (K + 1) := by exact_mod_cast hqB
+      omega
+  · intro d hd ⟨hKd, hdd⟩
+    have hdm := Nat.dvd_of_mem_divisors hd
+    have hd0 : 0 < d := Nat.pos_of_mem_divisors hd
+    have hddR : (d : ℝ) * d ≤ N := by exact_mod_cast hdd
+    have hKdR : (K : ℝ) < d := by exact_mod_cast hKd
+    have hX4 := rpow_quarter_pow_four N
+    have hpair : ∀ a b : ℕ, (N : ℝ) ^ (1 / 4 : ℝ) < a → (N : ℝ) ^ (1 / 4 : ℝ) < b →
+        a * b ∣ d → False := fun a b ha hb hab => by
+      have h1 : ((a * b : ℕ) : ℝ) ≤ d := by exact_mod_cast Nat.le_of_dvd hd0 hab
+      push_cast at h1
+      have h2 : (N : ℝ) ^ (1 / 4 : ℝ) * (N : ℝ) ^ (1 / 4 : ℝ) < d :=
+        lt_of_lt_of_le (mul_lt_mul'' ha hb hX0.le hX0.le) h1
+      nlinarith
+    have hNK : (N : ℝ) ^ (1 / 3 : ℝ) * (N : ℝ) ^ γ = (N : ℝ) ^ (1 / 3 + γ) := by
+      rw [← Real.rpow_add hN0]
+    have hsingle : ∀ a : ℕ, 0 < a → (a : ℝ) ≤ (N : ℝ) ^ (1 / 3 : ℝ) → d ∣ a * s → False :=
+        fun a hapos ha h => by
+      have ha0 : 0 < a * s := Nat.mul_pos hapos (by omega)
+      have h1 : (d : ℝ) ≤ ((a * s : ℕ) : ℝ) := by exact_mod_cast Nat.le_of_dvd ha0 h
+      push_cast at h1
+      have h2 : (a : ℝ) * s ≤ (N : ℝ) ^ (1 / 3 : ℝ) * (N : ℝ) ^ γ :=
+        mul_le_mul ha hsγ (by linarith) (by positivity)
+      linarith
+    rcases dvd_three_primes hp₁ hp₂ hp₃ h12 h13 h23 hdm with (h | h | h) | (h | h | h)
+    · exact hpair _ _ l1 l2 h
+    · exact hpair _ _ l1 l3 h
+    · exact hpair _ _ l2 l3 h
+    · exact hsingle _ hp₁.pos u1 h
+    · exact hsingle _ hp₂.pos u2 h
+    · exact hsingle _ hp₃.pos u3 h
+
+/-- **Remark 7.2, the way around it.** With `p_i`, `s` and `m = p₁p₂p₃s ≤ N` as in
+`three_primes_mem`, and real `M` with `N^{3/4} ≤ M`, `2(K + 1)N^{1/3} ≤ M` and `K < N^{1/2}`: the
+three divisors `m/p_i = p_jp_ks` are distinct and lie in `S_M` (so `s(m) ≥ 3`), and `m ∈ S_M` if
+`m ≤ M`. -/
+theorem three_primes_goodSet {N K p₁ p₂ p₃ s : ℕ} {γ M : ℝ} (hN : 1 ≤ N) (hγ : γ ≤ 1 / 3)
+    (hp₁ : p₁.Prime) (hp₂ : p₂.Prime) (hp₃ : p₃.Prime) (h12 : p₁ ≠ p₂) (h13 : p₁ ≠ p₃)
+    (h23 : p₂ ≠ p₃) (l1 : (N : ℝ) ^ (1 / 4 : ℝ) < p₁) (l2 : (N : ℝ) ^ (1 / 4 : ℝ) < p₂)
+    (l3 : (N : ℝ) ^ (1 / 4 : ℝ) < p₃) (u1 : (p₁ : ℝ) ≤ (N : ℝ) ^ (1 / 3 : ℝ))
+    (u2 : (p₂ : ℝ) ≤ (N : ℝ) ^ (1 / 3 : ℝ)) (u3 : (p₃ : ℝ) ≤ (N : ℝ) ^ (1 / 3 : ℝ))
+    (hs1 : 1 ≤ s) (hsγ : (s : ℝ) ≤ (N : ℝ) ^ γ) (hle : p₁ * p₂ * p₃ * s ≤ N)
+    (hM1 : (N : ℝ) ^ (3 / 4 : ℝ) ≤ M) (hM2 : 2 * ((K : ℝ) + 1) * (N : ℝ) ^ (1 / 3 : ℝ) ≤ M)
+    (hK : (K : ℝ) < (N : ℝ) ^ (1 / 2 : ℝ)) :
+    goodSet M K (p₂ * p₃ * s) ∧ goodSet M K (p₁ * p₃ * s) ∧ goodSet M K (p₁ * p₂ * s) ∧
+      p₂ * p₃ * s ≠ p₁ * p₃ * s ∧ p₂ * p₃ * s ≠ p₁ * p₂ * s ∧ p₁ * p₃ * s ≠ p₁ * p₂ * s ∧
+      (((p₁ * p₂ * p₃ * s : ℕ) : ℝ) ≤ M → goodSet M K (p₁ * p₂ * p₃ * s)) := by
+  have hN0 : (0 : ℝ) < N := by exact_mod_cast hN
+  have hX0 : 0 < (N : ℝ) ^ (1 / 4 : ℝ) := by positivity
+  have hs0 : (1 : ℝ) ≤ s := by exact_mod_cast hs1
+  have hleR : (p₁ : ℝ) * p₂ * p₃ * s ≤ N := by exact_mod_cast hle
+  have hγT : (N : ℝ) ^ γ ≤ (N : ℝ) ^ (1 / 3 : ℝ) := rpow_mono_N hN hγ
+  have hXX : (N : ℝ) ^ (1 / 4 : ℝ) * (N : ℝ) ^ (1 / 4 : ℝ) = (N : ℝ) ^ (1 / 2 : ℝ) := by
+    rw [← Real.rpow_add hN0]; norm_num
+  have hXY : (N : ℝ) ^ (1 / 4 : ℝ) * (N : ℝ) ^ (3 / 4 : ℝ) = N := by
+    rw [← Real.rpow_add hN0]; norm_num
+  have hhalf : (N : ℝ) ^ (1 / 2 : ℝ) ≤ (N : ℝ) ^ (3 / 4 : ℝ) := rpow_mono_N hN (by norm_num)
+  -- Prime factors of divisors of `m` are at most `N^{1/3}`.
+  have hprimes : ∀ x : ℕ, x ∣ p₁ * p₂ * p₃ * s →
+      ∀ q, q.Prime → q ∣ x → 2 * ((K : ℝ) + 1) * q ≤ M := fun x hx q hq hqx => by
+    have hqT : (q : ℝ) ≤ (N : ℝ) ^ (1 / 3 : ℝ) := by
+      rcases prime_dvd_four hq hp₁ hp₂ hp₃ (hqx.trans hx) with h | h | h | h
+      · rw [h]; exact u1
+      · rw [h]; exact u2
+      · rw [h]; exact u3
+      · have : (q : ℝ) ≤ s := by exact_mod_cast Nat.le_of_dvd (by omega) h
+        linarith
+    have hK0 : (0 : ℝ) ≤ 2 * ((K : ℝ) + 1) := by positivity
+    exact (mul_le_mul_of_nonneg_left hqT hK0).trans hM2
+  have hpair : ∀ a b c : ℕ, (N : ℝ) ^ (1 / 4 : ℝ) < a → (N : ℝ) ^ (1 / 4 : ℝ) < b →
+      (N : ℝ) ^ (1 / 4 : ℝ) < c → (c : ℝ) * (a * b * s) ≤ N →
+      a * b * s ∣ p₁ * p₂ * p₃ * s → goodSet M K (a * b * s) := fun a b c ha hb hc habc hdvd => by
+    refine ⟨?_, ?_, hprimes _ hdvd⟩
+    · have hab : (N : ℝ) ^ (1 / 2 : ℝ) < a * b := by
+        rw [← hXX]; exact mul_lt_mul'' ha hb hX0.le hX0.le
+      have : (K : ℝ) < ((a * b * s : ℕ) : ℝ) := by
+        push_cast
+        nlinarith
+      exact_mod_cast this
+    · push_cast
+      have ha0 : (0 : ℝ) < a := lt_trans hX0 ha
+      have hb0 : (0 : ℝ) < b := lt_trans hX0 hb
+      have h1 : (N : ℝ) ^ (1 / 4 : ℝ) * (a * b * s) < c * (a * b * s) :=
+        mul_lt_mul_of_pos_right hc (by positivity)
+      have h2 : (N : ℝ) ^ (1 / 4 : ℝ) * (a * b * s) < (N : ℝ) ^ (1 / 4 : ℝ) * M := by
+        nlinarith
+      exact (lt_of_mul_lt_mul_left h2 hX0.le).le
+  have d23 : p₂ * p₃ * s ∣ p₁ * p₂ * p₃ * s := ⟨p₁, by ring⟩
+  have d13 : p₁ * p₃ * s ∣ p₁ * p₂ * p₃ * s := ⟨p₂, by ring⟩
+  have d12 : p₁ * p₂ * s ∣ p₁ * p₂ * p₃ * s := ⟨p₃, by ring⟩
+  have hp₃s : 0 < p₃ * s := Nat.mul_pos hp₃.pos (by omega)
+  refine ⟨hpair p₂ p₃ p₁ l2 l3 l1 (by linarith) d23, hpair p₁ p₃ p₂ l1 l3 l2 (by linarith) d13,
+    hpair p₁ p₂ p₃ l1 l2 l3 (by linarith) d12, ?_, ?_, ?_, ?_⟩
+  · intro h
+    exact h12 (Nat.eq_of_mul_eq_mul_right hp₃s (by rw [← mul_assoc, ← mul_assoc]; exact h)).symm
+  · intro h
+    exact h13 (Nat.eq_of_mul_eq_mul_left hp₂.pos
+      (Nat.eq_of_mul_eq_mul_right (by omega : 0 < s) (by linarith [h]))).symm
+  · intro h
+    exact h23 (Nat.eq_of_mul_eq_mul_left hp₁.pos
+      (Nat.eq_of_mul_eq_mul_right (by omega : 0 < s) (by linarith [h]))).symm
+  · intro hmM
+    refine ⟨?_, hmM, hprimes _ dvd_rfl⟩
+    have hP : (N : ℝ) ^ (1 / 2 : ℝ) < (p₁ : ℝ) * p₂ * p₃ := by
+      rw [← hXX]
+      have h1 := mul_lt_mul'' l1 l2 hX0.le hX0.le
+      have h3 : (1 : ℝ) ≤ p₃ := by exact_mod_cast hp₃.one_lt.le
+      nlinarith
+    have : (K : ℝ) < ((p₁ * p₂ * p₃ * s : ℕ) : ℝ) := by
+      push_cast
+      nlinarith
+    exact_mod_cast this
+
 end HubRemoval

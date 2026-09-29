@@ -114,6 +114,8 @@ open HubRemoval Finset Filter Topology
 #print axioms slice_sum_ge
 #print axioms card_obst_ge
 #print axioms remark_7_2
+#print axioms three_primes_mem
+#print axioms three_primes_goodSet
 #print axioms card_common_multiples_ge
 #print axioms hub_mutual
 #print axioms prob_not_hub

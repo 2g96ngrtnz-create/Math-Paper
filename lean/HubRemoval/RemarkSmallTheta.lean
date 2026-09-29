@@ -83,7 +83,8 @@ theorem remark_7_2_small {θ : ℝ} (hθ : θ < 1 / 3) {K : ℕ → ℕ}
       fun m => ∀ d ∈ m.divisors, ¬ (K N < d ∧ d * d ≤ N)).card : ℝ) / N) atTop (𝓝 0) := by
   -- `θ ≥ 0`, as a limit of nonnegative numbers.
   have hθ0 : 0 ≤ θ := by
-    refine ge_of_tendsto hK (Eventually.of_forall fun N => div_nonneg ?_ (Real.log_natCast_nonneg N))
+    refine ge_of_tendsto hK (Eventually.of_forall fun N =>
+      div_nonneg ?_ (Real.log_natCast_nonneg N))
     exact Real.log_nonneg (by linarith [Nat.cast_nonneg (α := ℝ) (K N)])
   rw [tendsto_order]
   refine ⟨fun c hc => Eventually.of_forall fun N => lt_of_lt_of_le hc (by positivity), ?_⟩

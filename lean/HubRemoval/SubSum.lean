@@ -15,7 +15,8 @@ The bound `1/3` is sharp. For `1/3 < θ`, the parts `(1/3, 1/3, 1/3)` have no su
 `[θ, 1/2]`.
 
 **Lemma A.1 (infinite form).** Let `x₀, x₁, …` be real with `∑ xᵢ = 1` absolutely convergent, let
-`0 < θ ≤ 1/3`, and suppose every `xᵢ < 1 − θ`. Then `∑_{i ∈ S} xᵢ ∈ [θ, 1/2]` for some `S ⊆ ℕ` (`subsum_infinite`).
+`0 < θ ≤ 1/3`, and suppose every `xᵢ < 1 − θ`. Then `∑_{i ∈ S} xᵢ ∈ [θ, 1/2]` for some `S ⊆ ℕ`
+(`subsum_infinite`).
 Choose `n` with `x₀ + ⋯ + x_{n−1} > θ`; then the tail `r = ∑_{i ≥ n} xᵢ` is `< 1 − θ`. The finite
 form applied to `(x₀, …, x_{n−1}, r)` gives a set `I`, and `S` is `I` with `r` replaced by all
 indices `≥ n`.
