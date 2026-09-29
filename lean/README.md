@@ -2,6 +2,8 @@
 
 The lemmas are formalised one at a time. Each is compiled and checked before it is marked proved.
 
+The paper states every result in the form proved here, gives each one's Lean names, and follows the formal proofs; its Appendix C transcribes the Lean proofs of Lemmas 2.1 and 2.2.
+
 ## Setup
 
 - **Versions:** Lean `v4.34.1` (`lean-toolchain`) and Mathlib `v4.34.1` (`lakefile.toml`). The exact dependency revisions are in `lake-manifest.json`.
