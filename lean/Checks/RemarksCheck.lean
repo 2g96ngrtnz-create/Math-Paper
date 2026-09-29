@@ -2,6 +2,7 @@ import HubRemoval.RemarkEdges
 import HubRemoval.RemarkForms
 import HubRemoval.RemarkSmallK
 import HubRemoval.RemarkRho
+import HubRemoval.RemarkSecond
 open HubRemoval Finset Filter Topology
 
 /-! ### Remarks 7.1 and 7.3: axioms -/
@@ -33,6 +34,19 @@ open HubRemoval Finset Filter Topology
 #print axioms N_sub_psi_eq
 #print axioms smallK_psi
 #print axioms remark_5_1
+
+/-! ### Remark 5.2: axioms -/
+
+#print axioms mul_mem_edges
+#print axioms edgeMul_injective
+#print axioms arc_edgeMul
+#print axioms reach_edgeMul
+#print axioms secondSCC_ge
+#print axioms expect_secondSCC_ge
+#print axioms sqrt_le_B
+#print axioms prob_PhiK_le_K
+#print axioms second_ge_fixed
+#print axioms remark_5_2
 
 /-! ### Remark 5.3: axioms -/
 
@@ -175,3 +189,35 @@ example : Tendsto (fun N : ℕ => ⨆ K : Fin N, gap (rhoSlow N) N K / N) atTop 
   rcases rhoSlow_min_mul N (by linarith) with h | h
   · exact h
   · linarith
+
+/-! ### Remark 5.2 at `ρ = 1/2`, `K = ⌊⌊√N⌋/2⌋` -/
+
+/-- A rule choosing a largest SCC whenever `k < N`. -/
+noncomputable def starSel (N k : ℕ) : (Edge N k → Bool) → Finset ℕ :=
+  if h : k < N then Classical.choose (exists_star h) else fun _ => ∅
+
+theorem starSel_spec {N k : ℕ} (h : k < N) (ω : Edge N k → Bool) :
+    IsSCC ω (starSel N k ω) ∧ (starSel N k ω).card = PhiK N k ω := by
+  unfold starSel
+  simp only [h, ↓reduceDIte]
+  exact Classical.choose_spec (exists_star h) ω
+
+theorem sqrt_half_tendsto : Tendsto (fun N : ℕ => Nat.sqrt N / 2) atTop atTop := by
+  refine tendsto_atTop.mpr fun b => eventually_atTop.mpr ⟨(2 * b) * (2 * b), fun N hN => ?_⟩
+  have := Nat.le_sqrt.mpr hN
+  omega
+
+theorem sqrt_half_le (N : ℕ) : ((Nat.sqrt N / 2 : ℕ) : ℝ) ≤ Real.sqrt N / 2 := by
+  have h1 : ((Nat.sqrt N / 2 : ℕ) : ℝ) ≤ (Nat.sqrt N : ℝ) / 2 := by
+    have := Nat.cast_div_le (α := ℝ) (m := Nat.sqrt N) (n := 2)
+    simpa using this
+  have h2 : (Nat.sqrt N : ℝ) ≤ Real.sqrt N := Real.nat_sqrt_le_real_sqrt
+  linarith
+
+/-- With `K = ⌊⌊√N⌋/2⌋`, the second largest SCC has mean at least `(1/2 − ε)K` for large `N`. -/
+example {ε : ℝ} (hε : 0 < ε) : ∀ᶠ N in atTop, (1 / 2 - ε) * ((Nat.sqrt N / 2 : ℕ) : ℝ) ≤
+    expectP (1 / 2) (fun ω : Edge N (Nat.sqrt N / 2) → Bool =>
+      (secondSCC ω (starSel N (Nat.sqrt N / 2) ω) : ℝ)) :=
+  remark_5_2 (K := fun N => Nat.sqrt N / 2) (by norm_num) (by norm_num) sqrt_half_tendsto
+    (Eventually.of_forall sqrt_half_le) (fun N => starSel N (Nat.sqrt N / 2))
+    (fun _ h ω => starSel_spec h ω) hε
