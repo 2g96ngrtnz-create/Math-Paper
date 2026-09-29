@@ -10,7 +10,7 @@ For `m ∈ V_{N,K}` with `m > M`, let `D(m) = {d ∈ S_M : d ∣ m}` (`lowerDivi
 
 **Lemma 4.4.** `P(A_m) ≥ 1 − ρ^s − (1 − ρ)^s ≥ 1 − 2λ^s`, where `λ = max(ρ, 1 − ρ)`.
 
-The paper computes this with equality for `s ≥ 1`. The inequality below holds for every `s`.
+For `s ≥ 1` this is an equality (`prob_attachEv_eq`); the inequality holds for every `s`.
 Every `d ∈ D(m)` has `d ≤ M < m`, so `{d, m}` is an edge `(d, m)` of `G_{N,K}`. It points
 `d → m` when reversed and `m → d` otherwise. If `A_m` fails, then all these edges are reversed or
 none is. Each of these is a cylinder on the `s` edges, with probability `ρ^s` or `(1 − ρ)^s`.
@@ -97,6 +97,56 @@ theorem prob_attachEv {ρ : ℝ} (hρ0 : 0 ≤ ρ) (hρ1 : ρ ≤ 1) {M : ℝ} {
   have h3 := prob_not ρ (attachEv (N := N) (K := K) M m)
   simp only [pb] at h2
   simp only [Bool.false_eq_true, ↓reduceIte] at h2
+  linarith
+
+open Classical in
+/-- The probability of the union of two disjoint events is the sum of their probabilities. -/
+theorem prob_or_of_disjoint {ι : Type*} [Fintype ι] [DecidableEq ι] (ρ : ℝ)
+    {A B : (ι → Bool) → Prop} (h : ∀ ω, ¬ (A ω ∧ B ω)) :
+    prob ρ (fun ω => A ω ∨ B ω) = prob ρ A + prob ρ B := by
+  unfold prob
+  rw [← expectP_add]
+  congr 1
+  funext ω
+  by_cases hA : A ω <;> by_cases hB : B ω
+  · exact absurd ⟨hA, hB⟩ (h ω)
+  all_goals simp [hA, hB]
+
+/-- **Lemma 4.4, with equality.** If `s(m) ≥ 1`, then `P(A_m) = 1 − ρ^s − (1 − ρ)^s`. -/
+theorem prob_attachEv_eq (ρ : ℝ) {M : ℝ} {m : ℕ} (hmN : m ≤ N) (hMm : M < m)
+    (hs : 1 ≤ (lowerDivisors M K m).card) :
+    prob ρ (attachEv (N := N) (K := K) M m) =
+      1 - ρ ^ (lowerDivisors M K m).card - (1 - ρ) ^ (lowerDivisors M K m).card := by
+  have hiff : ∀ ω : Edge N K → Bool, ¬ attachEv M m ω ↔
+      ((∀ d ∈ lowerDivisors M K m, bit ω d m = true) ∨
+        (∀ d ∈ lowerDivisors M K m, bit ω d m = false)) := by
+    intro ω
+    constructor
+    · intro h
+      by_contra hc
+      push Not at hc
+      obtain ⟨⟨d, hd, hdt⟩, ⟨d', hd', hd'f⟩⟩ := hc
+      apply h
+      have e := edge_of_lowerDivisor hmN hMm hd
+      have e' := edge_of_lowerDivisor hmN hMm hd'
+      refine ⟨⟨d, hd, (arc_of_edge e).2.mpr ?_⟩, ⟨d', hd', (arc_of_edge e').1.mpr ?_⟩⟩
+      · simpa using hdt
+      · simpa using hd'f
+    · rintro (h | h) ⟨⟨d, hd, hmd⟩, ⟨d', hd', hdm⟩⟩
+      · have := (arc_of_edge (edge_of_lowerDivisor hmN hMm hd)).2.mp hmd
+        simp [h d hd] at this
+      · have := (arc_of_edge (edge_of_lowerDivisor hmN hMm hd')).1.mp hdm
+        simp [h d' hd'] at this
+  have hdisj : ∀ ω : Edge N K → Bool, ¬ ((∀ d ∈ lowerDivisors M K m, bit ω d m = true) ∧
+      (∀ d ∈ lowerDivisors M K m, bit ω d m = false)) := by
+    rintro ω ⟨h1, h2⟩
+    obtain ⟨d, hd⟩ := Finset.card_pos.mp hs
+    have := (h1 d hd).symm.trans (h2 d hd)
+    simp at this
+  have h1 := prob_not ρ (attachEv (N := N) (K := K) M m)
+  rw [prob_congr hiff, prob_or_of_disjoint ρ hdisj, prob_all_bit ρ true hmN hMm,
+    prob_all_bit ρ false hmN hMm] at h1
+  simp only [pb, Bool.false_eq_true, ↓reduceIte] at h1
   linarith
 
 /-- **Lemma 4.4, the bound.** `P(A_m) ≥ 1 − 2λ^s` with `λ = max(ρ, 1 − ρ)`. -/

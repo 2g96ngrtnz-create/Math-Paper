@@ -11,7 +11,7 @@ import HubRemoval.Buchstab
 identity from `B` to `N` gives `N − Ψ(N, B) = ∑_{B<p≤N} ⌊N/p⌋`, which differs from
 `N ∑_{B<p≤N} 1/p` by at most `π(N) ≤ 5N/log N` (Lemma 2.1(d)). Lemma 2.1(b) and `log B ≥ ¼ log N`
 give `|1 − Ψ(N, B)/N − log(log N/log B)| ≤ 18/log B + 5/log N ≤ 77/log N ≤ 1/log log N` for large
-`N` (`smallK_psi`). Theorem 1.2 adds at most `30/log log N`.
+`N` (`smallK_psi`). Theorem 1.3 adds at most `30/log log N`.
 -/
 
 namespace HubRemoval

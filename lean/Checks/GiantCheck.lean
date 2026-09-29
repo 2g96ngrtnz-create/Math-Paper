@@ -2,7 +2,7 @@ import HubRemoval.Giant
 open HubRemoval Finset Filter Topology
 open scoped symmDiff
 
-/-! ### Eq. (4.2) and Corollary 1.4: axioms -/
+/-! ### Eq. (3) and Corollary 1.5: axioms -/
 
 #print axioms rate_cases
 #print axioms gap_le_of_good
@@ -26,8 +26,9 @@ open scoped symmDiff
 #print axioms expect_abs_eq_gap
 #print axioms cor_structure
 #print axioms cor_structure_prob
+#print axioms cor_structure_whp
 
-/-! ### Eq. (4.2) at the parameters of `Checks/CoreParamsCheck.lean`
+/-! ### Eq. (3) at the parameters of `Checks/CoreParamsCheck.lean`
 
 `N = 2¹⁶`, `K = 10`, `s₀ = 1`, `η = 1/2`, `δ = 1/16`, `ρ = 1/2`. -/
 
@@ -70,7 +71,7 @@ example : ∃ star : (Edge 10 3 → Bool) → Finset ℕ,
     ∀ ω, IsSCC ω (star ω) ∧ (star ω).card = PhiK 10 3 ω :=
   exists_star (by norm_num)
 
-/-! ### Corollary 1.4, applied (`ρ = 1/2`) -/
+/-! ### Corollary 1.5, applied (`ρ = 1/2`) -/
 
 /-- (a)–(c) for every rule. -/
 example : ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ K < N, ∀ star : (Edge N K → Bool) → Finset ℕ,
@@ -97,6 +98,20 @@ example : ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ K < N, ∃ star : (Edge N K → Bo
 example : Tendsto (fun N : ℕ => ⨆ K : Fin N, prob (1 / 2) (fun ω : Edge N K → Bool =>
     (1 / 100 : ℝ) ≤ |(PhiK N K ω : ℝ) / N - (psi N (N / (K + 1)) : ℝ) / N|)) atTop (𝓝 0) :=
   cor_structure_prob (by norm_num) (by norm_num) (by norm_num)
+
+/-- `K = o(N)`, here `K = 0`, with a concrete rule: w.h.p. the giant is `F₁` up to `N/100`
+vertices, and every other SCC has fewer than `N/100` vertices. -/
+example : ∃ star : ∀ N, (Edge N 0 → Bool) → Finset ℕ,
+    Tendsto (fun N : ℕ => prob (1 / 2) (fun ω : Edge N 0 → Bool =>
+      (1 / 100 : ℝ) * N ≤ ((smoothFibre N 0 ∆ star N ω).card : ℝ))) atTop (𝓝 0) ∧
+    Tendsto (fun N : ℕ => prob (1 / 2) (fun ω : Edge N 0 → Bool =>
+      (1 / 100 : ℝ) * N ≤ (secondSCC ω (star N ω) : ℝ))) atTop (𝓝 0) := by
+  classical
+  refine ⟨fun N => if h : 0 < N then (exists_star h).choose else fun _ => ∅, ?_⟩
+  exact cor_structure_whp (K := fun _ => 0) (by norm_num) (by norm_num)
+    (by simp) _
+    (fun N hN ω => by simp only [hN, ↓reduceDIte]; exact (exists_star hN).choose_spec ω)
+    (by norm_num)
 
 /-- Markov's inequality on two fair coins: `P(both heads) ≤ E[#heads]/2`. -/
 example : prob (1 / 2) (fun ω : Fin 2 → Bool =>

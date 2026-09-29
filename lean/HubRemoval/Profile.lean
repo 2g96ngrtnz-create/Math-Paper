@@ -2,16 +2,16 @@ import HubRemoval.Rate
 import HubRemoval.PsiLimit
 
 /-!
-# The limit profile (paper, Corollary 1.3; also Corollary 3.3)
+# The limit profile (paper, Corollary 1.4; also Corollary 3.3)
 
-**Corollary 1.3.** Fix `ρ ∈ (0, 1)`, and let `K = K(N) ∈ [0, N)` satisfy
+**Corollary 1.4.** Fix `ρ ∈ (0, 1)`, and let `K = K(N) ∈ [0, N)` satisfy
 `log(K + 1)/log N → θ`. Then `E[Φ_K]/N → ρ(1/(1 − θ))`, with `ρ(∞) = 0` (`cor_profile`).
 The profile `θ ↦ ρ(1/(1 − θ))` (`dickLim`) is continuous and strictly decreasing on `[0, 1]`
 (`dickLim_continuous`, `dickLim_strictAntiOn`). It equals `1 − log(1/(1 − θ))` for
 `0 ≤ θ ≤ 1/2` (`dickLim_of_le_half`).
 
 *Proof.* `E[Φ_K]/N = Ψ(N, N/(K + 1))/N − gap/N`. The first term tends to `ρ(1/(1 − θ))` by
-Lemma 2.7. By Theorem 1.2, `0 ≤ gap/N ≤ 30/log log N` for large `N`. Continuity at `θ = 1`
+Lemma 2.7. By Theorem 1.3, `0 ≤ gap/N ≤ 30/log log N` for large `N`. Continuity at `θ = 1`
 comes from `0 ≤ ρ(1/(1 − θ)) ≤ 2(1 − θ)` (Lemma 2.3, `dickman_le_two_div`).
 
 **Corollary 3.3.** For any `ρ ∈ [0, 1]`, `limsup E[Φ_K]/N ≤ ρ(1/(1 − θ))`
@@ -108,7 +108,7 @@ theorem dickLim_of_le_half {θ : ℝ} (h0 : 0 ≤ θ) (h1 : θ ≤ 1 / 2) :
 
 /-! ### Corollaries 1.3 and 3.3 -/
 
-/-- **Corollary 1.3 (Limit profile).** For `ρ ∈ (0, 1)`, if `K(N) < N` eventually and
+/-- **Corollary 1.4 (Limit profile).** For `ρ ∈ (0, 1)`, if `K(N) < N` eventually and
 `log(K + 1)/log N → θ`, then `E[Φ_K]/N → ρ(1/(1 − θ))`, with `ρ(∞) = 0`. -/
 theorem cor_profile {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {K : ℕ → ℕ}
     (hK : ∀ᶠ N in atTop, K N < N) {θ : ℝ}

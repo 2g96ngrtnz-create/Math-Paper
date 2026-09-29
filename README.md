@@ -10,5 +10,6 @@ Here Ψ(x, y) counts the y-smooth integers up to x. For K = N^{θ+o(1)} the limi
 
 - `paper/hub_removal.tex`, `paper/hub_removal.pdf`: paper draft with complete proofs.
 - `STATUS.md`: report by target (T1–T5) and a status table for every claim.
+- `lean/`: Lean 4 + Mathlib formalisation of every numbered statement of the paper (no `sorry`, standard axioms only); `lean/README.md` maps each statement to its Lean names. Check it with `cd lean && lake build HubRemoval`.
 
 Build the paper with `cd paper && pdflatex hub_removal.tex && pdflatex hub_removal.tex`.

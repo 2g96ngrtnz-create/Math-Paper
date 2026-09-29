@@ -1,7 +1,9 @@
 # Kim–Phillips Question 20: status report
 
-Paper draft: [`paper/hub_removal.tex`](paper/hub_removal.tex) (compiled: [`paper/hub_removal.pdf`](paper/hub_removal.pdf), 16 pages).
+Paper draft: [`paper/hub_removal.tex`](paper/hub_removal.tex) (compiled: [`paper/hub_removal.pdf`](paper/hub_removal.pdf), 24 pages).
 Numbering below refers to the compiled PDF.
+
+Every numbered statement of the paper, including the remarks and the appendices, is formalised in Lean 4 with Mathlib, with no `sorry` and only the standard axioms. See [`lean/README.md`](lean/README.md) for the statement-by-statement table; the paper's proofs follow the formal ones.
 
 ## Headline result (PROVEN, new)
 
@@ -17,7 +19,7 @@ Fix a flip probability ρ ∈ (0,1). Let Φ_K be the size of the largest SCC of 
    E[Φ_K]/N → ρ_Dick(1/(1−θ)), with ρ_Dick(∞) = 0.
 
    So **the conjecture of the brief holds for every θ ∈ [0,1)**, not only θ ≤ 1/3.
-4. **Structure (Cor. 1.5).** W.h.p. the giant SCC equals the smooth fibre F₁ up to o(N) + O(K) vertices, and E[second-largest SCC] ≤ K + o(N).
+4. **Structure (Cor. 1.5).** E|F₁ △ giant SCC| ≤ 2K + o(N), and E[second-largest SCC] ≤ K + o(N). If K = o(N), then w.h.p. the giant differs from F₁ in o(N) vertices and every other SCC has o(N) vertices.
 5. **Degree attacks (Cor. 1.6).** For θ < 1, the same limit holds for static and adaptive highest-degree attacks.
 6. **Explicit loss (Remark 5.1).** For K ≤ √N − 1,
 
@@ -37,21 +39,22 @@ The argument needs no hub clique and no Poisson–Dirichlet input.
 
 | Target | Outcome | Where |
 |---|---|---|
-| **T1** F1–F4, F7 rigorous; Turán–Kubilius and Dickman stated precisely | **Done.** F1–F2: Lemma 3.1, Prop. 3.2 (we prove the sharper Φ_K ≤ Ψ(N,B)). F3: Cor. 3.3. F4: Remark 3.4. F5: Cor. 1.6 and Lemma 6.2. F6: Remark 7.1. F7 is the case θ = 0 of Cor. 1.4. Turán–Kubilius: Remark 2.5, with the special case proved (Lemma 2.4). Dickman: Lemma 2.2. | §§2–3, 5, 6 |
+| **T1** F1–F4, F7 rigorous; Turán–Kubilius and Dickman stated precisely | **Done.** F1–F2: Lemma 3.1, Prop. 3.2 (we prove the sharper Φ_K ≤ Ψ(N,B)). F3: Cor. 3.3. F4: Remark 3.4. F5: Cor. 1.6 and Lemma 6.2. F6: Remark 7.1. F7 is the case θ = 0 of Cor. 1.4. Turán–Kubilius: Lemma 2.4 (the special case used) and Remark 2.5 (the general inequality, with C = 130). Dickman: Lemma 2.2. | §§2–3, 5, 6 |
 | **T2** sharp for 0 ≤ θ ≤ 1/3 | **Done**, as a special case of Cor. 1.4. The intended route (hub window + PD) was **not needed**; the replacement is fully elementary (Lemma 4.5). Steps 1–2 of the intended route are correct. We did not prove the step-3 density claim for the hub window; our proof bypasses it. The Sub-sum Lemma is proven (Appendix A, sharp). | §4, App. A |
-| **T3** 1/3 < θ < 1/2 | **Sharp constant proven** (Cor. 1.4). So c_H(θ) is moot as a lower bound and was not computed. Remark 7.2 explains why the one-step hub clique loses for θ > 1/3; it is a SKETCH, not used. | §4, Rem. 7.2 |
+| **T3** 1/3 < θ < 1/2 | **Sharp constant proven** (Cor. 1.4). So c_H(θ) is moot as a lower bound and was not computed. Remark 7.2 proves that the one-step hub clique loses a positive proportion of F₁ for 1/3 < θ < 1/2; it is not used. | §4, Rem. 7.2 |
 | **T4** θ ≥ 1/2 | **Resolved** (Cor. 1.4): the profile is ρ_Dick(1/(1−θ)) on all of [1/2, 1), and 0 at θ = 1. The "copies" idea was not needed. | §4 |
-| **T5** rates | **Done.** Uniform error O(N/log log N) (Thm. 1.3) and explicit form for K ≤ √N − 1 (Rem. 5.1). The suggested shape O((log K/log N)^c) cannot hold for bounded K, because the error term includes an additive O(1/log log N). The natural statement is Rem. 5.1. The true order of the error is OPEN; a lower bound ≫ N/log N holds for K ∈ {0,1}. | §5, (O1) |
+| **T5** rates | **Done.** Uniform error O(N/log log N) (Thm. 1.3) and explicit form for K ≤ √N − 1 (Rem. 5.1). The suggested shape O((log K/log N)^c) cannot hold for bounded K, because the error term includes an additive O(1/log log N). The natural statement is Rem. 5.1. | §5 |
 
 ## Status table
 
 | Claim | Status | Notes / gaps |
 |---|---|---|
-| Lemma 2.1 (Mertens, Chebyshev) | PROVEN (cited) | classical |
-| Lemma 2.2 (Dickman, uniform on [1,U]) | PROVEN (cited) | Dickman 1930, de Bruijn 1951, Hildebrand 1986; used only to identify the limit |
+| Lemma 2.1 (Mertens, Chebyshev; c₀ = log 4 + 2, C₁ = 18) | PROVEN | classical; proved from scratch in App. C |
+| Lemma 2.2 (Dickman, uniform on [1,U]) | PROVEN | Dickman 1930, de Bruijn 1951, Hildebrand 1986; proved from scratch in App. C; used only to identify the limit |
 | Lemma 2.3 (Ψ(x,y) ≤ √x + 2x(log y + c₀)/log x; ρ_Dick(u) ≤ 2/u) | PROVEN | standard |
 | Lemma 2.4 (variance of ω_z) | PROVEN | special case of Turán–Kubilius |
-| Lemma 2.6 (τ(n) ≪_ε n^ε) | PROVEN | standard |
+| Remark 2.5 (Turán–Kubilius, C = 130) | PROVEN | not needed for the main results |
+| Lemma 2.6 (τ(n) ≤ C_ε n^ε, explicit C_ε) | PROVEN | standard |
 | Lemma 2.7 (limit of Ψ(N, N/(K+1))/N) | PROVEN | standard; added by the proof-checker audit (F6) |
 | Lemma 3.1 (fibres of the B-rough part) | PROVEN | essentially known (cf. McNew 2021) |
 | Prop. 3.2 (Φ_K ≤ Ψ(N,B); Φ_K ≤ max(\|F₁\|, K)) | PROVEN | deterministic |
@@ -73,15 +76,16 @@ The argument needs no hub clique and no Poisson–Dirichlet input.
 | Lemma 6.1, Lemma 6.2 (monotonicity, sandwich) | PROVEN | |
 | Cor. 1.6 (static/adaptive degree attacks) | PROVEN | degrees taken in the undirected G_N |
 | Remark 7.1 (edge share θ) | PROVEN | |
-| Remark 7.2 (a hub clique loses for θ > 1/3) | SKETCH | gap: the ≫ N count of m = p₁p₂p₃s is not written out; not used anywhere |
-| Lemma A.1 (Sub-sum Lemma, sharp at 1/3) | PROVEN | not needed for the main results |
-| (O1) true error order; (O2) fluctuations; (O3) in/out-degree attacks; (O4) ρ_N → 0 fast; (O5) diameter | OPEN | |
+| Remark 7.2 (a hub clique loses for 1/3 < θ < 1/2) | PROVEN | the ≫ N count of m = p₁p₂p₃s is written out; not used anywhere |
+| Remark 7.3 (relation to Kim–Phillips) | PROVEN | the case K = 0 of Cor. 1.4 is KP's Corollary 2 |
+| Lemma A.1 (Sub-sum Lemma, finite and infinite, sharp at 1/3) | PROVEN | not needed for the main results |
+| Lemmas C.1, C.2 (Buchstab's identity; prime sums as Riemann sums) | PROVEN | used for Lemma 2.2 |
 
 ## Referee notes and caveats
 
 - **Independence** is used only in two places: among the 2-paths for one fixed pair (x, x′) (Lemma 4.1), and among the edges at one vertex m (Lemma 4.4). The dependence between the event R and the attachment events A_m is handled by P(A_m ∩ R) ≥ P(A_m) − P(Rᶜ).
 - **No limit interchanges.** Prop. 4.6 is non-asymptotic, and all parameters depend only on N. So the bounds are uniform in K by construction.
-- **Citation hygiene.** Theorem numbers are given only for Hardy–Wright (Thm. 7, Chebyshev; Thm. 315, divisor bound). They should be checked against the edition used. The other classical inputs are cited by author and work, without theorem numbers.
+- **Citation hygiene.** Theorem numbers are given only for Hardy–Wright (Ch. XXII, Chebyshev and Mertens; Thm. 315, divisor bound). They should be checked against the edition used. The other classical inputs are cited by author and work, without theorem numbers.
 - **Sanity check (not a result).** At N = 10⁵, one random sample was run for each of K ∈ {1, 10, 46, 316, 1000, 2154}. In every sample the set S_M from Lemma 4.2 was connected in G_{M,K} and lay inside the giant SCC, and the observed Φ/N matched the background table of the brief.
 
 ## Proof-checker audit (2026-09-28, run 01)

@@ -1,9 +1,9 @@
 import Mathlib
 
 /-!
-# The divisor bound (paper, Lemma 2.5)
+# The divisor bound (paper, Lemma 2.6)
 
-**Lemma 2.5.** For every `ε > 0` there is `C_ε` with `τ(n) ≤ C_ε n^ε` for all `n ≥ 1`.
+**Lemma 2.6.** For every `ε > 0` there is `C_ε` with `τ(n) ≤ C_ε n^ε` for all `n ≥ 1`.
 
 The proof is the paper's. Write `τ(n)/n^ε = ∏_{p^a ∥ n} (a+1) p^{−aε}`.
 
@@ -70,16 +70,16 @@ theorem rpow_eq_prod_primeFactors {n : ℕ} (hn : n ≠ 0) (ε : ℝ) :
   refine prod_congr rfl fun p _ => ?_
   rw [← Real.rpow_natCast, ← Real.rpow_mul (by positivity)]
 
-/-- **Lemma 2.5.** For every `ε > 0` there is `C > 0` with `τ(n) ≤ C n^ε` for all `n ≥ 1`.
-Explicitly `C = max(1, 1/(ε log 2))^{⌈2^{1/ε}⌉}`. -/
-theorem divisor_bound {ε : ℝ} (hε : 0 < ε) :
-    ∃ C : ℝ, 0 < C ∧ ∀ n : ℕ, n ≠ 0 → (n.divisors.card : ℝ) ≤ C * (n : ℝ) ^ ε := by
+/-- **Lemma 2.6, with the explicit constant.** For `ε > 0` and `n ≥ 1`,
+`τ(n) ≤ C_ε n^ε` with `C_ε = max(1, 1/(ε log 2))^{⌈2^{1/ε}⌉}`. -/
+theorem divisor_bound_explicit {ε : ℝ} (hε : 0 < ε) {n : ℕ} (hn : n ≠ 0) :
+    (n.divisors.card : ℝ) ≤
+      max 1 (1 / (ε * Real.log 2)) ^ ⌈(2 : ℝ) ^ (1 / ε)⌉₊ * (n : ℝ) ^ ε := by
   classical
   set c := max 1 (1 / (ε * Real.log 2)) with hcdef
   set B := (2 : ℝ) ^ (1 / ε) with hBdef
   have hc1 : 1 ≤ c := le_max_left _ _
   have hc0 : 0 < c := by linarith
-  refine ⟨c ^ ⌈B⌉₊, by positivity, fun n hn => ?_⟩
   rw [Nat.card_divisors hn, rpow_eq_prod_primeFactors hn]
   push_cast
   have hper : ∀ p ∈ n.primeFactors, (n.factorization p : ℝ) + 1 ≤
@@ -112,5 +112,12 @@ theorem divisor_bound {ε : ℝ} (hε : 0 < ε) :
           ∏ p ∈ n.primeFactors, (p : ℝ) ^ ((n.factorization p : ℝ) * ε) := prod_mul_distrib
     _ ≤ c ^ ⌈B⌉₊ * ∏ p ∈ n.primeFactors, (p : ℝ) ^ ((n.factorization p : ℝ) * ε) :=
         mul_le_mul_of_nonneg_right hweights (prod_nonneg fun p _ => by positivity)
+
+/-- **Lemma 2.6.** `τ(n) ≤ C_ε n^ε` for all `n ≥ 1`, for some `C_ε > 0`
+(`divisor_bound_explicit` gives `C_ε = max(1, 1/(ε log 2))^⌈2^{1/ε}⌉`). -/
+theorem divisor_bound {ε : ℝ} (hε : 0 < ε) :
+    ∃ C : ℝ, 0 < C ∧ ∀ n : ℕ, n ≠ 0 → (n.divisors.card : ℝ) ≤ C * (n : ℝ) ^ ε :=
+  ⟨_, pow_pos (lt_of_lt_of_le one_pos (le_max_left _ _)) _,
+    fun _ hn => divisor_bound_explicit hε hn⟩
 
 end HubRemoval

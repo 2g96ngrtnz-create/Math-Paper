@@ -8,6 +8,8 @@ open HubRemoval Finset
 #print axioms prob_all_bit
 #print axioms prob_attachEv
 #print axioms prob_attachEv_ge
+#print axioms prob_or_of_disjoint
+#print axioms prob_attachEv_eq
 
 /-! ### Applied: `m = 30` in `𝒟_{1/2}(48, 1)` with `M = 24`
 
@@ -42,6 +44,11 @@ example : (1 / 2 : ℝ) ≤ prob (1 / 2) (attachEv (N := 48) (K := 1) 24 30) := 
   have hpow : (1 / 2 : ℝ) ^ (lowerDivisors 24 1 30).card ≤ (1 / 2) ^ 2 :=
     pow_le_pow_of_le_one (by norm_num) (by norm_num) hs
   linarith
+
+/-- Equality, since `s ≥ 1`: `P(A₃₀) = 1 − (1/2)^s − (1/2)^s`. -/
+example : prob (1 / 2) (attachEv (N := 48) (K := 1) 24 30) =
+    1 - (1 / 2 : ℝ) ^ (lowerDivisors 24 1 30).card - (1 - 1 / 2) ^ (lowerDivisors 24 1 30).card :=
+  prob_attachEv_eq (1 / 2) (by norm_num) (by norm_num) (card_pos.mpr ⟨2, two_mem⟩)
 
 /-! The edge `(2, 30)` of `G_{48,1}` is one of the `s` edges. -/
 

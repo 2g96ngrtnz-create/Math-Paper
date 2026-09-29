@@ -28,6 +28,7 @@ This file is generated from those two documents; each `#check` fails if its name
 #check @cor_profile
 #check @cor_structure
 #check @cor_structure_prob
+#check @cor_structure_whp
 #check @cor_upper_profile
 #check @cor_upper_profile_eventually
 #check @core_a
@@ -56,12 +57,14 @@ This file is generated from those two documents; each `#check` fails if its name
 #check @dickman_tendsto_zero
 #check @dickman_unique
 #check @divisor_bound
+#check @divisor_bound_explicit
 #check @doubling
 #check @doubling_connected
 #check @dvd_three_primes
 #check @edgeMul
 #check @eq_4_2
 #check @eq_4_2_core
+#check @eventually_attach_cond
 #check @eventually_goodN
 #check @eventually_goodT
 #check @eventually_mul_log_pow_le
@@ -99,6 +102,7 @@ This file is generated from those two documents; each `#check` fails if its name
 #check @prob_and_ge
 #check @prob_attach
 #check @prob_attachEv
+#check @prob_attachEv_eq
 #check @prob_attachEv_ge
 #check @prob_attach_ge
 #check @prob_cylinder
@@ -107,6 +111,7 @@ This file is generated from those two documents; each `#check` fails if its name
 #check @prob_not_hub
 #check @prob_not_robust
 #check @prob_not_robust_exp
+#check @prob_or_of_disjoint
 #check @prob_pat
 #check @psi_dickman_base
 #check @psi_dickman_nat
@@ -146,6 +151,7 @@ This file is generated from those two documents; each `#check` fails if its name
 #check @sigma_mutual
 #check @sigma_subset_smoothFibre
 #check @slow_rho_bound
+#check @slow_rho_bound_explicit
 #check @smallK_psi
 #check @static_eq_Icc
 #check @step_bound

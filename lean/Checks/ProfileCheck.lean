@@ -32,7 +32,7 @@ example : dickLim (1 / 2) = 1 - Real.log 2 ∧ dickLim (1 / 3) = 1 - Real.log (3
   · rw [dickLim_of_le_half (by norm_num) (by norm_num)]
     norm_num
 
-/-! ### Corollary 1.3, applied (`ρ = 1/2`) -/
+/-! ### Corollary 1.4, applied (`ρ = 1/2`) -/
 
 /-- `K = 0`, `θ = 0`: `E[Φ_0]/N → 1`. This is Kim–Phillips' Corollary 2. -/
 example : Tendsto (fun N : ℕ => expectP (1 / 2)

@@ -825,4 +825,39 @@ theorem three_primes_goodSet {N K p₁ p₂ p₃ s : ℕ} {γ M : ℝ} (hN : 1 �
       nlinarith
     exact_mod_cast this
 
+/-- **Remark 7.2, the attachment condition.** If `log(K + 1)/log N → θ` and
+`θ + 1/3 < 1 − 2δ`, then `2(K + 1)N^{1/3} ≤ N^{1−2δ} = M` for all large `N`. -/
+theorem eventually_attach_cond {θ δ : ℝ} (hθδ : θ + 1 / 3 < 1 - 2 * δ) {K : ℕ → ℕ}
+    (hK : Tendsto (fun N : ℕ => Real.log ((K N : ℝ) + 1) / Real.log N) atTop (𝓝 θ)) :
+    ∀ᶠ N : ℕ in atTop,
+      2 * ((K N : ℝ) + 1) * (N : ℝ) ^ (1 / 3 : ℝ) ≤ (N : ℝ) ^ (1 - 2 * δ) := by
+  obtain ⟨ε, hεdef⟩ : ∃ ε : ℝ, ε = (1 - 2 * δ - θ - 1 / 3) / 2 := ⟨_, rfl⟩
+  have hε : 0 < ε := by rw [hεdef]; linarith
+  have hN : Tendsto (fun N : ℕ => (N : ℝ)) atTop atTop := tendsto_natCast_atTop_atTop
+  filter_upwards [hK.eventually (gt_mem_nhds (show θ < θ + ε by linarith)),
+    eventually_ge_atTop 2, hN.eventually ((tendsto_rpow_atTop hε).eventually_ge_atTop 2)]
+    with N hhi hN2 hNε
+  have hNR : (2 : ℝ) ≤ N := by exact_mod_cast hN2
+  have hN0 : (0 : ℝ) < N := by linarith
+  have hlogN : 0 < Real.log (N : ℝ) := Real.log_pos (by linarith)
+  have hK0 : (0 : ℝ) < (K N : ℝ) + 1 := by positivity
+  have hKhi : (K N : ℝ) + 1 < (N : ℝ) ^ (θ + ε) := by
+    rw [div_lt_iff₀ hlogN] at hhi
+    rw [← Real.log_lt_log_iff hK0 (by positivity), Real.log_rpow hN0]
+    exact hhi
+  have hsplit : (N : ℝ) ^ (1 - 2 * δ) =
+      (N : ℝ) ^ ε * ((N : ℝ) ^ (θ + ε) * (N : ℝ) ^ (1 / 3 : ℝ)) := by
+    rw [← Real.rpow_add hN0, ← Real.rpow_add hN0]
+    congr 1
+    rw [hεdef]
+    ring
+  rw [hsplit]
+  have hA : ((K N : ℝ) + 1) * (N : ℝ) ^ (1 / 3 : ℝ) ≤
+      (N : ℝ) ^ (θ + ε) * (N : ℝ) ^ (1 / 3 : ℝ) :=
+    mul_le_mul_of_nonneg_right hKhi.le (by positivity)
+  calc 2 * ((K N : ℝ) + 1) * (N : ℝ) ^ (1 / 3 : ℝ)
+      = 2 * (((K N : ℝ) + 1) * (N : ℝ) ^ (1 / 3 : ℝ)) := by ring
+    _ ≤ (N : ℝ) ^ ε * ((N : ℝ) ^ (θ + ε) * (N : ℝ) ^ (1 / 3 : ℝ)) :=
+        mul_le_mul hNε hA (by positivity) (by positivity)
+
 end HubRemoval

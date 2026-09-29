@@ -1,7 +1,7 @@
 import HubRemoval.Rate
 
 /-!
-# The structure of the giant (paper, eq. (4.2) and Corollary 1.4)
+# The structure of the giant (paper, eq. (3) and Corollary 1.5)
 
 **SCCs.** `sccOf ω v` is the SCC of `v` in the digraph of `ω`: the vertices of `G_{N,K}`
 mutually reachable with `v`. `IsSCC ω C` says that `C` is one of these. A largest SCC exists
@@ -13,10 +13,10 @@ element of `S_M`. On `𝓡` (with `M ≥ 4(K+1)`) it is strongly connected (Coro
 under mutual reachability, and contained in `F₁` when `M ≤ N`. So it is the SCC containing `S_M`
 whenever `S_M ≠ ∅`.
 
-**Proposition 4.6, eq. (4.2).** `E[|F₁ \ Σ| · 1_𝓡] ≤ Err` (`eq_4_2`). On `𝓡`,
+**Proposition 4.6, eq. (3).** `E[|F₁ \ Σ| · 1_𝓡] ≤ Err` (`eq_4_2`). On `𝓡`,
 `F₁ \ Σ ⊆ (F₁ \ 𝒰) ∪ {m ∈ 𝒰 : A_mᶜ}`, and `P(A_mᶜ) ≤ 2λ^{s₀+1}` (Lemmas 4.4, 4.5(c)).
 
-**Corollary 1.4 (Structure of the giant).** Fix `ρ ∈ (0, 1)`. There is `N₀` such that for
+**Corollary 1.5 (Structure of the giant).** Fix `ρ ∈ (0, 1)`. There is `N₀` such that for
 `N ≥ N₀`, all `K < N` and every rule `Φ*_K` choosing a largest SCC (`cor_structure`):
 * (a) `E|Φ_K − Ψ(N, N/(K+1))| ≤ 30N/log log N`. Also `Φ_K/N − Ψ/N → 0` in probability,
   uniformly in `K` (`cor_structure_prob`);
@@ -27,7 +27,7 @@ whenever `S_M ≠ ∅`.
 `Σ` and lies in one fibre. So it lies in `F₁ \ Σ`, or has at most `K` elements
 (Proposition 3.2 and Lemma 3.1(c)). A case analysis gives `|F₁ ∆ Φ*| ≤ W + 2K` and
 `Φ^{(2)} ≤ W + K`, where `W = |F₁ \ Σ|` (`giant_pointwise`). Off `𝓡` both are at most `N`.
-Then eq. (4.2), `Err ≤ 28N/ℓ` and `N·P(𝓡ᶜ) ≤ 1` finish the bound. If `K > N^{1−η}`, then
+Then eq. (3), `Err ≤ 28N/ℓ` and `N·P(𝓡ᶜ) ≤ 1` finish the bound. If `K > N^{1−η}`, then
 `Ψ(N, B) ≤ 3N/ℓ` bounds everything.
 -/
 
@@ -267,12 +267,12 @@ theorem PhiK_le_N (ω : Edge N K → Bool) : PhiK N K ω ≤ N := by
   have h2 := psi_le_self N (N / (K + 1))
   omega
 
-/-! ### Proposition 4.6, eq. (4.2) -/
+/-! ### Proposition 4.6, eq. (3) -/
 
 variable {s₀ : ℕ} {η δ : ℝ}
 
 open Classical in
-/-- **Eq. (4.2), with `|F₁ \ 𝒰|`.** `E[|F₁ \ Σ| · 1_𝓡] ≤ |F₁ \ 𝒰| + 2λ^{s₀+1} N`. -/
+/-- **Eq. (3), with `|F₁ \ 𝒰|`.** `E[|F₁ \ Σ| · 1_𝓡] ≤ |F₁ \ 𝒰| + 2λ^{s₀+1} N`. -/
 theorem eq_4_2_core (h : CoreHyp N K s₀ η δ) {ρ : ℝ} (hρ0 : 0 ≤ ρ) (hρ1 : ρ ≤ 1) :
     expectP ρ (fun ω : Edge N K → Bool =>
       if RobustEvent (arc ω) N K ((N : ℝ) ^ (1 - 2 * δ)) then
@@ -355,7 +355,7 @@ theorem eq_4_2_core (h : CoreHyp N K s₀ η δ) {ρ : ℝ} (hρ0 : 0 ≤ ρ) (h
     _ ≤ c + 2 * lam ^ (s₀ + 1) * N := by nlinarith
 
 open Classical in
-/-- **Proposition 4.6, eq. (4.2).** Under the hypotheses of Lemma 4.5, in `𝒟_ρ(N, K)`,
+/-- **Proposition 4.6, eq. (3).** Under the hypotheses of Lemma 4.5, in `𝒟_ρ(N, K)`,
 `E[|F₁ \ Σ| · 1_𝓡] ≤ Err`, with `C₁ = 18` in `Err`. -/
 theorem eq_4_2 (h : CoreHyp N K s₀ η δ) {ρ : ℝ} (hρ0 : 0 ≤ ρ) (hρ1 : ρ ≤ 1) :
     expectP ρ (fun ω : Edge N K → Bool =>
@@ -390,7 +390,7 @@ theorem prob_ge_le {ρ : ℝ} (h0 : 0 ≤ ρ) (h1 : ρ ≤ 1) {f : (ι → Bool)
 
 end Markov
 
-/-! ### Corollary 1.4 -/
+/-! ### Corollary 1.5 -/
 
 /-- `E|Φ_K − Ψ(N, B)| = Ψ(N, B) − E[Φ_K]`, since `Φ_K ≤ Ψ(N, B)` pointwise. -/
 theorem expect_abs_eq_gap {ρ : ℝ} (N K : ℕ) :
@@ -402,7 +402,7 @@ theorem expect_abs_eq_gap {ρ : ℝ} (N K : ℕ) :
   rw [e, expectP_sub, expectP_const]
   rfl
 
-/-- **Corollary 1.4 (Structure of the giant).** Fix `ρ ∈ (0, 1)`. For `N ≥ N₀(ρ)`, all
+/-- **Corollary 1.5 (Structure of the giant).** Fix `ρ ∈ (0, 1)`. For `N ≥ N₀(ρ)`, all
 `K < N` and any rule `Φ*_K` choosing a largest SCC:
 (a) `E|Φ_K − Ψ(N, N/(K+1))| ≤ 30N/log log N`;
 (b) `E|F₁ ∆ Φ*_K| ≤ 2K + 30N/log log N`;
@@ -429,7 +429,7 @@ theorem cor_structure {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) :
   have hNℓ0 : (0 : ℝ) ≤ N / ellN N := by linarith
   rw [e30]
   by_cases hKs : (K : ℝ) ≤ (N : ℝ) ^ (1 - etaN N)
-  · ---------- `K ≤ N^{1−η}`: eq. (4.2).
+  · ---------- `K ≤ N^{1−η}`: eq. (3).
     obtain ⟨h, -, eErr, e6⟩ := hsmall hKs
     set δ := deltaN N with hδ
     set M := (N : ℝ) ^ (1 - 2 * δ) with hMdef
@@ -507,7 +507,7 @@ theorem cor_structure {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) :
     have hK0 : (0 : ℝ) ≤ K := Nat.cast_nonneg K
     constructor <;> linarith
 
-/-- **Corollary 1.4(a), in probability.** For every `ε > 0`,
+/-- **Corollary 1.5(a), in probability.** For every `ε > 0`,
 `max_{K < N} P(|Φ_K/N − Ψ(N, N/(K+1))/N| ≥ ε) → 0`. -/
 theorem cor_structure_prob {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {ε : ℝ} (hε : 0 < ε) :
     Tendsto (fun N : ℕ => ⨆ K : Fin N, prob ρ (fun ω : Edge N K → Bool =>
@@ -540,5 +540,55 @@ theorem cor_structure_prob {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {ε : ℝ}
       have e2 : 30 / ε * (ε * N) = 30 * N := by field_simp
       nlinarith
     exact hmono.trans (hmarkov.trans e)
+
+/-- **After Corollary 1.5: the case `K = o(N)`.** If `K(N)/N → 0`, then for every `ε > 0` and any
+rule choosing a largest SCC, `P(|F₁ △ Φ*_K| ≥ εN) → 0` and `P(Φ^{(2)}_K ≥ εN) → 0`. This is
+Markov's inequality applied to (b) and (c). -/
+theorem cor_structure_whp {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {K : ℕ → ℕ}
+    (hK : Tendsto (fun N : ℕ => (K N : ℝ) / N) atTop (𝓝 0))
+    (star : ∀ N, (Edge N (K N) → Bool) → Finset ℕ)
+    (hstar : ∀ N, K N < N → ∀ ω, IsSCC ω (star N ω) ∧ (star N ω).card = PhiK N (K N) ω)
+    {ε : ℝ} (hε : 0 < ε) :
+    Tendsto (fun N : ℕ => prob ρ (fun ω : Edge N (K N) → Bool =>
+      ε * N ≤ ((smoothFibre N (K N) ∆ star N ω).card : ℝ))) atTop (𝓝 0) ∧
+    Tendsto (fun N : ℕ => prob ρ (fun ω : Edge N (K N) → Bool =>
+      ε * N ≤ (secondSCC ω (star N ω) : ℝ))) atTop (𝓝 0) := by
+  obtain ⟨N₀, hN₀⟩ := cor_structure hρ0 hρ1
+  have hll : Tendsto (fun N : ℕ => Real.log (Real.log N)) atTop atTop :=
+    Real.tendsto_log_atTop.comp tendsto_log_nat
+  have hlim : ∀ c : ℝ, Tendsto (fun N : ℕ =>
+      (c * ((K N : ℝ) / N) + 30 / Real.log (Real.log N)) / ε) atTop (𝓝 0) := fun c => by
+    have := ((hK.const_mul c).add
+      ((tendsto_const_nhds (x := (30 : ℝ))).div_atTop hll)).div_const ε
+    simpa using this
+  have hKN : ∀ᶠ N : ℕ in atTop, K N < N := by
+    filter_upwards [hK.eventually (gt_mem_nhds (show (0 : ℝ) < 1 by norm_num)),
+      eventually_ge_atTop 1] with N h hN1
+    have hN : (0 : ℝ) < N := by exact_mod_cast hN1
+    rw [div_lt_one hN] at h
+    exact_mod_cast h
+  have key : ∀ (c : ℝ) (g : ∀ N, (Edge N (K N) → Bool) → ℝ), (∀ N ω, 0 ≤ g N ω) →
+      (∀ N ≥ N₀, K N < N → expectP ρ (g N) ≤ c * K N + 30 * N / Real.log (Real.log N)) →
+      Tendsto (fun N : ℕ => prob ρ (fun ω : Edge N (K N) → Bool => ε * N ≤ g N ω)) atTop
+        (𝓝 0) := by
+    intro c g hg hE
+    refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds (hlim c) ?_ ?_
+    · exact Eventually.of_forall fun N => prob_nonneg hρ0.le hρ1.le _
+    · filter_upwards [hKN, eventually_ge_atTop N₀, eventually_ge_atTop 1,
+        hll.eventually_gt_atTop 0] with N hKN hN hN1 hℓ
+      have hNpos : (0 : ℝ) < N := by exact_mod_cast hN1
+      have hεN : 0 < ε * N := mul_pos hε hNpos
+      calc prob ρ (fun ω : Edge N (K N) → Bool => ε * N ≤ g N ω)
+          ≤ expectP ρ (g N) / (ε * N) := prob_ge_le hρ0.le hρ1.le (hg N) hεN
+        _ ≤ (c * K N + 30 * N / Real.log (Real.log N)) / (ε * N) :=
+            div_le_div_of_nonneg_right (hE N hN hKN) hεN.le
+        _ = (c * ((K N : ℝ) / N) + 30 / Real.log (Real.log N)) / ε := by
+            field_simp
+  refine ⟨key 2 (fun N ω => ((smoothFibre N (K N) ∆ star N ω).card : ℝ))
+      (fun _ _ => Nat.cast_nonneg _) fun N hN hKN => ?_,
+    key 1 (fun N ω => (secondSCC ω (star N ω) : ℝ)) (fun _ _ => Nat.cast_nonneg _)
+      fun N hN hKN => ?_⟩
+  · exact (hN₀ N hN (K N) hKN (star N) (hstar N hKN)).2.1
+  · simpa using (hN₀ N hN (K N) hKN (star N) (hstar N hKN)).2.2
 
 end HubRemoval

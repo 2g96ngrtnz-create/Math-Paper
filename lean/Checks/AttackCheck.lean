@@ -1,7 +1,7 @@
 import HubRemoval.Attack
 open HubRemoval Finset Filter Topology
 
-/-! ### Corollary 1.5: axioms -/
+/-! ### Corollary 1.6: axioms -/
 
 #print axioms expectP_comp_injective
 #print axioms arc_restrict
@@ -53,7 +53,7 @@ example : ∃ N₁ : ℕ, ∀ N ≥ N₁, ∀ K : ℕ, 1 ≤ K → (K : ℝ) ≤
       (∀ t ∈ T, ∀ v ∈ Icc 1 N, v ∉ T → deg N v ≤ deg N t) → T = Icc 1 K :=
   static_eq_Icc (by norm_num) (by norm_num)
 
-/-! ### Corollary 1.5, applied (`ρ = 1/2`, `K = ⌊√N⌋`, `θ = 1/2`) -/
+/-! ### Corollary 1.6, applied (`ρ = 1/2`, `K = ⌊√N⌋`, `θ = 1/2`) -/
 
 /-- A static top-`⌊√N⌋` set of `G_N`. -/
 noncomputable def staticSqrt (N : ℕ) : Finset ℕ :=

@@ -94,6 +94,7 @@ open HubRemoval Finset Filter Topology
 #print axioms slow_turan_term
 #print axioms slow_small_case
 #print axioms slow_large_case
+#print axioms slow_rho_bound_explicit
 #print axioms slow_rho_bound
 #print axioms remark_5_3_slow
 
@@ -116,6 +117,7 @@ open HubRemoval Finset Filter Topology
 #print axioms remark_7_2
 #print axioms three_primes_mem
 #print axioms three_primes_goodSet
+#print axioms eventually_attach_cond
 #print axioms card_common_multiples_ge
 #print axioms hub_mutual
 #print axioms prob_not_hub
@@ -196,6 +198,12 @@ example : ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ ρ : ℝ, 1 / 4 ≤ ρ → ρ ≤ 
 example : ∃ A : ℝ, ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
     A ≤ min ρ (1 - ρ) * Real.log (Real.log N) → ∀ K < N, gap ρ N K ≤ 1 / 2 * N :=
   slow_rho_bound (by norm_num) (by norm_num)
+
+/-- (b), quantitative, with `ε = 1/2` and the explicit threshold `8 log 32 + 8`. -/
+example : ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+    8 * Real.log (16 / (1 / 2)) + 8 ≤ min ρ (1 - ρ) * Real.log (Real.log N) →
+      ∀ K < N, gap ρ N K ≤ 1 / 2 * N :=
+  slow_rho_bound_explicit (by norm_num) (by norm_num)
 
 /-- A slowly vanishing density: `ρ_N = 1/(2 + √(log log N))` for `N ≥ 16` (and `1/2` before). Then
 `min(ρ_N, 1 − ρ_N) log log N ≥ ½ √(log log N) → ∞`, so Theorem 1.2 holds along `ρ_N`. -/
@@ -317,6 +325,13 @@ example : ∃ c > 0, ∀ᶠ N : ℕ in atTop, c * N ≤
     (((smoothFibre N ⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊).filter fun m => ∀ d ∈ m.divisors,
       ¬ (⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊ < d ∧ d * d ≤ N)).card : ℝ) :=
   remark_7_2 (K := fun N => ⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊) (by norm_num) (by norm_num)
+    (tendsto_log_floor_rpow (by norm_num))
+
+/-- The attachment condition of Remark 7.2 with `K = ⌊N^{2/5}⌋` and `δ = 1/8`
+(`2/5 + 1/3 < 3/4`): eventually `2(K + 1)N^{1/3} ≤ N^{3/4} = M`. -/
+example : ∀ᶠ N : ℕ in atTop, 2 * ((⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊ : ℝ) + 1) * (N : ℝ) ^ (1 / 3 : ℝ) ≤
+    (N : ℝ) ^ (1 - 2 * (1 / 8 : ℝ)) :=
+  eventually_attach_cond (K := fun N => ⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊) (by norm_num)
     (tendsto_log_floor_rpow (by norm_num))
 
 /-- The count on its own, for `γ = 1/12`. -/

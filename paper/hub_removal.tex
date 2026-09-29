@@ -39,9 +39,9 @@ Let $\cD_\rho(N)$ be the randomly oriented divisor graph of Kim and Phillips: th
 \[
 0\;\le\;\Psi\Bigl(N,\frac{N}{K+1}\Bigr)-\E[\Phi_K]\;\le\;\frac{30\,N}{\log\log N}\qquad(0\le K<N,\ N\ge N_0(\rho)),
 \]
-where $\Psi(x,y)$ is the number of $y$-smooth integers up to $x$. Consequently, if $K=N^{\theta+o(1)}$ with $0\le\theta\le 1$ (that is, $\log(K+1)/\log N\to\theta$), then $\E[\Phi_K]/N\to\dick\bigl(1/(1-\theta)\bigr)$, where $\dick$ is Dickman's function and $\dick(\infty)=0$. For $0\le\theta<1$ the same limit holds if the $K$ vertices of largest degree are deleted instead, whether degrees are computed once or recomputed after each deletion. This answers Question~20 of Kim and Phillips. Moreover, with high probability the largest strong component consists of all but $o(N)+O(K)$ of the $N/(K+1)$-smooth vertices, and the second largest strong component has expected size at most $K+o(N)$.
+where $\Psi(x,y)$ is the number of $y$-smooth integers up to $x$. Consequently, if $K=N^{\theta+o(1)}$ with $0\le\theta\le 1$ (that is, $\log(K+1)/\log N\to\theta$), then $\E[\Phi_K]/N\to\dick\bigl(1/(1-\theta)\bigr)$, where $\dick$ is Dickman's function and $\dick(\infty)=0$. For $0\le\theta<1$ the same limit holds if the $K$ vertices of largest degree are deleted instead, whether degrees are computed once or recomputed after each deletion. This answers Question~20 of Kim and Phillips. Moreover, the symmetric difference of the largest strong component and the set of $N/(K+1)$-smooth vertices has expected size at most $2K+o(N)$, and the second largest strong component has expected size at most $K+o(N)$.
 
-The upper bound comes from the decomposition of the divisor graph into fibres of the rough part. The lower bound rests on one observation. Every divisibility edge $\{x,x'\}$ with $x'\le N^{1-2\delta}$ is shadowed by at least $N^{2\delta}-2$ independent directed $2$-paths through common multiples. So with high probability the strong components are at least as coarse as the connected components of a deterministic divisor graph on $(K,N^{1-2\delta}]$, and a doubling argument shows that the smooth part of that graph is connected. The proof is elementary and self-contained. It uses the estimates of Chebyshev and Mertens, a second-moment bound for the number of small prime factors, and, to identify the limit, Dickman's asymptotic for $\Psi$; all three are proved here from first principles. Every lemma, proposition, theorem and corollary has been formally verified in Lean~4 with Mathlib, and the proofs given here follow the formal ones.
+The upper bound comes from the decomposition of the divisor graph into fibres of the rough part. The lower bound rests on one observation. Every divisibility edge $\{x,x'\}$ with $x'\le N^{1-2\delta}$ is shadowed by at least $N^{2\delta}-2$ independent directed $2$-paths through common multiples. So with high probability the strong components are at least as coarse as the connected components of a deterministic divisor graph on $(K,N^{1-2\delta}]$, and a doubling argument shows that the smooth part of that graph is connected. The proof is elementary and self-contained. It uses the estimates of Chebyshev and Mertens, a second-moment bound for the number of small prime factors, and, to identify the limit, Dickman's asymptotic for $\Psi$; all three are proved here from first principles. Every numbered statement, including the remarks, has been formally verified in Lean~4 with Mathlib, and the proofs given here follow the formal ones.
 \end{abstract}
 
 \maketitle
@@ -117,7 +117,7 @@ Fix $\rho\in(0,1)$, and let $K=K(N)$ satisfy $0\le K(N)<N$ for all large $N$ and
 with the convention $\dick(\infty)=0$. The profile $\theta\mapsto\dick(1/(1-\theta))$, extended by $0$ for $\theta\ge1$, is continuous on $\mathbb R$ and strictly decreasing on $[0,1]$. It equals $1-\log\frac1{1-\theta}$ for $0\le\theta\le\frac12$.
 \end{corollary}
 
-\begin{corollary}[Structure of the giant]\label{cor:structure}\status{PROVEN}\lean{cor_structure, cor_structure_prob}
+\begin{corollary}[Structure of the giant]\label{cor:structure}\status{PROVEN}\lean{cor_structure, cor_structure_prob, cor_structure_whp}
 Fix $\rho\in(0,1)$. Let $\Phi_K^{*}$ be a largest SCC of $\cD_\rho(N,K)$ (chosen by any rule), and let $\Phi_K^{(2)}$ be the size of a largest SCC other than $\Phi_K^*$ ($0$ if there is none). For $N\ge N_0(\rho)$ and all $0\le K<N$:
 \begin{enumerate}[label=\textup{(\alph*)}]
 \item $\E\bigl|\Phi_K-\Psi(N,\frac N{K+1})\bigr|\le 30N/\log\log N$. In particular $\Phi_K/N-\Psi(N,\frac N{K+1})/N\to0$ in probability, uniformly in $K$.
@@ -126,7 +126,7 @@ Fix $\rho\in(0,1)$. Let $\Phi_K^{*}$ be a largest SCC of $\cD_\rho(N,K)$ (chosen
 \end{enumerate}
 \end{corollary}
 
-So when $K=o(N)$, the following holds for every fixed $\varepsilon>0$ with probability $1-o(1)$, by Markov's inequality applied to (b) and (c). The largest SCC differs from the set of $N/(K+1)$-smooth integers in $(K,N]$ in at most $\varepsilon N$ vertices, and every other SCC has at most $\varepsilon N$ vertices. The term $K$ in (c) cannot be dropped in general; see Remark~\ref{rem:second}.
+So when $K=o(N)$, the following holds for every fixed $\varepsilon>0$ with probability $1-o(1)$, by Markov's inequality applied to (b) and (c) (\texttt{cor\_structure\_whp}). The largest SCC differs from the set of $N/(K+1)$-smooth integers in $(K,N]$ in at most $\varepsilon N$ vertices, and every other SCC has at most $\varepsilon N$ vertices. The term $K$ in (c) cannot be dropped in general; see Remark~\ref{rem:second}.
 
 \begin{corollary}[Removing the vertices of highest degree]\label{cor:degree}\status{PROVEN}\lean{cor_degree_static, cor_degree_adaptive, static_eq_Icc}
 Fix $\rho\in(0,1)$ and let $\log(K+1)/\log N\to\theta\in[0,1)$. Let $T=T(N)\subset[N]$ with $|T|=K$ be chosen from the \emph{undirected} graph $G_N$ alone (and so independently of the orientation), for all large $N$, in either of the following ways:
@@ -137,7 +137,7 @@ Fix $\rho\in(0,1)$ and let $\log(K+1)/\log N\to\theta\in[0,1)$. Let $T=T(N)\subs
 Ties may be broken arbitrarily. Then $\E[\#\Phi(\cD_\rho(N)-T)]/N\to\dick(1/(1-\theta))$. Moreover, for fixed $\kappa\in(0,\frac12)$ and $N\ge N_1(\kappa)$, if $1\le K\le N^{1/2-\kappa}$ then the static set $T$ is exactly $\{1,\dots,K\}$.
 \end{corollary}
 
-Since the total degree of a vertex in any orientation equals its degree in $G_N$, (i) and (ii) cover attacks by total degree in the directed graph. Attacks by in- or out-degree depend on the orientation and are not covered; see \S\ref{sec:open}.
+Since the total degree of a vertex in any orientation equals its degree in $G_N$, (i) and (ii) cover attacks by total degree in the directed graph. Attacks by in- or out-degree depend on the orientation and are not covered (see the end of \S\ref{sec:degree}).
 
 \begin{table}[ht]
 \centering
@@ -152,14 +152,14 @@ $u=\frac1{1-\theta}$ & $3$ & $4$ & $5$ & $10$ & $20$ & $\infty$\\
 $\dick(u)$ & $0.04861$ & $0.004911$ & $3.547\cdot10^{-4}$ & $2.770\cdot10^{-11}$ & $2.46\cdot10^{-29}$ & $0$\\
 \bottomrule
 \end{tabular}
-\caption{The limit profile $\lim \E[\Phi_K]/N$ when $\log(K+1)/\log N\to\theta$. For $u\le2$, $\dick(u)=1-\log u$. The other values were computed numerically from $u\dick(u)=\int_{u-1}^{u}\dick(t)\,dt$ and agree with the standard tables.}
+\caption{The limit profile $\lim \E[\Phi_K]/N$ when $\log(K+1)/\log N\to\theta$. For $u\le2$, $\dick(u)=1-\log u$ (Lemma~\ref{lem:dickman}). The other values were computed numerically from $u\dick(u)=\int_{u-1}^{u}\dick(t)\,dt$ and agree with the standard tables. The decimal values are numerical approximations and are not part of the formal verification.}
 \label{tab:values}
 \end{table}
 
 \subsection{Discussion}
-\emph{Answer to Question~\ref{q:KP}.} Deleting any $K=N^{o(1)}$ hubs costs nothing asymptotically; for instance $\E[\Phi_K]/N\to1$ for every fixed $K$. Deleting $K=N^{\theta}$ hubs, a vanishing fraction of the vertices, leaves a giant of relative size $\dick(1/(1-\theta))$. For example, deleting the $\sqrt N$ hubs leaves $1-\log2\approx30.7\%$. Deleting $N^{1-o(1)}$ hubs destroys the giant. The vertices $1,\dots,K$ carry a $\theta$-fraction of the $N\log N+O(N)$ edges (Remark~\ref{rem:edges}), so for moderate $\theta$ hub removal is far more damaging than the loss of edges alone suggests: at $\theta=\frac12$ about half of the edges disappear, but only $30.7\%$ of the vertices remain in the giant. This is the fragility to targeted attacks familiar from scale-free networks~\cite{AJB,BR}. In the divisor graph, however, the surviving giant has an explicit arithmetic description: the smooth fibre. At finite $N$ the convergence is slow (compare Theorem~\ref{thm:rate}). For instance, for $K=1$ every prime $p\in(N/3,N/2]$ lies in $F_1$ but has degree~$1$ in $G_{N,1}$ (its only neighbour is $2p$), so it is never in a strong component of size $\ge2$. Hence $\Psi(N,B)-\E[\Phi_1]\ge\pi(N/2)-\pi(N/3)$, which is $\sim N/(6\log N)$ by the prime number theorem~\cite{Had,dlVP}. This is a loss that vanishes asymptotically but is visible at moderate $N$ (see (O1) in \S\ref{sec:open}).
+\emph{Answer to Question~\ref{q:KP}.} Deleting any $K=N^{o(1)}$ hubs costs nothing asymptotically; for instance $\E[\Phi_K]/N\to1$ for every fixed $K$. Deleting $K=N^{\theta}$ hubs, a vanishing fraction of the vertices, leaves a giant of relative size $\dick(1/(1-\theta))$. For example, deleting the $\sqrt N$ hubs leaves $1-\log2\approx30.7\%$. Deleting $N^{1-o(1)}$ hubs destroys the giant. The vertices $1,\dots,K$ carry a $\theta$-fraction of the $N\log N+O(N)$ edges (Remark~\ref{rem:edges}), so for moderate $\theta$ hub removal is far more damaging than the loss of edges alone suggests: at $\theta=\frac12$ about half of the edges disappear, but only $30.7\%$ of the vertices remain in the giant. This is the fragility to targeted attacks familiar from scale-free networks~\cite{AJB,BR}. In the divisor graph, however, the surviving giant has an explicit arithmetic description: the smooth fibre. At finite $N$ the error bound $30N/\log\log N$ of Theorem~\ref{thm:rate} tends to $0$ only slowly relative to $N$.
 
-\emph{What is new.} To our knowledge Theorems~\ref{thm:main} and~\ref{thm:rate} and Corollaries~\ref{cor:profile}--\ref{cor:degree} are new. The fibre decomposition behind the upper bound (Lemma~\ref{lem:fibres}) is a simple and essentially known observation; a closely related statement appears in McNew's work on the divisor graph~\cite{McN}. The inputs from analytic number theory (Mertens, Chebyshev, Dickman, a Tur\'an-type variance bound, and the divisor bound) are classical. The lower-bound mechanism (Lemmas~\ref{lem:robust} and~\ref{lem:doubling}) is, as far as we know, new. It differs from the triangle argument of~\cite{KP}, which uses paths through the vertex~$1$, and it does not need a strongly connected ``hub clique''. Such a clique, for instance the interval $(K,N^{1/2-\delta}]$, whose elements pairwise have many common multiples, can capture only the integers with a divisor in the clique. For $\theta>1/3$ that should miss a positive proportion of $F_1$; see the sketch in Remark~\ref{rem:clique}.
+\emph{What is new.} To our knowledge Theorems~\ref{thm:main} and~\ref{thm:rate} and Corollaries~\ref{cor:profile}--\ref{cor:degree} are new. The fibre decomposition behind the upper bound (Lemma~\ref{lem:fibres}) is a simple and essentially known observation; a closely related statement appears in McNew's work on the divisor graph~\cite{McN}. The inputs from analytic number theory (Mertens, Chebyshev, Dickman, a Tur\'an-type variance bound, and the divisor bound) are classical. The lower-bound mechanism (Lemmas~\ref{lem:robust} and~\ref{lem:doubling}) is, as far as we know, new. It differs from the triangle argument of~\cite{KP}, which uses paths through the vertex~$1$, and it does not need a strongly connected ``hub clique''. Such a clique, for instance the interval $(K,N^{1/2-\delta}]$, whose elements pairwise have many common multiples, can capture only the integers with a divisor in the clique. For $1/3<\theta<1/2$ this misses a positive proportion of $F_1$ (Remark~\ref{rem:clique}).
 
 \subsection{Idea of the proof}
 \emph{Upper bound.} If $d\mid m$ with $K<d<m\le N$, then $m/d\le B$. Hence the $B$-rough part of a vertex is constant on connected components, and every SCC lies in a fibre $\{v:\ v=n s,\ \Pp(s)\le B\}$, which has at most $\Psi(N,B)$ elements.
@@ -172,7 +172,7 @@ $\dick(u)$ & $0.04861$ & $0.004911$ & $3.547\cdot10^{-4}$ & $2.770\cdot10^{-11}$
 \end{enumerate}
 
 \subsection*{Organisation}
-\S\ref{sec:prelim} collects the arithmetic inputs. \S\ref{sec:upper} proves the upper bound, \S\ref{sec:lower} the general lower bound (Proposition~\ref{prop:lower}), and \S\ref{sec:proofs} the theorems and corollaries. \S\ref{sec:degree} treats degree-based removal, and \S\ref{sec:open} contains remarks and open problems. Appendix~\ref{app:subsum} proves the sub-sum lemma from the preliminary notes, which is no longer needed. Appendix~\ref{app:status} lists every claim with its status and its Lean name. Appendix~\ref{app:classical} proves Lemmas~\ref{lem:mertens} and~\ref{lem:dickman}.
+\S\ref{sec:prelim} collects the arithmetic inputs. \S\ref{sec:upper} proves the upper bound, \S\ref{sec:lower} the general lower bound (Proposition~\ref{prop:lower}), and \S\ref{sec:proofs} the theorems and corollaries. \S\ref{sec:degree} treats degree-based removal, and \S\ref{sec:open} contains further remarks. Appendix~\ref{app:subsum} proves the sub-sum lemma from the preliminary notes, which is no longer needed. Appendix~\ref{app:status} lists every claim with its status and its Lean name. Appendix~\ref{app:classical} proves Lemmas~\ref{lem:mertens} and~\ref{lem:dickman}.
 
 %======================================================================
 \section{Arithmetic preliminaries}\label{sec:prelim}
@@ -267,7 +267,7 @@ where $A(x)=\sum_{p^\nu\le x}f(p^\nu)p^{-\nu}(1-p^{-1})$ and $B(x)^2=\sum_{p^\nu
 The prime powers $p^\nu\le Y$ with $\nu\ge2$ have $p\le\sqrt Y$ and $\nu\le\log_2Y$. With Lemma~\ref{lem:mertens}(d) this shows that there are at most $58Y/\log 2Y$ prime powers $q\le Y$. Also $\sum_{q\le M}1/q\le1+\log M$. By Cauchy--Schwarz, $E^2\le B^4\sum_{qq'\le N}qq'\le(22NB^2)^2$, where each pair is split according to which of $q,q'$ is at most $\sqrt N$; and $(AG)^2\le B^2(1+\log N)\cdot B^2\sum_{q\le N}q\le(10NB^2)^2$. Hence the sum is at most $(1+44+20)NB^2$.\qed
 \end{remark}
 
-\begin{lemma}[Divisor bound {\cite[Thm.~315]{HW}}]\label{lem:divisor}\status{PROVEN, standard}\lean{divisor_bound}
+\begin{lemma}[Divisor bound {\cite[Thm.~315]{HW}}]\label{lem:divisor}\status{PROVEN, standard}\lean{divisor_bound_explicit, divisor_bound}
 For every $\varepsilon>0$ we have $\tau(n)\le C_\varepsilon n^\varepsilon$ for all $n\ge1$, where $C_\varepsilon:=\max\bigl(1,\frac1{\varepsilon\log2}\bigr)^{\lceil 2^{1/\varepsilon}\rceil}$.
 \end{lemma}
 \begin{proof}
@@ -402,7 +402,7 @@ The first claim follows from Lemmas~\ref{lem:robust} and~\ref{lem:doubling}. If 
 
 For $m\in V_{N,K}$ with $m>M$ let $D(m):=\{d\in S_M:\ d\mid m\}$ and $s(m):=|D(m)|$. Let $A_m$ be the event that there are $d,d'\in D(m)$ with $m\to d$ and $d'\to m$.
 
-\begin{lemma}[Attachment]\label{lem:attach}\status{PROVEN}\lean{prob_attachEv, prob_attachEv_ge, prob_all_bit, attach_mutual, prob_attach}
+\begin{lemma}[Attachment]\label{lem:attach}\status{PROVEN}\lean{prob_attachEv, prob_attachEv_eq, prob_attachEv_ge, prob_all_bit, attach_mutual, prob_attach}
 Assume $M\ge4(K+1)$ and let $m\in V_{N,K}$ with $m>M$. Then $\Prob(A_m)\ge1-\rho^{s(m)}-(1-\rho)^{s(m)}\ge1-2\lambda^{s(m)}$, with equality in the first step if $s(m)\ge1$. On $A_m\cap\cR$ we have $m\in\Sigma$.
 \end{lemma}
 \begin{proof}
@@ -599,7 +599,7 @@ On the event $\{\Phi_K>K\}$ the largest SCC lies in $F_1=V_1$ (Lemma~\ref{lem:fi
 \]
 \end{remark}
 
-\begin{remark}[Uniformity in $\rho$; slowly vanishing $\rho$]\label{rem:rho}\status{PROVEN}\lean{remark_5_3_uniform, remark_5_3_uniform_main, GoodT.mono, remark_5_3_slow, slow_rho_bound}
+\begin{remark}[Uniformity in $\rho$; slowly vanishing $\rho$]\label{rem:rho}\status{PROVEN}\lean{remark_5_3_uniform, remark_5_3_uniform_main, GoodT.mono, remark_5_3_slow, slow_rho_bound_explicit}
 The proof depends on $\rho$ only through $q=\rho(1-\rho)$ and $\lambda=\max(\rho,1-\rho)$. Let $0<\rho_0\le\frac12$. For $\rho\in[\rho_0,1-\rho_0]$ we have $\lambda\le\lambda_0:=1-\rho_0$ and $q\ge q_0:=\rho_0(1-\rho_0)$. Then $s_0(\lambda)\le s_0(\lambda_0)$. Conditions (R1)--(R4) and (R6) involve only $N$ and $s_0$, and they become weaker as $s_0$ decreases. Condition (R5) becomes weaker as $q$ increases, because its left side is decreasing in $q$ when $N^{2\delta}\ge2$. So (R1)--(R6) at $\rho_0$ imply (R1)--(R6) at every $\rho\in[\rho_0,1-\rho_0]$. Hence Theorems~\ref{thm:main} and~\ref{thm:rate} hold uniformly for $\rho\in[\rho_0,1-\rho_0]$, with $N_0=N_0(\rho_0)$. More generally, Theorem~\ref{thm:main} remains true for $\rho=\rho_N$ provided $\min(\rho_N,1-\rho_N)\log\log N\to\infty$. This follows from a quantitative form: for every $\varepsilon\in(0,1]$ there is $N_0(\varepsilon)$ such that $\Psi(N,N/(K+1))-\E[\Phi_K]\le\varepsilon N$ for all $N\ge N_0(\varepsilon)$, all $0\le K<N$ and all $\rho\in(0,1)$ with $\min(\rho,1-\rho)\log\log N\ge8\log(16/\varepsilon)+8$. To prove it, write $\ell=\log\log N$ and apply Proposition~\ref{prop:lower} with $\eta=\varepsilon/4$, $\delta=\varepsilon\eta/32\le\eta/8$ and $s_0:=\lfloor\ell/4\rfloor$, so that $\ell/8\le s_0\le\ell/4$. Each of the seven error terms is at most $\varepsilon N/8$ for large $N$. In particular, Lemma~\ref{lem:mertens}(c) gives $L\ge\log\delta+\ell-\log s_0-13\ge\ell/2$, so the $\omega_z$ term is at most $12N/L\le24N/\ell$. Next, $2\lambda^{s_0+1}\le2\exp(-\min(\rho,1-\rho)(s_0+1))\le\varepsilon/8$. Finally $N\Prob(\cR^c)\le N^3\exp(-q(N^{2\delta}-2))\le\varepsilon N/8$, since $q\ge\frac12\min(\rho,1-\rho)\ge1/(2\ell)$. The case $K>N^{1-\eta}$ is handled by Lemma~\ref{lem:psi-upper} as before.
 \end{remark}
 
@@ -671,14 +671,14 @@ Let $\varepsilon=\frac14$ and $K_\pm:=\lfloor(1\pm\varepsilon)K\rfloor$.
 \noindent\emph{Referee check.} The attack set $T$ must not depend on the orientation. Otherwise $\cD_\rho(N)-T$ is not an independently oriented copy of $G_N-T$, and the coupling argument breaks down. This is why in- and out-degree attacks are excluded.
 
 %======================================================================
-\section{Remarks and open problems}\label{sec:open}
+\section{Further remarks}\label{sec:open}
 %======================================================================
 
 \begin{remark}[Edge share of the hubs]\label{rem:edges}\status{PROVEN}\lean{card_hubEdges, card_edges_zero, abs_card_hubEdges_sub_le, abs_card_edges_sub_le, hub_edge_share}
 An edge meets $\{1,\dots,K\}$ if and only if its smaller endpoint $d$ is at most $K$. So $\{1,\dots,K\}$ meets exactly $\sum_{d\le K}(\lfloor N/d\rfloor-1)=N\log K+O(N)$ of the $\sum_{d\le N}(\lfloor N/d\rfloor-1)=N\log N+O(N)$ edges, for $1\le K\le N$; both $O(N)$ terms are at most $2N$ in absolute value. Hence, if $\log(K+1)/\log N\to\theta$, the hubs meet a fraction $\theta+o(1)$ of the edges.
 \end{remark}
 
-\begin{remark}[Why a hub clique does not suffice for $\theta>1/3$]\label{rem:clique}\status{PROVEN; not used}\lean{remark_7_2_hubs, card_common_multiples_ge, prob_not_hub, remark_7_2_small, exists_divisor_of_subsum, three_primes_mem, three_primes_goodSet, remark_7_2, card_obst_ge}
+\begin{remark}[Why a hub clique does not suffice for $\frac13<\theta<\frac12$]\label{rem:clique}\status{PROVEN; not used}\lean{remark_7_2_hubs, card_common_multiples_ge, prob_not_hub, remark_7_2_small, exists_divisor_of_subsum, three_primes_mem, three_primes_goodSet, eventually_attach_cond, remark_7_2, card_obst_ge}
 A natural first approach takes the hub set $H=(K,N^{1/2-\delta}]$ for a fixed $\delta>0$. Two hubs $a<b$ have $\operatorname{lcm}(a,b)\le ab\le N^{1-2\delta}$, hence at least $\lfloor N^{2\delta}\rfloor$ common multiples in $[1,N]$. So $H$ is strongly connected w.h.p., uniformly in $K$. Indeed, for each common multiple $y\in(b,N]$ the event $\{a\to y\to b\}$ has probability $q$ and depends only on the edges $\{a,y\}$ and $\{b,y\}$, which are disjoint for distinct $y$. As in Lemma~\ref{lem:robust}, the probability that some pair of hubs is not joined in both directions is at most $2N^{1-2\delta}(1-q)^{N^{2\delta}-2}\to0$. One then attaches every $m$ with many divisors in $H$. This captures only the integers having a divisor in $(K,N^{1/2-\delta}]$.
 
 For $\theta<1/3$, all but $o(N)$ elements of $F_1$ have a divisor in $(K,\sqrt N\,]$, so the obstruction below does not occur there. To see this, fix a small $\varepsilon>0$ and put $\theta'=\theta+\varepsilon/2$ and $\eta=\varepsilon/8$. Let $m\in F_1$ with $m\ge N^{1-\eta}$. If every prime factor of $m$ is $<m^{1-\theta'}$, apply the sub-sum lemma (Appendix~\ref{app:subsum}) to the numbers $\log p/\log m$, where $p$ runs over the prime factors of $m$ counted with multiplicity. This gives a divisor $d$ of $m$ with $m^{\theta'}\le d\le m^{1/2}$, and $d>K$ for large $N$. Otherwise $m$ has a prime factor in $(N^a,N^b]$, where $a=(1-\eta)(1-\theta-\varepsilon)$ and $b=1-\theta+\varepsilon$, because $B\le N^b$ for large $N$. By Lemma~\ref{lem:mertens}(b), at most $N^{1-\eta}+N\bigl(\log\frac ba+\frac{18}{a\log N}\bigr)\le(10\varepsilon+o(1))N$ elements of $F_1$ remain.
@@ -693,14 +693,6 @@ For $1/3<\theta<1/2$, however, let $p_1,p_2,p_3$ be distinct primes in $(N^{1/4}
 The lower bound of~\cite{KP} uses the triangles $\{1,d,m\}$ and needs the vertex $1$. The present argument uses $2$-paths through common \emph{multiples} of divisibility pairs in the lower layer. It gives a new proof of~\cite[Corollary~2]{KP}, the case $K=0$ of Corollary~\ref{cor:profile}, and extends it to all $K$. The case $K=0$ is also checked formally (\texttt{kp\_corollary\_2}, and \texttt{Checks/ProfileCheck.lean}).
 \end{remark}
 
-\subsection{Open problems}\label{sec:open-problems}
-\begin{enumerate}[label=(O\arabic*)]
-\item \status{OPEN} \emph{True rate.} Determine the order of $\Psi(N,N/(K+1))-\E[\Phi_K]$. Theorem~\ref{thm:rate} gives $O(N/\log\log N)$. Vertices of degree $1$ in $F_1$ are never in an SCC with at least two vertices. This gives $N-\E[\Phi_0]\ge\pi(N)-\pi(N/2)\sim N/(2\log N)$ (the primes in $(N/2,N]$) and $\Psi(N,B)-\E[\Phi_1]\ge\pi(N/2)-\pi(N/3)\sim N/(6\log N)$ (the primes in $(N/3,N/2]$); the two asymptotics follow from the prime number theorem~\cite{Had,dlVP}. Is the error $N(\log N)^{-1+o(1)}$, uniformly in $K\le N^{1-\eta}$? The bottleneck in our argument is the variance bound (Lemma~\ref{lem:turan}) and the thin layer $Y<\Pp(m)\le B$.
-\item \status{OPEN} \emph{Fluctuations.} Find the variance and the limiting distribution of $\Phi_K$; this is~\cite[Question~21]{KP} in the presence of hub removal. Corollary~\ref{cor:structure} gives concentration only at scale $o(N)$.
-\item \status{OPEN} \emph{Orientation-dependent attacks.} Determine the limit profile when hubs are removed by in-degree or out-degree in the realised orientation, which is adaptive to the randomness.
-\item \status{OPEN} \emph{Small $\rho$.} Remark~\ref{rem:rho} allows $\min(\rho,1-\rho)\gg1/\log\log N$. Where does the profile change when $\rho=\rho_N\to0$ faster?
-\item \status{OPEN} \emph{Diameter.} What is the diameter of the giant SCC after hub removal? Compare~\cite[Conjecture~6]{KP}.
-\end{enumerate}
 
 %======================================================================
 \appendix
@@ -749,7 +741,7 @@ Lemma~\ref{lem:dickman} (Dickman, uniform on $[1,U]$) & PROVEN & \lean{dickman_u
 Lemma~\ref{lem:psi-upper} ($\Psi\le\sqrt x+2x(\log y+c_0)/\log x$) & PROVEN & \lean{psi_upper', dickman_le_two_div}Integers $x\ge2$, $y\ge1$\\
 Lemma~\ref{lem:turan} (variance of $\omega_z$) & PROVEN & \lean{turan_variance, turan_count}\\
 Remark~\ref{rem:TK} (Tur\'an--Kubilius) & PROVEN & \lean{remark_2_5, turan_kubilius}$C=130$; not needed for the main results\\
-Lemma~\ref{lem:divisor} ($\tau(n)\le C_\varepsilon n^\varepsilon$) & PROVEN & \lean{divisor_bound}Explicit $C_\varepsilon$\\
+Lemma~\ref{lem:divisor} ($\tau(n)\le C_\varepsilon n^\varepsilon$) & PROVEN & \lean{divisor_bound_explicit}Explicit $C_\varepsilon$\\
 Lemma~\ref{lem:psi-limit} (limit of $\Psi(N,N/(K+1))/N$) & PROVEN & \lean{psi_limit}\\
 Lemma~\ref{lem:fibres} (fibres) & PROVEN & \lean{roughPart_eq_of_reachable, card_fibre_le, card_fibre_le_K}Essentially known (cf.~\cite{McN})\\
 Proposition~\ref{prop:upper} ($\Phi_K\le\Psi(N,B)$, $\Phi_K\le\max(|F_1|,K)$) & PROVEN & \lean{PhiK_le_psi, PhiK_le_max}Deterministic\\
@@ -758,24 +750,23 @@ Remark~\ref{rem:F4} (equivalent forms) & PROVEN & \lean{remark_3_4, remark_3_4_h
 Lemma~\ref{lem:robust} (robust edges) & PROVEN & \lean{prob_not_robust_exp, robust_reachable}Union bound, no cross-pair independence\\
 Lemma~\ref{lem:doubling} (doubling) & PROVEN & \lean{doubling_connected}Deterministic\\
 Corollary~\ref{cor:Sigma} & PROVEN & \lean{sigmaSet_mutual, sigmaSet_closed, sigmaSet_subset}\\
-Lemma~\ref{lem:attach} (attachment) & PROVEN & \lean{prob_attachEv_ge, attach_mutual}\\
+Lemma~\ref{lem:attach} (attachment) & PROVEN & \lean{prob_attachEv_eq, prob_attachEv_ge, attach_mutual}\\
 Lemma~\ref{lem:core} (arithmetic core) & PROVEN & \lean{core_a, core_b, core_c, core_d'}Deterministic, explicit exceptional set\\
 Proposition~\ref{prop:lower}, \eqref{eq:lower1} and~\eqref{eq:lower2} & PROVEN & \lean{lower_bound_err', fixedN_sandwich', eq_4_2}Non-asymptotic, $C_1=18$\\
 Theorem~\ref{thm:rate} (rate $30N/\log\log N$) & PROVEN & \lean{thm_rate, rate_cases, eventually_goodN}\\
 Theorem~\ref{thm:main} (uniform asymptotic) & PROVEN & \lean{thm_main}Answers \cite[Q.~20]{KP}\\
 Remark~\ref{rem:smallK} (explicit loss for $K<\sqrt N$) & PROVEN & \lean{remark_5_1, smallK_psi}$\Psi$-estimate with error $77/\log N$\\
 Corollary~\ref{cor:profile} (profile $\dick(1/(1-\theta))$) & PROVEN & \lean{cor_profile, dickLim_continuous, dickLim_strictAntiOn}\\
-Corollary~\ref{cor:structure} (giant $\approx F_1$, second SCC $\le K+o(N)$) & PROVEN & \lean{cor_structure, cor_structure_prob}\\
+Corollary~\ref{cor:structure} (giant $\approx F_1$, second SCC $\le K+o(N)$) & PROVEN & \lean{cor_structure, cor_structure_prob, cor_structure_whp}\\
 Remark~\ref{rem:second} (term $K$ needed) & PROVEN & \lean{remark_5_2, secondSCC_ge, prob_PhiK_le_K}Uses \cite[Cor.~2]{KP} (Remark~\ref{rem:KP})\\
-Remark~\ref{rem:rho} (uniform in $\rho$; $\rho_N\gg1/\log\log N$) & PROVEN & \lean{remark_5_3_uniform, remark_5_3_slow, slow_rho_bound}(R1)--(R6) are monotone in $s_0$ and $q$\\
+Remark~\ref{rem:rho} (uniform in $\rho$; $\rho_N\gg1/\log\log N$) & PROVEN & \lean{remark_5_3_uniform, remark_5_3_slow, slow_rho_bound_explicit}(R1)--(R6) are monotone in $s_0$ and $q$\\
 Lemma~\ref{lem:mono}, Lemma~\ref{lem:sandwich} & PROVEN & \lean{maxSCC_mono, sandwich_static, sandwich_adaptive}\\
 Corollary~\ref{cor:degree} (static/adaptive degree attacks) & PROVEN & \lean{cor_degree_static, cor_degree_adaptive, static_eq_Icc}Degrees taken in $G_N$\\
 Remark~\ref{rem:edges} (edge share $\theta$) & PROVEN & \lean{card_hubEdges, hub_edge_share}$|O(N)|\le2N$\\
-Remark~\ref{rem:clique} (hub clique loses for $\theta>1/3$) & PROVEN; not used & \lean{remark_7_2_hubs, remark_7_2_small, three_primes_mem, three_primes_goodSet, remark_7_2}Triple sum written out; hubs strongly connected w.h.p.; the case $\theta<1/3$\\
+Remark~\ref{rem:clique} (hub clique loses for $\frac13<\theta<\frac12$) & PROVEN; not used & \lean{remark_7_2_hubs, remark_7_2_small, three_primes_mem, three_primes_goodSet, eventually_attach_cond, remark_7_2}Triple sum written out; hubs strongly connected w.h.p.; the case $\theta<1/3$\\
 Remark~\ref{rem:KP} (Kim--Phillips' Corollary~2) & PROVEN & \lean{kp_corollary_2}The case $K=0$ of Corollary~\ref{cor:profile}\\
 Lemma~\ref{lem:subsum} (sub-sum lemma, sharp) & PROVEN & \lean{subsum, subsum_infinite, subsum_sharp}Finite and infinite sequences; not needed for the main results\\
 Lemmas~\ref{lem:buchstab} and~\ref{lem:primesum} (Buchstab, prime sums) & PROVEN & \lean{buchstab_real, primeSum_integral}\\
-(O1)--(O5) & OPEN & \\
 \bottomrule
 \end{longtable}
 
@@ -911,8 +902,6 @@ By Lemma~\ref{lem:primesum}, $\bigl|\sum_{p\in P}\dick(w_p-1)/p-\int_n^u\dick(w-
 
 \bibitem{Gra} A.~Granville, Smooth numbers: computational number theory and beyond, in: \emph{Algorithmic Number Theory}, MSRI Publ.~44, Cambridge Univ. Press, 2008, 267--323.
 
-\bibitem{Had} J.~Hadamard, Sur la distribution des z\'eros de la fonction $\zeta(s)$ et ses cons\'equences arithm\'etiques, \emph{Bull. Soc. Math. France} \textbf{24} (1896), 199--220.
-
 \bibitem{HW} G.~H.~Hardy, E.~M.~Wright, \emph{An Introduction to the Theory of Numbers}, 6th ed., Oxford Univ. Press, 2008.
 
 \bibitem{Hil} A.~Hildebrand, On the number of positive integers $\le x$ and free of prime factors $>y$, \emph{J. Number Theory} \textbf{22} (1986), 289--307.
@@ -924,8 +913,6 @@ By Lemma~\ref{lem:primesum}, $\bigl|\sum_{p\in P}\dick(w_p-1)/p-\int_n^u\dick(w-
 \bibitem{McN} N.~McNew, Counting primitive subsets and other statistics of the divisor graph of $\{1,2,\dots,n\}$, \emph{European J. Combin.} \textbf{92} (2021), 103237.
 
 \bibitem{Mertens} F.~Mertens, Ein Beitrag zur analytischen Zahlentheorie, \emph{J. Reine Angew. Math.} \textbf{78} (1874), 46--62.
-
-\bibitem{dlVP} C.-J.~de la Vall\'ee Poussin, Recherches analytiques sur la th\'eorie des nombres premiers, \emph{Ann. Soc. Sci. Bruxelles} \textbf{20} (1896), 183--256.
 
 \bibitem{Ten} G.~Tenenbaum, \emph{Introduction to Analytic and Probabilistic Number Theory}, 3rd ed., Grad. Stud. Math.~163, Amer. Math. Soc., 2015.
 

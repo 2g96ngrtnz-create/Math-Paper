@@ -93,7 +93,7 @@ theorem hMb_example : coreY 65536 10 (1 / 16) < ((65536 / (10 + 1) : ℕ) : ℝ)
     linarith
   linarith
 
-/-- Proposition 4.6, eq. (4.1), in `𝒟_{1/2}(2¹⁶, 10)` (no Mertens input needed). -/
+/-- Proposition 4.6, eq. (2), in `𝒟_{1/2}(2¹⁶, 10)` (no Mertens input needed). -/
 example := lower_bound hyp (ρ := 1 / 2) (by norm_num) (by norm_num)
 
 /-- The paper's form of Proposition 4.6, with the Mertens instance proved above. -/

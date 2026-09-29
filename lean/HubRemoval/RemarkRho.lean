@@ -347,12 +347,13 @@ theorem slow_large_case {ε η ρ t : ℝ} {N K : ℕ} (hε : 0 < ε) (hη : η 
   unfold gap
   linarith
 
-/-- **The quantitative form of Remark 5.3(b).** For every `ε ∈ (0, 1]` there are `A` and `N₀` such
-that for all `N ≥ N₀`, all `ρ ∈ (0, 1)` with `min(ρ, 1 − ρ) log log N ≥ A`, and all `K < N`,
-`Ψ(N, N/(K+1)) − E[Φ_K] ≤ εN`. Here `A = 8 log(16/ε) + 8`. -/
-theorem slow_rho_bound {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
-    ∃ A : ℝ, ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
-      A ≤ min ρ (1 - ρ) * Real.log (Real.log N) → ∀ K < N, gap ρ N K ≤ ε * N := by
+/-- **The quantitative form of Remark 5.3(b).** For every `ε ∈ (0, 1]` there is `N₀` such that
+for all `N ≥ N₀`, all `ρ ∈ (0, 1)` with `min(ρ, 1 − ρ) log log N ≥ 8 log(16/ε) + 8`, and all
+`K < N`, `Ψ(N, N/(K+1)) − E[Φ_K] ≤ εN`. -/
+theorem slow_rho_bound_explicit {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
+    ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+      8 * Real.log (16 / ε) + 8 ≤ min ρ (1 - ρ) * Real.log (Real.log N) →
+        ∀ K < N, gap ρ N K ≤ ε * N := by
   obtain ⟨η, hη⟩ : ∃ η : ℝ, η = ε / 4 := ⟨_, rfl⟩
   obtain ⟨δ, hδ⟩ : ∃ δ : ℝ, δ = ε * η / 32 := ⟨_, rfl⟩
   have hη0 : 0 < η := by rw [hη]; positivity
@@ -379,7 +380,7 @@ theorem slow_rho_bound {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
   have E11 := hlog.eventually_ge_atTop (8 * (Real.log 4 + 2) / ε)
   obtain ⟨N₀, hN₀⟩ := eventually_atTop.mp ((((E1.and E2).and (E3.and E4)).and
     ((E4'.and E6).and (E7.and E8))).and (((E9.and E10).and E11).and (eventually_ge_atTop 3)))
-  refine ⟨8 * Real.log (16 / ε) + 8, N₀, fun N hN ρ hρ0 hρ1 hAm K hK => ?_⟩
+  refine ⟨N₀, fun N hN ρ hρ0 hρ1 hAm K hK => ?_⟩
   obtain ⟨⟨⟨e1, e2⟩, ⟨e3, e4⟩⟩, ⟨⟨e4', e6⟩, ⟨e7, e8⟩⟩⟩ := (hN₀ N hN).1
   obtain ⟨⟨⟨e9, e10⟩, e11⟩, hN3⟩ := (hN₀ N hN).2
   simp only [pow_one] at e3 e4
@@ -407,6 +408,12 @@ theorem slow_rho_bound {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
   · exact slow_small_case hε hε1 hη hδ hρ0 hρ1 (by linarith) rfl rfl ht1 hℓt hs₀1 hs₀le hℓε hq
       hlam hKs e2 e3 e4 e4' e6 e7 (le_trans (le_max_right _ _) e8) e9
   · exact slow_large_case hε hη hρ0 hρ1 hN3 hK rfl (by linarith) hKs e10 e11
+
+/-- `slow_rho_bound_explicit` with the threshold `A = 8 log(16/ε) + 8` left implicit. -/
+theorem slow_rho_bound {ε : ℝ} (hε : 0 < ε) (hε1 : ε ≤ 1) :
+    ∃ A : ℝ, ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ ρ : ℝ, 0 < ρ → ρ < 1 →
+      A ≤ min ρ (1 - ρ) * Real.log (Real.log N) → ∀ K < N, gap ρ N K ≤ ε * N :=
+  ⟨_, slow_rho_bound_explicit hε hε1⟩
 
 /-- **Remark 5.3(b).** Theorem 1.2 remains true for `ρ = ρ_N ∈ (0, 1)` with
 `min(ρ_N, 1 − ρ_N) log log N → ∞`: `max_{K<N} (Ψ(N, N/(K+1)) − E[Φ_K])/N → 0`. -/

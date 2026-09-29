@@ -3,24 +3,24 @@ import HubRemoval.Sandwich
 import HubRemoval.Divisor
 
 /-!
-# Removing the vertices of highest degree (paper, Corollary 1.5)
+# Removing the vertices of highest degree (paper, Corollary 1.6)
 
 `𝒟_ρ(N)` is the random orientation of `G_N`, with outcomes `ω : Edge N 0 → Bool` (`G_{N,0} = G_N`).
 For `T ⊆ [N]`, `#Φ(𝒟_ρ(N) − T)` is `maxSCC (arc ω) ([N] \ T)`.
 
-**Corollary 1.5.** Fix `ρ ∈ (0, 1)`, and let `log(K + 1)/log N → θ ∈ [0, 1)`. Let `T = T(N)`
+**Corollary 1.6.** Fix `ρ ∈ (0, 1)`, and let `log(K + 1)/log N → θ ∈ [0, 1)`. Let `T = T(N)`
 with `|T| = K` be chosen from `G_N` alone, by a static attack (`cor_degree_static`) or an
 adaptive attack (`cor_degree_adaptive`). Then `E[#Φ(𝒟_ρ(N) − T)]/N → ρ(1/(1 − θ))`.
 Moreover, for fixed `κ ∈ (0, 1/2)` and large `N`, if `1 ≤ K ≤ N^{1/2−κ}`, then a static set is
 exactly `{1, …, K}` (`static_eq_Icc`).
 
-*Proof.* Put `ε = 1/4` and `K_± = ⌊(1 ± ε)K⌋`. The divisor bound (Lemma 2.5, exponent
+*Proof.* Put `ε = 1/4` and `K_± = ⌊(1 ± ε)K⌋`. The divisor bound (Lemma 2.6, exponent
 `(1 − θ)/2`) makes the hypothesis of Lemma 6.2 hold for large `N`
 (`eventually_sandwich_hyp`). So `V_{N,K₊} ⊆ [N] \ T ⊆ V_{N,K₋}`. Lemma 6.1 gives
 `Φ_{K₊} ≤ #Φ(𝒟_ρ(N) − T) ≤ Φ_{K₋}` pointwise, where `Φ_{K'}` is the largest SCC of `𝒟_ρ(N)`
 restricted to `(K', N]`. That restriction has the law of `𝒟_ρ(N, K')`
 (`expect_maxSCC_Ioc`, from `expectP_comp_injective`), so its mean is `E[Φ_{K'}]`. Finally
-`log(K_± + 1)/log N → θ`, and Corollary 1.3 applies to `K_±`.
+`log(K_± + 1)/log N → θ`, and Corollary 1.4 applies to `K_±`.
 
 As `T` is a fixed function of `N`, it does not depend on the orientation.
 -/
@@ -254,7 +254,7 @@ theorem eventually_lt_of_ratio {K : ℕ → ℕ} {θ : ℝ} (hθ1 : θ < 1)
 /-! ### The attacks -/
 
 /-- **The hypothesis of Lemma 6.2 holds for large `N`**, with `ε = 1/4` and `τ = C N^α`,
-`α = (1 − θ)/2` (Lemma 2.5). -/
+`α = (1 − θ)/2` (Lemma 2.6). -/
 theorem eventually_sandwich_hyp {K : ℕ → ℕ} {θ : ℝ} (hθ1 : θ < 1)
     (hθ : Tendsto (fun N : ℕ => Real.log ((K N : ℝ) + 1) / Real.log N) atTop (𝓝 θ)) :
     ∃ τ : ℕ → ℝ, ∀ᶠ N : ℕ in atTop, K N < N ∧
@@ -357,7 +357,7 @@ theorem attack_limit {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {K : ℕ → ℕ
     exact div_le_div_of_nonneg_right (expect_attack_sandwich hρ0.le hρ1.le hTN.1 hTN.2).2
       (Nat.cast_nonneg N)
 
-/-- **Corollary 1.5, static attack.** If `|T| = K`, `T ⊆ [N]`, and every `t ∈ T` has degree in
+/-- **Corollary 1.6, static attack.** If `|T| = K`, `T ⊆ [N]`, and every `t ∈ T` has degree in
 `G_N` at least that of every `v ∉ T`, then `E[#Φ(𝒟_ρ(N) − T)]/N → ρ(1/(1 − θ))`. -/
 theorem cor_degree_static {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {K : ℕ → ℕ} {θ : ℝ} (hθ1 : θ < 1)
     (hθ : Tendsto (fun N : ℕ => Real.log ((K N : ℝ) + 1) / Real.log N) atTop (𝓝 θ))
@@ -377,7 +377,7 @@ theorem cor_degree_static {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {K : ℕ �
     linarith
   · exact sandwich_static (by norm_num) (by norm_num) hK1 hKN hτN (hgap hK1) hTN hTK hst
 
-/-- **Corollary 1.5, adaptive attack.** If `T = {u₀, …, u_{K−1}}` where each `u_j` has maximal
+/-- **Corollary 1.6, adaptive attack.** If `T = {u₀, …, u_{K−1}}` where each `u_j` has maximal
 degree in `G_N − {u₀, …, u_{j−1}}`, then `E[#Φ(𝒟_ρ(N) − T)]/N → ρ(1/(1 − θ))`. -/
 theorem cor_degree_adaptive {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {K : ℕ → ℕ} {θ : ℝ}
     (hθ1 : θ < 1)
@@ -397,7 +397,7 @@ theorem cor_degree_adaptive {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {K : ℕ 
     linarith
   · exact sandwich_adaptive (by norm_num) (by norm_num) hK1 hKN hτN (hgap hK1) huN
 
-/-- **Corollary 1.5, last claim.** For fixed `κ ∈ (0, 1/2)` and large `N`, if
+/-- **Corollary 1.6, last claim.** For fixed `κ ∈ (0, 1/2)` and large `N`, if
 `1 ≤ K ≤ N^{1/2−κ}`, then a static set `T` is exactly `{1, …, K}`. -/
 theorem static_eq_Icc {κ : ℝ} (hκ0 : 0 < κ) (hκ : κ < 1 / 2) :
     ∃ N₁ : ℕ, ∀ N ≥ N₁, ∀ K : ℕ, 1 ≤ K → (K : ℝ) ≤ (N : ℝ) ^ (1 / 2 - κ) →

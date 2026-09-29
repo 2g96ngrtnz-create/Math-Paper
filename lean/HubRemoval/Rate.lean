@@ -1,18 +1,18 @@
 import HubRemoval.Asymptotics
 
 /-!
-# Theorems 1.1 and 1.2
+# Theorems 1.2 and 1.3
 
 `gap ρ N K = Ψ(N, N/(K+1)) − E[Φ_K]` in `𝒟_ρ(N, K)`. (As the paper notes,
 `Ψ(N, N/(K+1)) = Ψ(N, B)` with `B = ⌊N/(K+1)⌋`, which is what `psi N (N / (K + 1))` counts.)
 
-**Theorem 1.2 (Rate).** For every `ρ ∈ (0,1)` there is `N₀(ρ)` such that for all `N ≥ N₀(ρ)`
+**Theorem 1.3 (Rate).** For every `ρ ∈ (0,1)` there is `N₀(ρ)` such that for all `N ≥ N₀(ρ)`
 and all `0 ≤ K < N`, `0 ≤ Ψ(N, N/(K+1)) − E[Φ_K] ≤ 30N/log log N` (`thm_rate`).
 
-**Theorem 1.1 (Main theorem).** `Φ_K ≤ Ψ(N, N/(K+1))` for every orientation, and
+**Theorem 1.2 (Main theorem).** `Φ_K ≤ Ψ(N, N/(K+1))` for every orientation, and
 `max_{0 ≤ K < N} (Ψ(N, N/(K+1)) − E[Φ_K])/N → 0` (`thm_main`).
 
-The proof of Theorem 1.2 is the paper's, with `ℓ = log log N`, `η = 1/ℓ`, `δ = 1/(8ℓ²)`,
+The proof of Theorem 1.3 is the paper's, with `ℓ = log log N`, `η = 1/ℓ`, `δ = 1/(8ℓ²)`,
 `s₀ = max(1, ⌈log ℓ / log(1/λ)⌉)` and `z = N^{δ/s₀}`. `GoodT ρ (log N)` (conditions (R1)–(R6))
 holds for all large `N` (`eventually_goodN`). Under it (`gap_le_of_good`):
 * **if `K ≤ N^{1−η}`**, the hypotheses of Lemma 4.5 hold. Proposition 4.6 with Lemma 4.1
@@ -44,7 +44,7 @@ theorem gap_nonneg {ρ : ℝ} (hρ0 : 0 ≤ ρ) (hρ1 : ρ ≤ 1) (N K : ℕ) : 
 /-- `ℓ = log log N`. -/
 noncomputable def ellN (N : ℕ) : ℝ := Real.log (Real.log N)
 
-/-- The paper's parameters in the proof of Theorem 1.2: `η = 1/ℓ`, `δ = 1/(8ℓ²)`,
+/-- The paper's parameters in the proof of Theorem 1.3: `η = 1/ℓ`, `δ = 1/(8ℓ²)`,
 `s₀ = max(1, ⌈log ℓ/log(1/λ)⌉)`. -/
 noncomputable def etaN (N : ℕ) : ℝ := 1 / ellN N
 noncomputable def deltaN (N : ℕ) : ℝ := 1 / (8 * ellN N ^ 2)
@@ -56,7 +56,7 @@ noncomputable def errT (ρ : ℝ) (N s₀ : ℕ) (η δ : ℝ) : ℝ :=
     ((Ioc 0 N).filter (fun m => omegaZ ⌊(N : ℝ) ^ (δ / s₀)⌋₊ m < s₀)).card +
     2 * (max ρ (1 - ρ)) ^ (s₀ + 1) * N
 
-/-- **The two cases of the proof of Theorem 1.2.** Under (R1)–(R6) at `t = log N`, and for
+/-- **The two cases of the proof of Theorem 1.3.** Under (R1)–(R6) at `t = log N`, and for
 `K < N`: `N/ℓ ≥ 1`, and
 * if `K ≤ N^{1−η}`, the hypotheses of Lemma 4.5 hold, `K ≤ N/ℓ`, `Err ≤ 28N/ℓ` and
   `N³ exp(−q(N^{2δ} − 2)) ≤ 1`;
@@ -280,7 +280,7 @@ theorem rate_cases {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (hK : 
       field_simp; ring
     linarith
 
-/-- **The core of Theorem 1.2.** Under (R1)–(R6) at `t = log N`, every `K < N` has
+/-- **The core of Theorem 1.3.** Under (R1)–(R6) at `t = log N`, every `K < N` has
 `gap ≤ 30N/log log N`. -/
 theorem gap_le_of_good {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (hK : K < N)
     (hG : GoodT ρ (Real.log N)) : gap ρ N K ≤ 30 * N / Real.log (Real.log N) := by
@@ -299,7 +299,7 @@ theorem gap_le_of_good {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {N K : ℕ} (h
     unfold gap
     linarith
 
-/-- **Theorem 1.2 (Rate).** For every `ρ ∈ (0,1)` there is `N₀` such that for all `N ≥ N₀` and all
+/-- **Theorem 1.3 (Rate).** For every `ρ ∈ (0,1)` there is `N₀` such that for all `N ≥ N₀` and all
 `K < N`, `0 ≤ Ψ(N, N/(K+1)) − E[Φ_K] ≤ 30N/log log N`. -/
 theorem thm_rate {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) :
     ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ K < N,
@@ -308,7 +308,7 @@ theorem thm_rate {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) :
   exact ⟨N₀, fun N hN K hK =>
     ⟨gap_nonneg hρ0.le hρ1.le N K, gap_le_of_good hρ0 hρ1 hK (hN₀ N hN)⟩⟩
 
-/-- **Theorem 1.1 (Main theorem).** For every orientation, `Φ_K ≤ Ψ(N, N/(K+1))`; and
+/-- **Theorem 1.2 (Main theorem).** For every orientation, `Φ_K ≤ Ψ(N, N/(K+1))`; and
 `max_{0 ≤ K < N} (Ψ(N, N/(K+1)) − E[Φ_K])/N → 0` as `N → ∞`. -/
 theorem thm_main {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) :
     (∀ (N K : ℕ) (ω : Edge N K → Bool), PhiK N K ω ≤ psi N (N / (K + 1))) ∧

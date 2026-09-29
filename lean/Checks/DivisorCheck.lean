@@ -1,11 +1,12 @@
 import HubRemoval.Divisor
 open HubRemoval
 
-/-! ### Lemma 2.5: axioms -/
+/-! ### Lemma 2.6: axioms -/
 
 #print axioms succ_le_const_mul_two_rpow
 #print axioms succ_le_rpow_of_large
 #print axioms rpow_eq_prod_primeFactors
+#print axioms divisor_bound_explicit
 #print axioms divisor_bound
 
 /-! ### Concrete values -/
@@ -13,9 +14,14 @@ open HubRemoval
 #guard (Nat.divisors 12).card = 6
 #guard (Nat.divisors 720720).card = 240   -- 720720 = 2⁴·3²·5·7·11·13, τ = 5·3·2·2·2·2
 
-/-- Lemma 2.5 with `ε = 1/2`: `τ(n) ≤ C √n`. -/
+/-- Lemma 2.6 with `ε = 1/2`: `τ(n) ≤ C √n`. -/
 example : ∃ C : ℝ, 0 < C ∧ ∀ n : ℕ, n ≠ 0 → (n.divisors.card : ℝ) ≤ C * (n : ℝ) ^ (1 / 2 : ℝ) :=
   divisor_bound (by norm_num)
+
+/-- Lemma 2.6 with the explicit constant, `ε = 1/2`: `τ(n) ≤ max(1, 2/log 2)^⌈2^2⌉ √n`. -/
+example {n : ℕ} (hn : n ≠ 0) : (n.divisors.card : ℝ) ≤
+    max 1 (1 / (1 / 2 * Real.log 2)) ^ ⌈(2 : ℝ) ^ (1 / (1 / 2 : ℝ))⌉₊ * (n : ℝ) ^ (1 / 2 : ℝ) :=
+  divisor_bound_explicit (by norm_num) hn
 
 /-- A constant is needed: `τ(12) = 6 > √12`, so `C = 1` fails for `ε = 1/2`. -/
 example : (12 : ℝ) ^ (1 / 2 : ℝ) < (Nat.divisors 12).card := by

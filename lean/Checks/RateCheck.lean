@@ -1,7 +1,7 @@
 import HubRemoval.Rate
 open HubRemoval Filter Topology
 
-/-! ### Theorems 1.1 and 1.2: axioms -/
+/-! ### Theorems 1.2 and 1.3: axioms -/
 
 #print axioms half_le_lam
 #print axioms s0f_le
@@ -17,16 +17,16 @@ open HubRemoval Filter Topology
 
 /-! ### The theorems, applied -/
 
-/-- Theorem 1.2 for `ρ = 1/2`. -/
+/-- Theorem 1.3 for `ρ = 1/2`. -/
 example : ∃ N₀ : ℕ, ∀ N ≥ N₀, ∀ K < N,
     0 ≤ gap (1 / 2) N K ∧ gap (1 / 2) N K ≤ 30 * N / Real.log (Real.log N) :=
   thm_rate (by norm_num) (by norm_num)
 
-/-- Theorem 1.1 for `ρ = 1/3`. -/
+/-- Theorem 1.2 for `ρ = 1/3`. -/
 example : Tendsto (fun N : ℕ => ⨆ K : Fin N, gap (1 / 3) N K / N) atTop (𝓝 0) :=
   (thm_main (by norm_num) (by norm_num)).2
 
-/-- The uniform form of Theorem 1.1: for every `ε > 0`, eventually `gap/N ≤ ε` for all `K < N`. -/
+/-- The uniform form of Theorem 1.2: for every `ε > 0`, eventually `gap/N ≤ ε` for all `K < N`. -/
 example {ρ : ℝ} (hρ0 : 0 < ρ) (hρ1 : ρ < 1) {ε : ℝ} (hε : 0 < ε) :
     ∀ᶠ N : ℕ in atTop, ∀ K < N, gap ρ N K ≤ ε * N := by
   have hlim : Tendsto (fun N : ℕ => 30 / Real.log (Real.log N)) atTop (𝓝 0) :=

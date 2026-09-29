@@ -9,7 +9,7 @@ import HubRemoval.Attach
 Assume the hypotheses of Lemma 4.5 (`CoreHyp N K s₀ η δ`), put `M = N^{1−2δ}`, and let
 `0 ≤ ρ ≤ 1`, `λ = max(ρ, 1 − ρ)`. `𝒰 ⊆ F₁` is the set of Lemma 4.5.
 
-**Proposition 4.6, eq. (4.1).** In `𝒟_ρ(N, K)`,
+**Proposition 4.6, eq. (2).** In `𝒟_ρ(N, K)`,
 `E[Φ_K] ≥ Ψ(N, B) − K − |F₁ \ 𝒰| − 2λ^{s₀+1} N − N · P(𝓡ᶜ)` (`lower_bound`).
 
 With Lemma 4.5(d) this becomes the paper's form
@@ -103,7 +103,7 @@ theorem card_coreU_le : (coreU N K s₀ δ).card ≤ N := by
   simpa using card_le_card hsub
 
 open Classical in
-/-- **Proposition 4.6, eq. (4.1).**
+/-- **Proposition 4.6, eq. (2).**
 `E[Φ_K] ≥ Ψ(N, B) − K − |F₁ \ 𝒰| − 2λ^{s₀+1} N − N · P(𝓡ᶜ)`. -/
 theorem lower_bound (h : CoreHyp N K s₀ η δ) {ρ : ℝ} (hρ0 : 0 ≤ ρ) (hρ1 : ρ ≤ 1) :
     (psi N (N / (K + 1)) : ℝ) - K -

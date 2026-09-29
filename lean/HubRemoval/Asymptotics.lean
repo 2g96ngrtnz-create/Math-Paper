@@ -1,9 +1,9 @@
 import HubRemoval.Unconditional
 
 /-!
-# The growth conditions (R1)–(R6) in the proof of Theorem 1.2
+# The growth conditions (R1)–(R6) in the proof of Theorem 1.3
 
-The proof of Theorem 1.2 uses the parameters
+The proof of Theorem 1.3 uses the parameters
 `ℓ = log log N`, `η = 1/ℓ`, `δ = 1/(8ℓ²)`, `s₀ = max(1, ⌈log ℓ / log(1/λ)⌉)`, `z = N^{δ/s₀}`,
 where `λ = max(ρ, 1 − ρ)`, and six growth conditions (R1)–(R6) that hold "for `N ≥ N₀(ρ)`".
 
@@ -85,7 +85,7 @@ theorem eventually_mul_log_pow_le (A : ℝ) (k : ℕ) :
     _ ≤ 1 * t := mul_le_mul_of_nonneg_right hA ht0
     _ = t := one_mul t
 
-/-- The inequalities in `t = log N` used in the proof of Theorem 1.2 (`ℓ = log t`). -/
+/-- The inequalities in `t = log N` used in the proof of Theorem 1.3 (`ℓ = log t`). -/
 structure GoodT (ρ t : ℝ) : Prop where
   /-- `ℓ > 1`. -/
   p0 : 1 < Real.log t
