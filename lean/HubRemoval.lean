@@ -32,3 +32,7 @@ import HubRemoval.PsiLimit
 import HubRemoval.Profile
 import HubRemoval.Giant
 import HubRemoval.Attack
+import HubRemoval.RemarkEdges
+import HubRemoval.RemarkForms
+import HubRemoval.RemarkSmallK
+import HubRemoval.RemarkRho
