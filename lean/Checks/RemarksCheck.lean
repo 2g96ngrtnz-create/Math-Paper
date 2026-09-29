@@ -3,6 +3,7 @@ import HubRemoval.RemarkForms
 import HubRemoval.RemarkSmallK
 import HubRemoval.RemarkRho
 import HubRemoval.RemarkSecond
+import HubRemoval.RemarkClique
 open HubRemoval Finset Filter Topology
 
 /-! ### Remarks 7.1 and 7.3: axioms -/
@@ -65,6 +66,24 @@ open HubRemoval Finset Filter Topology
 #print axioms slow_large_case
 #print axioms slow_rho_bound
 #print axioms remark_5_3_slow
+
+/-! ### Remark 7.2: axioms -/
+
+#print axioms mem_primesIn
+#print axioms dvd_three_primes
+#print axioms tuple_bounds
+#print axioms big_prime_dvd
+#print axioms prod4_injOn
+#print axioms obst_mem
+#print axioms prime_factor_le
+#print axioms obst_goodSet
+#print axioms card_filter_mul_le
+#print axioms card_tuples
+#print axioms div_ge_half
+#print axioms sum_triple
+#print axioms slice_sum_ge
+#print axioms card_obst_ge
+#print axioms remark_7_2
 
 /-! ### Remark 7.1 on concrete instances -/
 
@@ -221,3 +240,48 @@ example {ε : ℝ} (hε : 0 < ε) : ∀ᶠ N in atTop, (1 / 2 - ε) * ((Nat.sqrt
   remark_5_2 (K := fun N => Nat.sqrt N / 2) (by norm_num) (by norm_num) sqrt_half_tendsto
     (Eventually.of_forall sqrt_half_le) (fun N => starSel N (Nat.sqrt N / 2))
     (fun _ h ω => starSel_spec h ω) hε
+
+/-! ### Remark 7.2 at `θ = 2/5`, `K = ⌊N^{2/5}⌋` -/
+
+/-- `log(⌊N^a⌋ + 1)/log N → a` for `a > 0`. -/
+theorem tendsto_log_floor_rpow {a : ℝ} (ha : 0 < a) :
+    Tendsto (fun N : ℕ => Real.log ((⌊(N : ℝ) ^ a⌋₊ : ℝ) + 1) / Real.log N) atTop (𝓝 a) := by
+  have hup : Tendsto (fun N : ℕ => a + Real.log 2 / Real.log N) atTop (𝓝 a) := by
+    simpa using tendsto_const_nhds.add (tendsto_const_nhds.div_atTop tendsto_log_nat)
+  refine tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hup ?_ ?_
+  · filter_upwards [eventually_ge_atTop 2] with N hN2
+    have hN0 : (0 : ℝ) < N := by exact_mod_cast (show 0 < N by omega)
+    have hL : 0 < Real.log (N : ℝ) := Real.log_pos (by exact_mod_cast (show 1 < N by omega))
+    rw [le_div_iff₀ hL]
+    have h1 : Real.log ((N : ℝ) ^ a) ≤ Real.log ((⌊(N : ℝ) ^ a⌋₊ : ℝ) + 1) :=
+      Real.log_le_log (by positivity) (Nat.lt_floor_add_one _).le
+    rw [Real.log_rpow hN0] at h1
+    linarith
+  · filter_upwards [eventually_ge_atTop 2] with N hN2
+    have hN0 : (0 : ℝ) < N := by exact_mod_cast (show 0 < N by omega)
+    have hL : 0 < Real.log (N : ℝ) := Real.log_pos (by exact_mod_cast (show 1 < N by omega))
+    have h1 : (1 : ℝ) ≤ (N : ℝ) ^ a :=
+      Real.one_le_rpow (by exact_mod_cast (show 1 ≤ N by omega)) ha.le
+    have h2 : Real.log ((⌊(N : ℝ) ^ a⌋₊ : ℝ) + 1) ≤ Real.log (2 * (N : ℝ) ^ a) :=
+      Real.log_le_log (by positivity)
+        (by linarith [Nat.floor_le (by positivity : (0 : ℝ) ≤ (N : ℝ) ^ a)])
+    rw [Real.log_mul (by norm_num) (by positivity), Real.log_rpow hN0] at h2
+    rw [div_le_iff₀ hL, add_mul, div_mul_cancel₀ _ hL.ne']
+    linarith
+
+/-- With `K = ⌊N^{2/5}⌋`, a positive proportion of `F₁` has no divisor in `(K, √N]`. -/
+example : ∃ c > 0, ∀ᶠ N : ℕ in atTop, c * N ≤
+    (((smoothFibre N ⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊).filter fun m => ∀ d ∈ m.divisors,
+      ¬ (⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊ < d ∧ d * d ≤ N)).card : ℝ) :=
+  remark_7_2 (K := fun N => ⌊(N : ℝ) ^ (2 / 5 : ℝ)⌋₊) (by norm_num) (by norm_num)
+    (tendsto_log_floor_rpow (by norm_num))
+
+/-- The count on its own, for `γ = 1/12`. -/
+example : ∃ c > 0, ∀ᶠ N : ℕ in atTop, c * N ≤ ((obst N (1 / 12)).card : ℝ) :=
+  card_obst_ge (by norm_num) (by norm_num)
+
+/-- The divisor structure on a concrete case: `d = 11 · 13` divides `7 · 11 · 13 · 2`. -/
+example : (7 * 11 ∣ 143 ∨ 7 * 13 ∣ 143 ∨ 11 * 13 ∣ 143) ∨
+    (143 ∣ 7 * 2 ∨ 143 ∣ 11 * 2 ∨ 143 ∣ 13 * 2) :=
+  dvd_three_primes (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+    (by norm_num) (by norm_num)
