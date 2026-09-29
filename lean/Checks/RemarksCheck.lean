@@ -4,7 +4,34 @@ import HubRemoval.RemarkSmallK
 import HubRemoval.RemarkRho
 import HubRemoval.RemarkSecond
 import HubRemoval.RemarkClique
+import HubRemoval.TuranKubilius
 open HubRemoval Finset Filter Topology
+
+/-! ### Remark 2.5: axioms -/
+
+#print axioms mem_ppIdx
+#print axioms qi_injOn
+#print axioms IsAdditive.map_prod
+#print axioms IsAdditive.eq_sum_primeFactors
+#print axioms IsAdditive.eq_sum_ppIdx
+#print axioms dcount_bounds
+#print axioms card_ie
+#print axioms sum_Xi_bounds
+#print axioms sum_XiXj_le
+#print axioms cij_le
+#print axioms tk_core
+#print axioms log_sq_le_sqrt
+#print axioms card_ppIdx_mul_log_le
+#print axioms sum_inv_qi_le
+#print axioms sq_sum_le
+#print axioms tk_AG
+#print axioms sum_q_le
+#print axioms tk_E
+#print axioms tk_nonneg
+#print axioms tk_real
+#print axioms turan_kubilius_nat
+#print axioms turan_kubilius
+#print axioms remark_2_5
 
 /-! ### Remarks 7.1 and 7.3: axioms -/
 
@@ -285,3 +312,53 @@ example : (7 * 11 ∣ 143 ∨ 7 * 13 ∣ 143 ∨ 11 * 13 ∣ 143) ∨
     (143 ∣ 7 * 2 ∨ 143 ∣ 11 * 2 ∨ 143 ∣ 13 * 2) :=
   dvd_three_primes (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num)
     (by norm_num) (by norm_num)
+
+/-! ### Remark 2.5 on concrete additive functions -/
+
+-- The prime powers up to 10 are 2, 4, 8, 3, 9, 5, 7.
+example : (ppIdx 10).card = 7 := by decide
+
+/-- `log` is (completely) additive. -/
+theorem isAdditive_log : IsAdditive (fun n => (Real.log n : ℂ)) := by
+  intro m n h
+  rcases Nat.eq_zero_or_pos m with rfl | hm
+  · rw [Nat.coprime_zero_left] at h
+    subst h
+    simp
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · rw [Nat.coprime_zero_right] at h
+    subst h
+    simp
+  push_cast
+  rw [Real.log_mul (by positivity) (by positivity)]
+  push_cast
+  ring
+
+/-- `ω(n)`, the number of distinct prime factors, is additive. -/
+theorem isAdditive_omega : IsAdditive (fun n => ((n.primeFactors.card : ℕ) : ℂ)) := by
+  intro m n h
+  rcases Nat.eq_zero_or_pos m with rfl | hm
+  · rw [Nat.coprime_zero_left] at h
+    subst h
+    simp
+  rcases Nat.eq_zero_or_pos n with rfl | hn
+  · rw [Nat.coprime_zero_right] at h
+    subst h
+    simp
+  simp only
+  rw [Nat.primeFactors_mul hm.ne' hn.ne', card_union_of_disjoint h.disjoint_primeFactors]
+  push_cast
+  ring
+
+/-- Turán–Kubilius for `f = log`. -/
+example {x : ℝ} (hx : 2 ≤ x) :
+    ∑ n ∈ Icc 1 ⌊x⌋₊, ‖(Real.log n : ℂ) - tkA (fun n => (Real.log n : ℂ)) ⌊x⌋₊‖ ^ 2 ≤
+      130 * x * tkB2 (fun n => (Real.log n : ℂ)) ⌊x⌋₊ :=
+  turan_kubilius isAdditive_log hx
+
+/-- Turán–Kubilius for `f = ω`. -/
+example {x : ℝ} (hx : 2 ≤ x) :
+    ∑ n ∈ Icc 1 ⌊x⌋₊, ‖((n.primeFactors.card : ℕ) : ℂ) -
+        tkA (fun n => ((n.primeFactors.card : ℕ) : ℂ)) ⌊x⌋₊‖ ^ 2 ≤
+      130 * x * tkB2 (fun n => ((n.primeFactors.card : ℕ) : ℂ)) ⌊x⌋₊ :=
+  turan_kubilius isAdditive_omega hx
