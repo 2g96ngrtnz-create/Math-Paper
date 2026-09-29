@@ -108,4 +108,4 @@ Result numbers follow the compiled paper, `paper/hub_removal.pdf`. There, Questi
 
 **How the model matches the paper.** `expectP ρ (fun ω : Edge N K → Bool => PhiK N K ω)` is E[Φ_K] for independent reversals of the edges of G_{N,K}. The paper's 𝒟_ρ(N,K) = 𝒟_ρ(N)[V_{N,K}] has the same law, because the edges of G_N outside G_{N,K} do not affect Φ_K. Also Ψ(N, N/(K+1)) = Ψ(N, ⌊N/(K+1)⌋), and `psi N (N / (K + 1))` counts the latter.
 
-**Not yet formalised:** the aside in Remark 7.2 on θ ≤ 1/3 (\"compare the sub-sum lemma\"), and Lemma A.1 for infinite sequences (the finite case is proved). Every other numbered lemma, proposition, theorem, corollary and remark of the paper is formalised.
+**Not yet formalised:** the aside in Remark 7.2 on θ ≤ 1/3 ("compare the sub-sum lemma"), and Lemma A.1 for infinite sequences (the finite case is proved). Every other numbered lemma, proposition, theorem, corollary and remark of the paper is formalised.

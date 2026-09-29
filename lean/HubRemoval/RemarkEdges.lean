@@ -152,7 +152,8 @@ theorem abs_card_hubEdges_div_sub_le {N K : ℕ} (hN : 1 ≤ N) (hKN : K ≤ N) 
       linarith
     have hlog : |Real.log K - Real.log ((K : ℝ) + 1)| ≤ Real.log 2 := by
       have l1 : Real.log K ≤ Real.log ((K : ℝ) + 1) := Real.log_le_log (by linarith) (by linarith)
-      have l2 : Real.log ((K : ℝ) + 1) ≤ Real.log (2 * K) := Real.log_le_log (by linarith) (by linarith)
+      have l2 : Real.log ((K : ℝ) + 1) ≤ Real.log (2 * K) :=
+        Real.log_le_log (by linarith) (by linarith)
       rw [Real.log_mul (by norm_num) (by linarith)] at l2
       rw [abs_le]
       constructor <;> linarith

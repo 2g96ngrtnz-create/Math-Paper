@@ -298,7 +298,8 @@ theorem sum_XiXj_le {N : ℕ} {i j : ℕ × ℕ} (hi : i ∈ ppIdx N) (hj : j �
   rw [e]
   linarith
 
-/-- **The pair counts.** `∑_{n ≤ N} X_i(n) X_j(n) ≤ 1[i = j] N/q_i + N w_i w_j + 2·1[q_iq_j ≤ N]`. -/
+/-- **The pair counts.**
+`∑_{n ≤ N} X_i(n) X_j(n) ≤ 1[i = j] N/q_i + N w_i w_j + 2·1[q_iq_j ≤ N]`. -/
 theorem cij_le {N : ℕ} {i j : ℕ × ℕ} (hi : i ∈ ppIdx N) (hj : j ∈ ppIdx N) :
     ∑ n ∈ Ioc 0 N, Xi i n * Xi j n ≤
       (if i = j then (N : ℝ) / qi i else 0) + N * (wi i * wi j) +
